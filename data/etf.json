@@ -1,0 +1,1434 @@
+{
+  "meta": {
+    "popis": "Výběr ETF z NYSE / NYSE Arca pro začínajícího českého investora a jejich evropské UCITS obdoby.",
+    "overeno_dne": "2026-10-10",
+    "format_udaje": {
+      "hodnota": "údaj; null = neověřeno (pak je vyplněná poznamka)",
+      "zdroj": "URL, odkud je údaj převzatý (web emitenta nebo brokera)",
+      "k_datu": "datum, ke kterému údaj platí podle zdroje; null = zdroj datum neuvádí",
+      "overeno": "kdy byl zdroj přečten"
+    },
+    "jednotky": "TER v procentech ročně; velikost fondu v USD (zaokrouhlení podle zdroje, viz hodnota_ve_zdroji).",
+    "vanguard_us_api": "U Vanguard USA jsou zdrojem JSON endpointy investor.vanguard.com/vmf/api/…, ze kterých se plní produktová stránka investor.vanguard.com/investment-products/etfs/profile/<ticker>.",
+    "priips": "Proč ke každému ETF hledáme UCITS obdobu: viz data/README.md."
+  },
+  "etf": [
+    {
+      "ticker": "VOO",
+      "typ": "S&P 500 – 500 velkých amerických firem",
+      "proc_vybrano": "Základní stavební kámen: index S&P 500 v jednom fondu za 0,03 % ročně.",
+      "nazev": {
+        "hodnota": "Vanguard S&P 500 ETF",
+        "zdroj": "https://investor.vanguard.com/vmf/api/VOO/profile",
+        "k_datu": null,
+        "overeno": "2026-10-10"
+      },
+      "emitent": {
+        "hodnota": "Vanguard",
+        "zdroj": "https://investor.vanguard.com/investment-products/etfs/profile/voo",
+        "k_datu": null,
+        "overeno": "2026-10-10"
+      },
+      "burza": {
+        "hodnota": "NYSE Arca",
+        "zdroj": "https://investor.vanguard.com/investment-products/etfs/profile/voo",
+        "k_datu": null,
+        "overeno": "2026-10-10",
+        "poznamka": "Z textu na stránce fondu: „ETF Shares are listed for trading on …“"
+      },
+      "index": {
+        "hodnota": "S&P 500 Index",
+        "zdroj": "https://investor.vanguard.com/vmf/api/VOO/characteristic",
+        "k_datu": "2026-08-31",
+        "overeno": "2026-10-10"
+      },
+      "ter": {
+        "hodnota": 0.03,
+        "zdroj": "https://investor.vanguard.com/vmf/api/VOO/profile",
+        "k_datu": "2026-04-28",
+        "overeno": "2026-10-10",
+        "jednotka": "% ročně"
+      },
+      "velikost_fondu": {
+        "hodnota": 1800000000000,
+        "zdroj": "https://investor.vanguard.com/vmf/api/VOO/characteristic",
+        "k_datu": "2026-08-31",
+        "overeno": "2026-10-10",
+        "poznamka": "Celý fond (všechny třídy podílů). Samotná ETF třída: $1.0 trillion.",
+        "jednotka": "USD",
+        "hodnota_ve_zdroji": "$1.8 trillion"
+      },
+      "pocet_titulu": {
+        "hodnota": 505,
+        "zdroj": "https://investor.vanguard.com/vmf/api/VOO/characteristic",
+        "k_datu": "2026-08-31",
+        "overeno": "2026-10-10",
+        "poznamka": "Počet akcií ve fondu."
+      },
+      "dividendova_politika": {
+        "hodnota": "vyplácí čtvrtletně",
+        "zdroj": "https://investor.vanguard.com/vmf/api/VOO/distribution",
+        "k_datu": null,
+        "overeno": "2026-10-10",
+        "hodnota_ve_zdroji": "Quarterly"
+      },
+      "original_u_xtb_cz": {
+        "hodnota": "stránka jako ETF (ne CFD)",
+        "zdroj": "https://www.xtb.com/cz/etf/voo-us",
+        "k_datu": null,
+        "overeno": "2026-10-10",
+        "poznamka": "Česká stránka XTB obsahuje „Investujte do ETF VOO.US“ s ISIN fondu. Jestli XTB nákup povolí neprofesionálnímu (retailovému) klientovi, se z veřejné stránky ověřit nepodařilo – TODO."
+      },
+      "ucits_obdoba": {
+        "nazev": {
+          "hodnota": "Vanguard S&P 500 UCITS ETF (USD) Accumulating",
+          "zdroj": "https://www.vanguard.co.uk/professional/product/etf/equity/9694/sp-500-ucits-etf-usd-accumulating",
+          "k_datu": null,
+          "overeno": "2026-10-10"
+        },
+        "emitent": {
+          "hodnota": "Vanguard",
+          "zdroj": "https://www.vanguard.co.uk/professional/product/etf/equity/9694/sp-500-ucits-etf-usd-accumulating",
+          "k_datu": null,
+          "overeno": "2026-10-10"
+        },
+        "isin": {
+          "hodnota": "IE00BFMXXD54",
+          "zdroj": "https://www.vanguard.co.uk/professional/product/etf/equity/9694/sp-500-ucits-etf-usd-accumulating",
+          "k_datu": null,
+          "overeno": "2026-10-10"
+        },
+        "index": {
+          "hodnota": "S&P 500 Net Total Return",
+          "zdroj": "https://www.vanguard.co.uk/professional/product/etf/equity/9694/sp-500-ucits-etf-usd-accumulating",
+          "k_datu": null,
+          "overeno": "2026-10-10"
+        },
+        "ter": {
+          "hodnota": 0.07,
+          "zdroj": "https://www.vanguard.co.uk/professional/product/etf/equity/9694/sp-500-ucits-etf-usd-accumulating",
+          "k_datu": null,
+          "overeno": "2026-10-10",
+          "poznamka": "Údaj OCF/TER na stránce fondu; datum u něj stránka neuvádí.",
+          "jednotka": "% ročně"
+        },
+        "velikost_fondu": {
+          "hodnota": 88970000000,
+          "zdroj": "https://www.vanguard.co.uk/professional/product/etf/equity/9694/sp-500-ucits-etf-usd-accumulating",
+          "k_datu": null,
+          "overeno": "2026-10-10",
+          "poznamka": "Celý fond (všechny třídy). Tato třída: US$36.34 B. Stránka u velikosti datum neuvádí.",
+          "jednotka": "USD",
+          "hodnota_ve_zdroji": "US$88.97 B"
+        },
+        "pocet_titulu": {
+          "hodnota": 504,
+          "zdroj": "https://www.vanguard.co.uk/professional/product/etf/equity/9694/sp-500-ucits-etf-usd-accumulating",
+          "k_datu": "2026-08-31",
+          "overeno": "2026-10-10"
+        },
+        "dividendova_politika": {
+          "hodnota": "akumulační (dividendy reinvestuje)",
+          "zdroj": "https://www.vanguard.co.uk/professional/product/etf/equity/9694/sp-500-ucits-etf-usd-accumulating",
+          "k_datu": null,
+          "overeno": "2026-10-10",
+          "hodnota_ve_zdroji": "Accumulating (v názvu třídy)"
+        },
+        "burza": {
+          "hodnota": {
+            "burza": "Deutsche Boerse",
+            "ticker": "VUAA",
+            "mena": "EUR"
+          },
+          "zdroj": "https://www.vanguard.co.uk/professional/product/etf/equity/9694/sp-500-ucits-etf-usd-accumulating",
+          "k_datu": null,
+          "overeno": "2026-10-10",
+          "poznamka": "Kotace vhodná pro českého investora: Xetra v EUR, pokud existuje; jinak London Stock Exchange v USD."
+        },
+        "kotace": {
+          "hodnota": [
+            {
+              "burza": "Borsa Italiana S.p.A.",
+              "ticker": "VUAA",
+              "mena": "EUR"
+            },
+            {
+              "burza": "Deutsche Boerse",
+              "ticker": "VUAA",
+              "mena": "EUR"
+            },
+            {
+              "burza": "Bolsa Mexicana De Valores",
+              "ticker": "VUAA",
+              "mena": "MXN"
+            },
+            {
+              "burza": "London Stock Exchange",
+              "ticker": "VUAG",
+              "mena": "GBP"
+            },
+            {
+              "burza": "London Stock Exchange",
+              "ticker": "VUAA",
+              "mena": "USD"
+            }
+          ],
+          "zdroj": "https://www.vanguard.co.uk/professional/product/etf/equity/9694/sp-500-ucits-etf-usd-accumulating",
+          "k_datu": null,
+          "overeno": "2026-10-10"
+        },
+        "kde_koupit": {
+          "burzy": {
+            "hodnota": [
+              "Bolsa Mexicana De Valores",
+              "Borsa Italiana S.p.A.",
+              "Deutsche Boerse",
+              "London Stock Exchange"
+            ],
+            "zdroj": "https://www.vanguard.co.uk/professional/product/etf/equity/9694/sp-500-ucits-etf-usd-accumulating",
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "Burzy, kde emitent fond kotuje. Koupit ho jde u brokera s přístupem na některou z nich."
+          },
+          "xtb_cz": {
+            "hodnota": "ano – VUAA.DE jako skutečné ETF (ne CFD)",
+            "zdroj": "https://www.xtb.com/cz/etf/vanguard-s-p-500-ucits-acc-eur",
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "Česká stránka XTB obsahuje „Investujte do ETF VUAA.DE“."
+          },
+          "ostatni_brokeri": {
+            "hodnota": null,
+            "zdroj": null,
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "Neověřováno. Dostupnost u Fio, Trading 212, Degiro, IBKR, Portu apod. je TODO."
+          }
+        },
+        "rozdil_oproti_originalu": "Stejný index (S&P 500). UCITS třída dividendy reinvestuje, americký VOO je vyplácí; UCITS má vyšší TER."
+      }
+    },
+    {
+      "ticker": "VTI",
+      "typ": "celý americký akciový trh",
+      "proc_vybrano": "Širší než S&P 500: kromě velkých firem obsahuje i střední a malé americké firmy.",
+      "nazev": {
+        "hodnota": "Vanguard Morningstar Total Stock Market ETF",
+        "zdroj": "https://investor.vanguard.com/vmf/api/VTI/profile",
+        "k_datu": null,
+        "overeno": "2026-10-10"
+      },
+      "emitent": {
+        "hodnota": "Vanguard",
+        "zdroj": "https://investor.vanguard.com/investment-products/etfs/profile/vti",
+        "k_datu": null,
+        "overeno": "2026-10-10"
+      },
+      "burza": {
+        "hodnota": "NYSE Arca",
+        "zdroj": "https://investor.vanguard.com/investment-products/etfs/profile/vti",
+        "k_datu": null,
+        "overeno": "2026-10-10",
+        "poznamka": "Z textu na stránce fondu: „ETF Shares are listed for trading on …“"
+      },
+      "index": {
+        "hodnota": "Morningstar US Total Market Index",
+        "zdroj": "https://investor.vanguard.com/vmf/api/VTI/characteristic",
+        "k_datu": "2026-08-31",
+        "overeno": "2026-10-10"
+      },
+      "ter": {
+        "hodnota": 0.03,
+        "zdroj": "https://investor.vanguard.com/vmf/api/VTI/profile",
+        "k_datu": "2026-04-28",
+        "overeno": "2026-10-10",
+        "jednotka": "% ročně"
+      },
+      "velikost_fondu": {
+        "hodnota": 2300000000000,
+        "zdroj": "https://investor.vanguard.com/vmf/api/VTI/characteristic",
+        "k_datu": "2026-08-31",
+        "overeno": "2026-10-10",
+        "poznamka": "Celý fond (všechny třídy podílů). Samotná ETF třída: $690.1 billion.",
+        "jednotka": "USD",
+        "hodnota_ve_zdroji": "$2.3 trillion"
+      },
+      "pocet_titulu": {
+        "hodnota": 3507,
+        "zdroj": "https://investor.vanguard.com/vmf/api/VTI/characteristic",
+        "k_datu": "2026-08-31",
+        "overeno": "2026-10-10",
+        "poznamka": "Počet akcií ve fondu."
+      },
+      "dividendova_politika": {
+        "hodnota": "vyplácí čtvrtletně",
+        "zdroj": "https://investor.vanguard.com/vmf/api/VTI/distribution",
+        "k_datu": null,
+        "overeno": "2026-10-10",
+        "hodnota_ve_zdroji": "Quarterly"
+      },
+      "original_u_xtb_cz": {
+        "hodnota": "jen jako CFD",
+        "zdroj": "https://www.xtb.com/cz/etf-cfd/vanguard-total-stock-market",
+        "k_datu": null,
+        "overeno": "2026-10-10",
+        "poznamka": "Česká stránka XTB: „Investujte do CFD na VTI.US“ – derivát, ne vlastnictví fondu."
+      },
+      "ucits_obdoba": {
+        "nazev": {
+          "hodnota": "iShares MSCI USA UCITS ETF (Acc)",
+          "zdroj": "https://www.ishares.com/uk/individual/en/products/253740/ishares-msci-usa-b-ucits-etf",
+          "k_datu": null,
+          "overeno": "2026-10-10"
+        },
+        "emitent": {
+          "hodnota": "iShares (BlackRock)",
+          "zdroj": "https://www.ishares.com/uk/individual/en/products/253740/ishares-msci-usa-b-ucits-etf",
+          "k_datu": null,
+          "overeno": "2026-10-10"
+        },
+        "isin": {
+          "hodnota": "IE00B52SFT06",
+          "zdroj": "https://www.ishares.com/uk/individual/en/products/253740/ishares-msci-usa-b-ucits-etf",
+          "k_datu": null,
+          "overeno": "2026-10-10"
+        },
+        "index": {
+          "hodnota": "MSCI USA Index",
+          "zdroj": "https://www.ishares.com/uk/individual/en/products/253740/ishares-msci-usa-b-ucits-etf",
+          "k_datu": null,
+          "overeno": "2026-10-10"
+        },
+        "ter": {
+          "hodnota": 0.03,
+          "zdroj": "https://www.ishares.com/uk/individual/en/products/253740/ishares-msci-usa-b-ucits-etf",
+          "k_datu": null,
+          "overeno": "2026-10-10",
+          "poznamka": "Datum u TER stránka neuvádí.",
+          "jednotka": "% ročně"
+        },
+        "velikost_fondu": {
+          "hodnota": 5230776522,
+          "zdroj": "https://www.ishares.com/uk/individual/en/products/253740/ishares-msci-usa-b-ucits-etf",
+          "k_datu": "2026-10-08",
+          "overeno": "2026-10-10",
+          "poznamka": "Celý fond (všechny třídy).",
+          "jednotka": "USD",
+          "hodnota_ve_zdroji": "USD 5,230,776,522"
+        },
+        "pocet_titulu": {
+          "hodnota": 515,
+          "zdroj": "https://www.ishares.com/uk/individual/en/products/253740/ishares-msci-usa-b-ucits-etf",
+          "k_datu": "2026-10-08",
+          "overeno": "2026-10-10"
+        },
+        "dividendova_politika": {
+          "hodnota": "akumulační (dividendy reinvestuje)",
+          "zdroj": "https://www.ishares.com/uk/individual/en/products/253740/ishares-msci-usa-b-ucits-etf",
+          "k_datu": null,
+          "overeno": "2026-10-10",
+          "hodnota_ve_zdroji": "Use of Income: Accumulating"
+        },
+        "burza": {
+          "hodnota": {
+            "burza": "Deutsche Boerse Xetra",
+            "ticker": "SXR4",
+            "mena": "EUR"
+          },
+          "zdroj": "https://www.ishares.com/uk/individual/en/products/253740/ishares-msci-usa-b-ucits-etf",
+          "k_datu": null,
+          "overeno": "2026-10-10",
+          "poznamka": "Kotace vhodná pro českého investora: Xetra v EUR, pokud existuje; jinak London Stock Exchange v USD."
+        },
+        "kotace": {
+          "hodnota": [
+            {
+              "burza": "Bolsa Mexicana De Valores",
+              "ticker": "CSUS",
+              "mena": "MXN"
+            },
+            {
+              "burza": "Borsa Italiana",
+              "ticker": "CSUS",
+              "mena": "EUR"
+            },
+            {
+              "burza": "Deutsche Boerse Xetra",
+              "ticker": "SXR4",
+              "mena": "EUR"
+            },
+            {
+              "burza": "Euronext Amsterdam",
+              "ticker": "CSUS",
+              "mena": "EUR"
+            },
+            {
+              "burza": "London Stock Exchange",
+              "ticker": "CU1",
+              "mena": "GBP"
+            },
+            {
+              "burza": "London Stock Exchange",
+              "ticker": "CSUS",
+              "mena": "USD"
+            },
+            {
+              "burza": "SIX Swiss Exchange",
+              "ticker": "CSUS",
+              "mena": "USD"
+            }
+          ],
+          "zdroj": "https://www.ishares.com/uk/individual/en/products/253740/ishares-msci-usa-b-ucits-etf",
+          "k_datu": null,
+          "overeno": "2026-10-10"
+        },
+        "kde_koupit": {
+          "burzy": {
+            "hodnota": [
+              "Bolsa Mexicana De Valores",
+              "Borsa Italiana",
+              "Deutsche Boerse Xetra",
+              "Euronext Amsterdam",
+              "London Stock Exchange",
+              "SIX Swiss Exchange"
+            ],
+            "zdroj": "https://www.ishares.com/uk/individual/en/products/253740/ishares-msci-usa-b-ucits-etf",
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "Burzy, kde emitent fond kotuje. Koupit ho jde u brokera s přístupem na některou z nich."
+          },
+          "xtb_cz": {
+            "hodnota": "ano – SXR4.DE jako skutečné ETF (ne CFD)",
+            "zdroj": "https://www.xtb.com/cz/etf/sxr4-de",
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "Česká stránka XTB obsahuje „Investujte do ETF SXR4.DE“."
+          },
+          "ostatni_brokeri": {
+            "hodnota": null,
+            "zdroj": null,
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "Neověřováno. Dostupnost u Fio, Trading 212, Degiro, IBKR, Portu apod. je TODO."
+          }
+        },
+        "rozdil_oproti_originalu": "Přesnou UCITS obdobu celého amerického trhu se nepodařilo najít. iShares MSCI USA sleduje jiný, užší index (MSCI USA) a drží výrazně méně titulů než VTI – viz pocet_titulu u obou fondů."
+      }
+    },
+    {
+      "ticker": "VT",
+      "typ": "celý svět (vyspělé i rozvíjející se trhy)",
+      "proc_vybrano": "Nejjednodušší portfolio na jeden nákup: akcie z celého světa v jednom fondu.",
+      "nazev": {
+        "hodnota": "Vanguard Total World Stock ETF",
+        "zdroj": "https://investor.vanguard.com/vmf/api/VT/profile",
+        "k_datu": null,
+        "overeno": "2026-10-10"
+      },
+      "emitent": {
+        "hodnota": "Vanguard",
+        "zdroj": "https://investor.vanguard.com/investment-products/etfs/profile/vt",
+        "k_datu": null,
+        "overeno": "2026-10-10"
+      },
+      "burza": {
+        "hodnota": "NYSE Arca",
+        "zdroj": "https://investor.vanguard.com/investment-products/etfs/profile/vt",
+        "k_datu": null,
+        "overeno": "2026-10-10",
+        "poznamka": "Z textu na stránce fondu: „ETF Shares are listed for trading on …“"
+      },
+      "index": {
+        "hodnota": "FTSE Global All Cap Index",
+        "zdroj": "https://investor.vanguard.com/vmf/api/VT/characteristic",
+        "k_datu": "2026-08-31",
+        "overeno": "2026-10-10"
+      },
+      "ter": {
+        "hodnota": 0.06,
+        "zdroj": "https://investor.vanguard.com/vmf/api/VT/profile",
+        "k_datu": "2026-02-27",
+        "overeno": "2026-10-10",
+        "jednotka": "% ročně"
+      },
+      "velikost_fondu": {
+        "hodnota": 101700000000,
+        "zdroj": "https://investor.vanguard.com/vmf/api/VT/characteristic",
+        "k_datu": "2026-08-31",
+        "overeno": "2026-10-10",
+        "poznamka": "Celý fond (všechny třídy podílů). Samotná ETF třída: $81.9 billion.",
+        "jednotka": "USD",
+        "hodnota_ve_zdroji": "$101.7 billion"
+      },
+      "pocet_titulu": {
+        "hodnota": 10088,
+        "zdroj": "https://investor.vanguard.com/vmf/api/VT/characteristic",
+        "k_datu": "2026-08-31",
+        "overeno": "2026-10-10",
+        "poznamka": "Počet akcií ve fondu."
+      },
+      "dividendova_politika": {
+        "hodnota": "vyplácí čtvrtletně",
+        "zdroj": "https://investor.vanguard.com/vmf/api/VT/distribution",
+        "k_datu": null,
+        "overeno": "2026-10-10",
+        "hodnota_ve_zdroji": "Quarterly"
+      },
+      "original_u_xtb_cz": {
+        "hodnota": "jen jako CFD",
+        "zdroj": "https://www.xtb.com/cz/etf-cfd/vanguard-total-world-stock",
+        "k_datu": null,
+        "overeno": "2026-10-10",
+        "poznamka": "Česká stránka XTB: „Investujte do CFD na VT.US“ – derivát, ne vlastnictví fondu."
+      },
+      "ucits_obdoba": {
+        "nazev": {
+          "hodnota": "Vanguard FTSE All-World UCITS ETF (USD) Accumulating",
+          "zdroj": "https://www.vanguard.co.uk/professional/product/etf/equity/9679/ftse-all-world-ucits-etf-usd-accumulating",
+          "k_datu": null,
+          "overeno": "2026-10-10"
+        },
+        "emitent": {
+          "hodnota": "Vanguard",
+          "zdroj": "https://www.vanguard.co.uk/professional/product/etf/equity/9679/ftse-all-world-ucits-etf-usd-accumulating",
+          "k_datu": null,
+          "overeno": "2026-10-10"
+        },
+        "isin": {
+          "hodnota": "IE00BK5BQT80",
+          "zdroj": "https://www.vanguard.co.uk/professional/product/etf/equity/9679/ftse-all-world-ucits-etf-usd-accumulating",
+          "k_datu": null,
+          "overeno": "2026-10-10"
+        },
+        "index": {
+          "hodnota": "FTSE All-World Index",
+          "zdroj": "https://www.vanguard.co.uk/professional/product/etf/equity/9679/ftse-all-world-ucits-etf-usd-accumulating",
+          "k_datu": null,
+          "overeno": "2026-10-10"
+        },
+        "ter": {
+          "hodnota": 0.14,
+          "zdroj": "https://www.vanguard.co.uk/professional/product/etf/equity/9679/ftse-all-world-ucits-etf-usd-accumulating",
+          "k_datu": null,
+          "overeno": "2026-10-10",
+          "poznamka": "Údaj OCF/TER na stránce fondu; datum u něj stránka neuvádí.",
+          "jednotka": "% ročně"
+        },
+        "velikost_fondu": {
+          "hodnota": 87290000000,
+          "zdroj": "https://www.vanguard.co.uk/professional/product/etf/equity/9679/ftse-all-world-ucits-etf-usd-accumulating",
+          "k_datu": null,
+          "overeno": "2026-10-10",
+          "poznamka": "Celý fond (všechny třídy). Tato třída: US$60.19 B. Stránka u velikosti datum neuvádí.",
+          "jednotka": "USD",
+          "hodnota_ve_zdroji": "US$87.29 B"
+        },
+        "pocet_titulu": {
+          "hodnota": 3784,
+          "zdroj": "https://www.vanguard.co.uk/professional/product/etf/equity/9679/ftse-all-world-ucits-etf-usd-accumulating",
+          "k_datu": "2026-08-31",
+          "overeno": "2026-10-10"
+        },
+        "dividendova_politika": {
+          "hodnota": "akumulační (dividendy reinvestuje)",
+          "zdroj": "https://www.vanguard.co.uk/professional/product/etf/equity/9679/ftse-all-world-ucits-etf-usd-accumulating",
+          "k_datu": null,
+          "overeno": "2026-10-10",
+          "hodnota_ve_zdroji": "Accumulating (v názvu třídy)"
+        },
+        "burza": {
+          "hodnota": {
+            "burza": "Deutsche Boerse",
+            "ticker": "VWCE",
+            "mena": "EUR"
+          },
+          "zdroj": "https://www.vanguard.co.uk/professional/product/etf/equity/9679/ftse-all-world-ucits-etf-usd-accumulating",
+          "k_datu": null,
+          "overeno": "2026-10-10",
+          "poznamka": "Kotace vhodná pro českého investora: Xetra v EUR, pokud existuje; jinak London Stock Exchange v USD."
+        },
+        "kotace": {
+          "hodnota": [
+            {
+              "burza": "SIX Swiss Exchange",
+              "ticker": "VWRA",
+              "mena": "CHF"
+            },
+            {
+              "burza": "Borsa Italiana S.p.A.",
+              "ticker": "VWCE",
+              "mena": "EUR"
+            },
+            {
+              "burza": "Deutsche Boerse",
+              "ticker": "VWCE",
+              "mena": "EUR"
+            },
+            {
+              "burza": "NYSE Euronext - Amsterdam",
+              "ticker": "VWCE",
+              "mena": "EUR"
+            },
+            {
+              "burza": "Bolsa Institucional De Valores",
+              "ticker": "VWRA",
+              "mena": "USD"
+            },
+            {
+              "burza": "London Stock Exchange",
+              "ticker": "VWRA",
+              "mena": "USD"
+            },
+            {
+              "burza": "London Stock Exchange",
+              "ticker": "VWRP",
+              "mena": "GBP"
+            }
+          ],
+          "zdroj": "https://www.vanguard.co.uk/professional/product/etf/equity/9679/ftse-all-world-ucits-etf-usd-accumulating",
+          "k_datu": null,
+          "overeno": "2026-10-10"
+        },
+        "kde_koupit": {
+          "burzy": {
+            "hodnota": [
+              "Bolsa Institucional De Valores",
+              "Borsa Italiana S.p.A.",
+              "Deutsche Boerse",
+              "London Stock Exchange",
+              "NYSE Euronext - Amsterdam",
+              "SIX Swiss Exchange"
+            ],
+            "zdroj": "https://www.vanguard.co.uk/professional/product/etf/equity/9679/ftse-all-world-ucits-etf-usd-accumulating",
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "Burzy, kde emitent fond kotuje. Koupit ho jde u brokera s přístupem na některou z nich."
+          },
+          "xtb_cz": {
+            "hodnota": "ano – VWCE.DE jako skutečné ETF (ne CFD)",
+            "zdroj": "https://www.xtb.com/cz/etf/vanguard-ftse-all-world-ucits-acc-eur-",
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "Česká stránka XTB obsahuje „Investujte do ETF VWCE.DE“."
+          },
+          "ostatni_brokeri": {
+            "hodnota": null,
+            "zdroj": null,
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "Neověřováno. Dostupnost u Fio, Trading 212, Degiro, IBKR, Portu apod. je TODO."
+          }
+        },
+        "rozdil_oproti_originalu": "Jiný index: VT sleduje FTSE Global All Cap, UCITS fond FTSE All-World, který podle Vanguardu obsahuje velké a střední firmy (bez malých). Proto má UCITS fond méně titulů."
+      }
+    },
+    {
+      "ticker": "VWO",
+      "typ": "rozvíjející se trhy",
+      "proc_vybrano": "Doplněk k USA a vyspělému světu: Čína, Indie, Tchaj-wan a další rozvíjející se trhy.",
+      "nazev": {
+        "hodnota": "Vanguard FTSE Emerging Markets ETF",
+        "zdroj": "https://investor.vanguard.com/vmf/api/VWO/profile",
+        "k_datu": null,
+        "overeno": "2026-10-10"
+      },
+      "emitent": {
+        "hodnota": "Vanguard",
+        "zdroj": "https://investor.vanguard.com/investment-products/etfs/profile/vwo",
+        "k_datu": null,
+        "overeno": "2026-10-10"
+      },
+      "burza": {
+        "hodnota": "NYSE Arca",
+        "zdroj": "https://investor.vanguard.com/investment-products/etfs/profile/vwo",
+        "k_datu": null,
+        "overeno": "2026-10-10",
+        "poznamka": "Z textu na stránce fondu: „ETF Shares are listed for trading on …“"
+      },
+      "index": {
+        "hodnota": "FTSE Emerging ACap CN A Inclus Idx",
+        "zdroj": "https://investor.vanguard.com/vmf/api/VWO/characteristic",
+        "k_datu": "2026-08-31",
+        "overeno": "2026-10-10"
+      },
+      "ter": {
+        "hodnota": 0.06,
+        "zdroj": "https://investor.vanguard.com/vmf/api/VWO/profile",
+        "k_datu": "2026-02-27",
+        "overeno": "2026-10-10",
+        "jednotka": "% ročně"
+      },
+      "velikost_fondu": {
+        "hodnota": 168500000000,
+        "zdroj": "https://investor.vanguard.com/vmf/api/VWO/characteristic",
+        "k_datu": "2026-08-31",
+        "overeno": "2026-10-10",
+        "poznamka": "Celý fond (všechny třídy podílů). Samotná ETF třída: $127.3 billion.",
+        "jednotka": "USD",
+        "hodnota_ve_zdroji": "$168.5 billion"
+      },
+      "pocet_titulu": {
+        "hodnota": 6348,
+        "zdroj": "https://investor.vanguard.com/vmf/api/VWO/characteristic",
+        "k_datu": "2026-08-31",
+        "overeno": "2026-10-10",
+        "poznamka": "Počet akcií ve fondu."
+      },
+      "dividendova_politika": {
+        "hodnota": "vyplácí čtvrtletně",
+        "zdroj": "https://investor.vanguard.com/vmf/api/VWO/distribution",
+        "k_datu": null,
+        "overeno": "2026-10-10",
+        "hodnota_ve_zdroji": "Quarterly"
+      },
+      "original_u_xtb_cz": {
+        "hodnota": "jen jako CFD",
+        "zdroj": "https://www.xtb.com/cz/etf-cfd/vanguard-ftse-emerging-markets",
+        "k_datu": null,
+        "overeno": "2026-10-10",
+        "poznamka": "Česká stránka XTB: „Investujte do CFD na VWO.US“ – derivát, ne vlastnictví fondu."
+      },
+      "ucits_obdoba": {
+        "nazev": {
+          "hodnota": "Vanguard FTSE Emerging Markets UCITS ETF (USD) Accumulating",
+          "zdroj": "https://www.vanguard.co.uk/professional/product/etf/equity/9678/ftse-emerging-markets-ucits-etf-usd-accumulating",
+          "k_datu": null,
+          "overeno": "2026-10-10"
+        },
+        "emitent": {
+          "hodnota": "Vanguard",
+          "zdroj": "https://www.vanguard.co.uk/professional/product/etf/equity/9678/ftse-emerging-markets-ucits-etf-usd-accumulating",
+          "k_datu": null,
+          "overeno": "2026-10-10"
+        },
+        "isin": {
+          "hodnota": "IE00BK5BR733",
+          "zdroj": "https://www.vanguard.co.uk/professional/product/etf/equity/9678/ftse-emerging-markets-ucits-etf-usd-accumulating",
+          "k_datu": null,
+          "overeno": "2026-10-10"
+        },
+        "index": {
+          "hodnota": "FTSE Emerging Index",
+          "zdroj": "https://www.vanguard.co.uk/professional/product/etf/equity/9678/ftse-emerging-markets-ucits-etf-usd-accumulating",
+          "k_datu": null,
+          "overeno": "2026-10-10"
+        },
+        "ter": {
+          "hodnota": 0.17,
+          "zdroj": "https://www.vanguard.co.uk/professional/product/etf/equity/9678/ftse-emerging-markets-ucits-etf-usd-accumulating",
+          "k_datu": null,
+          "overeno": "2026-10-10",
+          "poznamka": "Údaj OCF/TER na stránce fondu; datum u něj stránka neuvádí.",
+          "jednotka": "% ročně"
+        },
+        "velikost_fondu": {
+          "hodnota": 5990000000,
+          "zdroj": "https://www.vanguard.co.uk/professional/product/etf/equity/9678/ftse-emerging-markets-ucits-etf-usd-accumulating",
+          "k_datu": null,
+          "overeno": "2026-10-10",
+          "poznamka": "Celý fond (všechny třídy). Tato třída: US$2.41 B. Stránka u velikosti datum neuvádí.",
+          "jednotka": "USD",
+          "hodnota_ve_zdroji": "US$5.99 B"
+        },
+        "pocet_titulu": {
+          "hodnota": 2306,
+          "zdroj": "https://www.vanguard.co.uk/professional/product/etf/equity/9678/ftse-emerging-markets-ucits-etf-usd-accumulating",
+          "k_datu": "2026-08-31",
+          "overeno": "2026-10-10"
+        },
+        "dividendova_politika": {
+          "hodnota": "akumulační (dividendy reinvestuje)",
+          "zdroj": "https://www.vanguard.co.uk/professional/product/etf/equity/9678/ftse-emerging-markets-ucits-etf-usd-accumulating",
+          "k_datu": null,
+          "overeno": "2026-10-10",
+          "hodnota_ve_zdroji": "Accumulating (v názvu třídy)"
+        },
+        "burza": {
+          "hodnota": {
+            "burza": "Deutsche Boerse",
+            "ticker": "VFEA",
+            "mena": "EUR"
+          },
+          "zdroj": "https://www.vanguard.co.uk/professional/product/etf/equity/9678/ftse-emerging-markets-ucits-etf-usd-accumulating",
+          "k_datu": null,
+          "overeno": "2026-10-10",
+          "poznamka": "Kotace vhodná pro českého investora: Xetra v EUR, pokud existuje; jinak London Stock Exchange v USD."
+        },
+        "kotace": {
+          "hodnota": [
+            {
+              "burza": "SIX Swiss Exchange",
+              "ticker": "VFEA",
+              "mena": "CHF"
+            },
+            {
+              "burza": "Borsa Italiana S.p.A.",
+              "ticker": "VFEA",
+              "mena": "EUR"
+            },
+            {
+              "burza": "Deutsche Boerse",
+              "ticker": "VFEA",
+              "mena": "EUR"
+            },
+            {
+              "burza": "Bolsa Institucional De Valores",
+              "ticker": "VFEA",
+              "mena": "USD"
+            },
+            {
+              "burza": "London Stock Exchange",
+              "ticker": "VFEA",
+              "mena": "USD"
+            },
+            {
+              "burza": "London Stock Exchange",
+              "ticker": "VFEG",
+              "mena": "GBP"
+            }
+          ],
+          "zdroj": "https://www.vanguard.co.uk/professional/product/etf/equity/9678/ftse-emerging-markets-ucits-etf-usd-accumulating",
+          "k_datu": null,
+          "overeno": "2026-10-10"
+        },
+        "kde_koupit": {
+          "burzy": {
+            "hodnota": [
+              "Bolsa Institucional De Valores",
+              "Borsa Italiana S.p.A.",
+              "Deutsche Boerse",
+              "London Stock Exchange",
+              "SIX Swiss Exchange"
+            ],
+            "zdroj": "https://www.vanguard.co.uk/professional/product/etf/equity/9678/ftse-emerging-markets-ucits-etf-usd-accumulating",
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "Burzy, kde emitent fond kotuje. Koupit ho jde u brokera s přístupem na některou z nich."
+          },
+          "xtb_cz": {
+            "hodnota": "ano – VFEA.DE jako skutečné ETF (ne CFD)",
+            "zdroj": "https://www.xtb.com/cz/etf/vfea-de",
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "Česká stránka XTB obsahuje „Investujte do ETF VFEA.DE“."
+          },
+          "ostatni_brokeri": {
+            "hodnota": null,
+            "zdroj": null,
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "Neověřováno. Dostupnost u Fio, Trading 212, Degiro, IBKR, Portu apod. je TODO."
+          }
+        },
+        "rozdil_oproti_originalu": "Jiný index: VWO sleduje FTSE Emerging Markets All Cap China A Inclusion, UCITS fond FTSE Emerging, který podle Vanguardu obsahuje velké a střední firmy. UCITS fond má méně titulů."
+      }
+    },
+    {
+      "ticker": "SDY",
+      "typ": "dividendové akcie (firmy, které dlouhodobě zvyšují dividendu)",
+      "proc_vybrano": "Dividendová strategie, ke které existuje UCITS fond na úplně stejný index.",
+      "nazev": {
+        "hodnota": "State Street® SPDR® S&P® Dividend ETF",
+        "zdroj": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-sp-dividend-etf-sdy",
+        "k_datu": null,
+        "overeno": "2026-10-10"
+      },
+      "emitent": {
+        "hodnota": "State Street Global Advisors (SPDR)",
+        "zdroj": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-sp-dividend-etf-sdy",
+        "k_datu": null,
+        "overeno": "2026-10-10"
+      },
+      "burza": {
+        "hodnota": "NYSE Arca",
+        "zdroj": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-sp-dividend-etf-sdy",
+        "k_datu": "2026-10-09",
+        "overeno": "2026-10-10",
+        "hodnota_ve_zdroji": "NYSE ARCA"
+      },
+      "index": {
+        "hodnota": "S&P High Yield Dividend Aristocrats Index",
+        "zdroj": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-sp-dividend-etf-sdy",
+        "k_datu": null,
+        "overeno": "2026-10-10"
+      },
+      "ter": {
+        "hodnota": 0.35,
+        "zdroj": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-sp-dividend-etf-sdy",
+        "k_datu": null,
+        "overeno": "2026-10-10",
+        "poznamka": "Hrubý nákladový poměr (Gross Expense Ratio) podle prospektu; stránka u něj datum neuvádí.",
+        "jednotka": "% ročně"
+      },
+      "velikost_fondu": {
+        "hodnota": 20750120000,
+        "zdroj": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-sp-dividend-etf-sdy",
+        "k_datu": "2026-10-08",
+        "overeno": "2026-10-10",
+        "jednotka": "USD",
+        "hodnota_ve_zdroji": "$20,750.12 M"
+      },
+      "pocet_titulu": {
+        "hodnota": 155,
+        "zdroj": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-sp-dividend-etf-sdy",
+        "k_datu": "2026-10-08",
+        "overeno": "2026-10-10"
+      },
+      "dividendova_politika": {
+        "hodnota": "vyplácí čtvrtletně",
+        "zdroj": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-sp-dividend-etf-sdy",
+        "k_datu": null,
+        "overeno": "2026-10-10",
+        "hodnota_ve_zdroji": "Quarterly"
+      },
+      "original_u_xtb_cz": {
+        "hodnota": null,
+        "zdroj": null,
+        "k_datu": null,
+        "overeno": "2026-10-10",
+        "poznamka": "Stránku XTB pro SDY.US se najít nepodařilo (adresa přesměruje na obecnou specifikaci)."
+      },
+      "ucits_obdoba": {
+        "nazev": {
+          "hodnota": "State Street® SPDR® S&P® U.S. Dividend Aristocrats UCITS ETF (Dist)",
+          "zdroj": "https://www.ssga.com/uk/en_gb/intermediary/etfs/state-street-spdr-sp-us-dividend-aristocrats-ucits-etf-dist-spyd-gy",
+          "k_datu": null,
+          "overeno": "2026-10-10"
+        },
+        "emitent": {
+          "hodnota": "State Street Global Advisors (SPDR)",
+          "zdroj": "https://www.ssga.com/uk/en_gb/intermediary/etfs/state-street-spdr-sp-us-dividend-aristocrats-ucits-etf-dist-spyd-gy",
+          "k_datu": null,
+          "overeno": "2026-10-10"
+        },
+        "isin": {
+          "hodnota": "IE00B6YX5D40",
+          "zdroj": "https://www.ssga.com/uk/en_gb/intermediary/etfs/state-street-spdr-sp-us-dividend-aristocrats-ucits-etf-dist-spyd-gy",
+          "k_datu": null,
+          "overeno": "2026-10-10"
+        },
+        "index": {
+          "hodnota": "S&P High Yield Dividend Aristocrats Index",
+          "zdroj": "https://www.ssga.com/uk/en_gb/intermediary/etfs/state-street-spdr-sp-us-dividend-aristocrats-ucits-etf-dist-spyd-gy",
+          "k_datu": null,
+          "overeno": "2026-10-10"
+        },
+        "ter": {
+          "hodnota": 0.35,
+          "zdroj": "https://www.ssga.com/uk/en_gb/intermediary/etfs/state-street-spdr-sp-us-dividend-aristocrats-ucits-etf-dist-spyd-gy",
+          "k_datu": null,
+          "overeno": "2026-10-10",
+          "poznamka": "Datum u TER stránka neuvádí.",
+          "jednotka": "% ročně"
+        },
+        "velikost_fondu": {
+          "hodnota": 3739850000,
+          "zdroj": "https://www.ssga.com/uk/en_gb/intermediary/etfs/state-street-spdr-sp-us-dividend-aristocrats-ucits-etf-dist-spyd-gy",
+          "k_datu": "2026-10-08",
+          "overeno": "2026-10-10",
+          "jednotka": "USD",
+          "hodnota_ve_zdroji": "$3,739.85 M"
+        },
+        "pocet_titulu": {
+          "hodnota": 155,
+          "zdroj": "https://www.ssga.com/uk/en_gb/intermediary/etfs/state-street-spdr-sp-us-dividend-aristocrats-ucits-etf-dist-spyd-gy",
+          "k_datu": "2026-10-08",
+          "overeno": "2026-10-10"
+        },
+        "dividendova_politika": {
+          "hodnota": "vyplácí čtvrtletně",
+          "zdroj": "https://www.ssga.com/uk/en_gb/intermediary/etfs/state-street-spdr-sp-us-dividend-aristocrats-ucits-etf-dist-spyd-gy",
+          "k_datu": null,
+          "overeno": "2026-10-10",
+          "hodnota_ve_zdroji": "Income Treatment: Distribution, Distribution Frequency: Quarterly"
+        },
+        "burza": {
+          "hodnota": {
+            "burza": "Deutsche Börse (primární)",
+            "ticker": "SPYD",
+            "mena": "EUR"
+          },
+          "zdroj": "https://www.ssga.com/uk/en_gb/intermediary/etfs/state-street-spdr-sp-us-dividend-aristocrats-ucits-etf-dist-spyd-gy",
+          "k_datu": "2026-10-09",
+          "overeno": "2026-10-10",
+          "poznamka": "Kotace vhodná pro českého investora: Xetra v EUR, pokud existuje; jinak London Stock Exchange v USD."
+        },
+        "kotace": {
+          "hodnota": [
+            {
+              "burza": "Deutsche Börse (primární)",
+              "ticker": "SPYD",
+              "mena": "EUR"
+            },
+            {
+              "burza": "London Stock Exchange",
+              "ticker": "USDV",
+              "mena": "GBP"
+            },
+            {
+              "burza": "London Stock Exchange",
+              "ticker": "UDVD",
+              "mena": "USD"
+            },
+            {
+              "burza": "SIX Swiss Exchange",
+              "ticker": "USDV",
+              "mena": "CHF"
+            },
+            {
+              "burza": "Borsa Italiana",
+              "ticker": "USDV",
+              "mena": "EUR"
+            }
+          ],
+          "zdroj": "https://www.ssga.com/uk/en_gb/intermediary/etfs/state-street-spdr-sp-us-dividend-aristocrats-ucits-etf-dist-spyd-gy",
+          "k_datu": "2026-10-09",
+          "overeno": "2026-10-10"
+        },
+        "registrace_v_cr": {
+          "hodnota": true,
+          "zdroj": "https://www.ssga.com/uk/en_gb/intermediary/etfs/state-street-spdr-sp-us-dividend-aristocrats-ucits-etf-dist-spyd-gy",
+          "k_datu": null,
+          "overeno": "2026-10-10",
+          "poznamka": "Seznam „Countries of Registration“ na stránce fondu obsahuje Czech Republic."
+        },
+        "kde_koupit": {
+          "burzy": {
+            "hodnota": [
+              "Borsa Italiana",
+              "Deutsche Börse (primární)",
+              "London Stock Exchange",
+              "SIX Swiss Exchange"
+            ],
+            "zdroj": "https://www.ssga.com/uk/en_gb/intermediary/etfs/state-street-spdr-sp-us-dividend-aristocrats-ucits-etf-dist-spyd-gy",
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "Burzy, kde emitent fond kotuje. Koupit ho jde u brokera s přístupem na některou z nich."
+          },
+          "xtb_cz": {
+            "hodnota": "ano – SPYD.DE jako skutečné ETF (ne CFD)",
+            "zdroj": "https://www.xtb.com/cz/etf/spdr-s-p-us-dividend-aristocrats-dist-eur",
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "Česká stránka XTB obsahuje „Investujte do ETF SPYD.DE“."
+          },
+          "ostatni_brokeri": {
+            "hodnota": null,
+            "zdroj": null,
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "Neověřováno. Dostupnost u Fio, Trading 212, Degiro, IBKR, Portu apod. je TODO."
+          }
+        },
+        "rozdil_oproti_originalu": "Stejný index (S&P High Yield Dividend Aristocrats) i stejný TER; oba fondy dividendy vyplácejí."
+      }
+    },
+    {
+      "ticker": "VGT",
+      "typ": "technologické firmy",
+      "proc_vybrano": "Technologický sektor pro ty, kdo by jinak hledali QQQ (to je na Nasdaqu, a proto vyřazené).",
+      "nazev": {
+        "hodnota": "Vanguard Information Technology ETF",
+        "zdroj": "https://investor.vanguard.com/vmf/api/VGT/profile",
+        "k_datu": null,
+        "overeno": "2026-10-10"
+      },
+      "emitent": {
+        "hodnota": "Vanguard",
+        "zdroj": "https://investor.vanguard.com/investment-products/etfs/profile/vgt",
+        "k_datu": null,
+        "overeno": "2026-10-10"
+      },
+      "burza": {
+        "hodnota": "NYSE Arca",
+        "zdroj": "https://investor.vanguard.com/investment-products/etfs/profile/vgt",
+        "k_datu": null,
+        "overeno": "2026-10-10",
+        "poznamka": "Z textu na stránce fondu: „ETF Shares are listed for trading on …“"
+      },
+      "index": {
+        "hodnota": "MSCI US IMI Info Technology 25/50",
+        "zdroj": "https://investor.vanguard.com/vmf/api/VGT/characteristic",
+        "k_datu": "2026-08-31",
+        "overeno": "2026-10-10"
+      },
+      "ter": {
+        "hodnota": 0.09,
+        "zdroj": "https://investor.vanguard.com/vmf/api/VGT/profile",
+        "k_datu": "2025-12-19",
+        "overeno": "2026-10-10",
+        "jednotka": "% ročně"
+      },
+      "velikost_fondu": {
+        "hodnota": 170200000000,
+        "zdroj": "https://investor.vanguard.com/vmf/api/VGT/characteristic",
+        "k_datu": "2026-08-31",
+        "overeno": "2026-10-10",
+        "poznamka": "Celý fond (všechny třídy podílů). Samotná ETF třída: $147.6 billion.",
+        "jednotka": "USD",
+        "hodnota_ve_zdroji": "$170.2 billion"
+      },
+      "pocet_titulu": {
+        "hodnota": 318,
+        "zdroj": "https://investor.vanguard.com/vmf/api/VGT/characteristic",
+        "k_datu": "2026-08-31",
+        "overeno": "2026-10-10",
+        "poznamka": "Počet akcií ve fondu."
+      },
+      "dividendova_politika": {
+        "hodnota": "vyplácí čtvrtletně",
+        "zdroj": "https://investor.vanguard.com/vmf/api/VGT/distribution",
+        "k_datu": null,
+        "overeno": "2026-10-10",
+        "hodnota_ve_zdroji": "Quarterly"
+      },
+      "original_u_xtb_cz": {
+        "hodnota": "jen jako CFD",
+        "zdroj": "https://www.xtb.com/cz/etf-cfd/vanguard-information-technology",
+        "k_datu": null,
+        "overeno": "2026-10-10",
+        "poznamka": "Česká stránka XTB: „Investujte do CFD na VGT.US“ – derivát, ne vlastnictví fondu."
+      },
+      "ucits_obdoba": {
+        "nazev": {
+          "hodnota": "iShares S&P 500 Information Technology Sector UCITS ETF (Acc)",
+          "zdroj": "https://www.ishares.com/uk/individual/en/products/280510/ishares-sp-500-information-technology-sector-ucits-etf",
+          "k_datu": null,
+          "overeno": "2026-10-10"
+        },
+        "emitent": {
+          "hodnota": "iShares (BlackRock)",
+          "zdroj": "https://www.ishares.com/uk/individual/en/products/280510/ishares-sp-500-information-technology-sector-ucits-etf",
+          "k_datu": null,
+          "overeno": "2026-10-10"
+        },
+        "isin": {
+          "hodnota": "IE00B3WJKG14",
+          "zdroj": "https://www.ishares.com/uk/individual/en/products/280510/ishares-sp-500-information-technology-sector-ucits-etf",
+          "k_datu": null,
+          "overeno": "2026-10-10"
+        },
+        "index": {
+          "hodnota": "S&P 500 Capped 35/20 Information Technology Index NTR",
+          "zdroj": "https://www.ishares.com/uk/individual/en/products/280510/ishares-sp-500-information-technology-sector-ucits-etf",
+          "k_datu": null,
+          "overeno": "2026-10-10"
+        },
+        "ter": {
+          "hodnota": 0.15,
+          "zdroj": "https://www.ishares.com/uk/individual/en/products/280510/ishares-sp-500-information-technology-sector-ucits-etf",
+          "k_datu": null,
+          "overeno": "2026-10-10",
+          "poznamka": "Datum u TER stránka neuvádí.",
+          "jednotka": "% ročně"
+        },
+        "velikost_fondu": {
+          "hodnota": 20605316181,
+          "zdroj": "https://www.ishares.com/uk/individual/en/products/280510/ishares-sp-500-information-technology-sector-ucits-etf",
+          "k_datu": "2026-10-08",
+          "overeno": "2026-10-10",
+          "poznamka": "Celý fond (všechny třídy).",
+          "jednotka": "USD",
+          "hodnota_ve_zdroji": "USD 20,605,316,181"
+        },
+        "pocet_titulu": {
+          "hodnota": 75,
+          "zdroj": "https://www.ishares.com/uk/individual/en/products/280510/ishares-sp-500-information-technology-sector-ucits-etf",
+          "k_datu": "2026-10-08",
+          "overeno": "2026-10-10"
+        },
+        "dividendova_politika": {
+          "hodnota": "akumulační (dividendy reinvestuje)",
+          "zdroj": "https://www.ishares.com/uk/individual/en/products/280510/ishares-sp-500-information-technology-sector-ucits-etf",
+          "k_datu": null,
+          "overeno": "2026-10-10",
+          "hodnota_ve_zdroji": "Use of Income: Accumulating"
+        },
+        "burza": {
+          "hodnota": {
+            "burza": "Deutsche Boerse Xetra",
+            "ticker": "QDVE",
+            "mena": "EUR"
+          },
+          "zdroj": "https://www.ishares.com/uk/individual/en/products/280510/ishares-sp-500-information-technology-sector-ucits-etf",
+          "k_datu": null,
+          "overeno": "2026-10-10",
+          "poznamka": "Kotace vhodná pro českého investora: Xetra v EUR, pokud existuje; jinak London Stock Exchange v USD."
+        },
+        "kotace": {
+          "hodnota": [
+            {
+              "burza": "Bolsa De Valores De Colombia",
+              "ticker": "IUITCO",
+              "mena": "COP"
+            },
+            {
+              "burza": "Bolsa Mexicana De Valores",
+              "ticker": "IUIT",
+              "mena": "MXN"
+            },
+            {
+              "burza": "Deutsche Boerse Xetra",
+              "ticker": "QDVE",
+              "mena": "EUR"
+            },
+            {
+              "burza": "London Stock Exchange",
+              "ticker": "IUIT",
+              "mena": "USD"
+            },
+            {
+              "burza": "London Stock Exchange",
+              "ticker": "IITU",
+              "mena": "GBP"
+            },
+            {
+              "burza": "Santiago Stock Exchange",
+              "ticker": "IUIT",
+              "mena": "CLP"
+            },
+            {
+              "burza": "SIX Swiss Exchange",
+              "ticker": "IUIT",
+              "mena": "USD"
+            },
+            {
+              "burza": "Tel Aviv Stock Exchange",
+              "ticker": "1159193",
+              "mena": "ILS"
+            }
+          ],
+          "zdroj": "https://www.ishares.com/uk/individual/en/products/280510/ishares-sp-500-information-technology-sector-ucits-etf",
+          "k_datu": null,
+          "overeno": "2026-10-10"
+        },
+        "kde_koupit": {
+          "burzy": {
+            "hodnota": [
+              "Bolsa De Valores De Colombia",
+              "Bolsa Mexicana De Valores",
+              "Deutsche Boerse Xetra",
+              "London Stock Exchange",
+              "SIX Swiss Exchange",
+              "Santiago Stock Exchange",
+              "Tel Aviv Stock Exchange"
+            ],
+            "zdroj": "https://www.ishares.com/uk/individual/en/products/280510/ishares-sp-500-information-technology-sector-ucits-etf",
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "Burzy, kde emitent fond kotuje. Koupit ho jde u brokera s přístupem na některou z nich."
+          },
+          "xtb_cz": {
+            "hodnota": "ano – QDVE.DE jako skutečné ETF (ne CFD)",
+            "zdroj": "https://www.xtb.com/cz/etf/ishares-s-p-500-information-technology-sector-ucits-acc-eur",
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "Česká stránka XTB obsahuje „Investujte do ETF QDVE.DE“."
+          },
+          "ostatni_brokeri": {
+            "hodnota": null,
+            "zdroj": null,
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "Neověřováno. Dostupnost u Fio, Trading 212, Degiro, IBKR, Portu apod. je TODO."
+          }
+        },
+        "rozdil_oproti_originalu": "Jiný index: VGT sleduje MSCI US IMI Information Technology 25/50, UCITS fond technologický sektor S&P 500 (S&P 500 Capped 35/20 Information Technology). UCITS fond drží jen firmy z S&P 500, proto výrazně méně titulů."
+      }
+    },
+    {
+      "ticker": "AGG",
+      "typ": "americké dluhopisy",
+      "proc_vybrano": "Jediný dluhopisový fond ve výběru – ukazuje, jak vypadá protiváha k akciím.",
+      "nazev": {
+        "hodnota": "iShares Core U.S. Aggregate Bond ETF",
+        "zdroj": "https://www.ishares.com/us/products/239458/ishares-core-total-us-bond-market-etf",
+        "k_datu": null,
+        "overeno": "2026-10-10"
+      },
+      "emitent": {
+        "hodnota": "iShares (BlackRock)",
+        "zdroj": "https://www.ishares.com/us/products/239458/ishares-core-total-us-bond-market-etf",
+        "k_datu": null,
+        "overeno": "2026-10-10"
+      },
+      "burza": {
+        "hodnota": "NYSE Arca",
+        "zdroj": "https://www.ishares.com/us/products/239458/ishares-core-total-us-bond-market-etf",
+        "k_datu": null,
+        "overeno": "2026-10-10"
+      },
+      "index": {
+        "hodnota": "Bloomberg US Aggregate Bond Index",
+        "zdroj": "https://www.ishares.com/us/products/239458/ishares-core-total-us-bond-market-etf",
+        "k_datu": null,
+        "overeno": "2026-10-10"
+      },
+      "ter": {
+        "hodnota": 0.03,
+        "zdroj": "https://www.ishares.com/us/products/239458/ishares-core-total-us-bond-market-etf",
+        "k_datu": null,
+        "overeno": "2026-10-10",
+        "poznamka": "Podle prospektu; stránka u TER datum neuvádí.",
+        "jednotka": "% ročně"
+      },
+      "velikost_fondu": {
+        "hodnota": 137068609994,
+        "zdroj": "https://www.ishares.com/us/products/239458/ishares-core-total-us-bond-market-etf",
+        "k_datu": "2026-10-08",
+        "overeno": "2026-10-10",
+        "jednotka": "USD",
+        "hodnota_ve_zdroji": "$137,068,609,994"
+      },
+      "pocet_titulu": {
+        "hodnota": 13400,
+        "zdroj": "https://www.ishares.com/us/products/239458/ishares-core-total-us-bond-market-etf",
+        "k_datu": "2026-10-08",
+        "overeno": "2026-10-10",
+        "poznamka": "Počet dluhopisů a dalších pozic ve fondu."
+      },
+      "dividendova_politika": {
+        "hodnota": "vyplácí měsíčně",
+        "zdroj": "https://www.ishares.com/us/products/239458/ishares-core-total-us-bond-market-etf",
+        "k_datu": null,
+        "overeno": "2026-10-10",
+        "hodnota_ve_zdroji": "Monthly"
+      },
+      "original_u_xtb_cz": {
+        "hodnota": "jen jako CFD",
+        "zdroj": "https://www.xtb.com/cz/etf-cfd/ishares-core-us-aggreagte",
+        "k_datu": null,
+        "overeno": "2026-10-10",
+        "poznamka": "Česká stránka XTB: „Investujte do CFD na AGG.US“ – derivát, ne vlastnictví fondu."
+      },
+      "ucits_obdoba": {
+        "nazev": {
+          "hodnota": "iShares US Aggregate Bond UCITS ETF (Acc)",
+          "zdroj": "https://www.ishares.com/uk/individual/en/products/287339/ishares-us-aggregate-bond-ucits-etf",
+          "k_datu": null,
+          "overeno": "2026-10-10"
+        },
+        "emitent": {
+          "hodnota": "iShares (BlackRock)",
+          "zdroj": "https://www.ishares.com/uk/individual/en/products/287339/ishares-us-aggregate-bond-ucits-etf",
+          "k_datu": null,
+          "overeno": "2026-10-10"
+        },
+        "isin": {
+          "hodnota": "IE00BYXYYM63",
+          "zdroj": "https://www.ishares.com/uk/individual/en/products/287339/ishares-us-aggregate-bond-ucits-etf",
+          "k_datu": null,
+          "overeno": "2026-10-10"
+        },
+        "index": {
+          "hodnota": "Bloomberg U.S. Aggregate Bond Index",
+          "zdroj": "https://www.ishares.com/uk/individual/en/products/287339/ishares-us-aggregate-bond-ucits-etf",
+          "k_datu": null,
+          "overeno": "2026-10-10"
+        },
+        "ter": {
+          "hodnota": 0.25,
+          "zdroj": "https://www.ishares.com/uk/individual/en/products/287339/ishares-us-aggregate-bond-ucits-etf",
+          "k_datu": null,
+          "overeno": "2026-10-10",
+          "poznamka": "Datum u TER stránka neuvádí.",
+          "jednotka": "% ročně"
+        },
+        "velikost_fondu": {
+          "hodnota": 6011974361,
+          "zdroj": "https://www.ishares.com/uk/individual/en/products/287339/ishares-us-aggregate-bond-ucits-etf",
+          "k_datu": "2026-10-08",
+          "overeno": "2026-10-10",
+          "poznamka": "Celý fond (všechny třídy).",
+          "jednotka": "USD",
+          "hodnota_ve_zdroji": "USD 6,011,974,361"
+        },
+        "pocet_titulu": {
+          "hodnota": 10204,
+          "zdroj": "https://www.ishares.com/uk/individual/en/products/287339/ishares-us-aggregate-bond-ucits-etf",
+          "k_datu": "2026-10-08",
+          "overeno": "2026-10-10"
+        },
+        "dividendova_politika": {
+          "hodnota": "akumulační (dividendy reinvestuje)",
+          "zdroj": "https://www.ishares.com/uk/individual/en/products/287339/ishares-us-aggregate-bond-ucits-etf",
+          "k_datu": null,
+          "overeno": "2026-10-10",
+          "hodnota_ve_zdroji": "Use of Income: Accumulating"
+        },
+        "burza": {
+          "hodnota": {
+            "burza": "London Stock Exchange",
+            "ticker": "IUAA",
+            "mena": "USD"
+          },
+          "zdroj": "https://www.ishares.com/uk/individual/en/products/287339/ishares-us-aggregate-bond-ucits-etf",
+          "k_datu": null,
+          "overeno": "2026-10-10",
+          "poznamka": "Kotace vhodná pro českého investora: Xetra v EUR, pokud existuje; jinak London Stock Exchange v USD."
+        },
+        "kotace": {
+          "hodnota": [
+            {
+              "burza": "Bolsa Mexicana De Valores",
+              "ticker": "IUAA",
+              "mena": "MXN"
+            },
+            {
+              "burza": "London Stock Exchange",
+              "ticker": "IUAA",
+              "mena": "USD"
+            },
+            {
+              "burza": "Santiago Stock Exchange",
+              "ticker": "IUAACL",
+              "mena": "CLP"
+            },
+            {
+              "burza": "Santiago Stock Exchange",
+              "ticker": "IUAA",
+              "mena": "USD"
+            },
+            {
+              "burza": "SIX Swiss Exchange",
+              "ticker": "IUAA",
+              "mena": "CHF"
+            }
+          ],
+          "zdroj": "https://www.ishares.com/uk/individual/en/products/287339/ishares-us-aggregate-bond-ucits-etf",
+          "k_datu": null,
+          "overeno": "2026-10-10"
+        },
+        "kde_koupit": {
+          "burzy": {
+            "hodnota": [
+              "Bolsa Mexicana De Valores",
+              "London Stock Exchange",
+              "SIX Swiss Exchange",
+              "Santiago Stock Exchange"
+            ],
+            "zdroj": "https://www.ishares.com/uk/individual/en/products/287339/ishares-us-aggregate-bond-ucits-etf",
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "Burzy, kde emitent fond kotuje. Koupit ho jde u brokera s přístupem na některou z nich."
+          },
+          "xtb_cz": {
+            "hodnota": "ano – IUAA.UK jako skutečné ETF (ne CFD)",
+            "zdroj": "https://www.xtb.com/cz/etf/ishares-us-aggregate-bond-ucits-acc-usd",
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "Česká stránka XTB obsahuje „Investujte do ETF IUAA.UK“."
+          },
+          "ostatni_brokeri": {
+            "hodnota": null,
+            "zdroj": null,
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "Neověřováno. Dostupnost u Fio, Trading 212, Degiro, IBKR, Portu apod. je TODO."
+          }
+        },
+        "rozdil_oproti_originalu": "Stejný index (Bloomberg US Aggregate Bond). UCITS fond drží výběr dluhopisů z indexu (metoda Sampled), proto méně pozic; TER je vyšší. Na Xetře kotovaný není."
+      }
+    }
+  ]
+}
