@@ -4,9 +4,9 @@ Pravidla pro práci na tomto projektu. Platí pro každou session i pro subagent
 
 ## Projekt
 
-Landing page do výběrového řízení. Celé zadání je v `ZADANI.md` (zadání B), odevzdání 16. 10. 2026.
+Landing page do výběrového řízení. Celé zadání je v `ZADANI.md` (zadání B; jen lokálně, je v `.gitignore`), odevzdání 16. 10. 2026.
 
-- **Co:** srovnání ETF obchodovaných na NYSE pro českého drobného investora. Přichází z placené reklamy na mobilu a stránce dá pár sekund.
+- **Co:** srovnání ETF obchodovaných na NYSE pro českého drobného investora. Spíš mladší lidé, přicházejí z placené reklamy na Instagramu nebo Facebooku na mobilu a stránce dají pár sekund.
 - **Účel:** lead magnet. Návštěvník dostane hodnotu a výměnou nechá kontakt. Měřítko: dala by se na stránku zítra pustit reklama?
 - **Stack:** čisté HTML + CSS + vanilla JS, bez frameworků a bez build kroku · Vercel (statika + serverless funkce v `api/`) · Supabase (PostgreSQL) pro kontakty, zápis jen ze serverless funkce.
 - **Jazyk stránky:** čeština.
@@ -30,6 +30,21 @@ README.md      dokumentace pro hodnotitele
 
 `public/` nastav ve `vercel.json` explicitně jako výstupní složku, aby se omylem neservíroval celý kořen repa (`ai-log/`, `supabase/`, `CLAUDE.md`). Novou složku v kořeni nezakládej bez domluvy. Když se struktura změní, uprav tuhle sekci.
 
+## Rozhodnutí
+
+Už rozhodnuté, neotevírej znovu. Když narazíš na důvod rozhodnutí změnit, napiš mi ho.
+
+- **NYSE = NYSE i NYSE Arca.** Fondy obchodované hlavně na Nasdaqu (např. QQQ) vynecháváme. Proč: většina amerických ETF je na NYSE Arca, která patří pod NYSE Group.
+- **Ke každému ETF z NYSE i evropská UCITS obdoba,** kterou si Čech opravdu koupí. Proč: drobný investor v EU americké ETF kvůli PRIIPs u evropského brokera nejspíš nekoupí (ověřuje se, výsledek bude v `data/README.md`) a stránka nesmí slibovat něco, co návštěvník nemůže udělat.
+- **Tykáme.** Proč: cílovka jsou spíš mladší lidé z Instagramu a Facebooku, vykání by tam působilo strojeně.
+- **Kontakt = jen e-mail,** žádný telefon. Proč: zadání chce co nejméně polí a e-mail stačí k doručení toho, co slibujeme.
+- **Konverze = návštěva → odeslaný formulář.** Proč: oba konce trychtýře změříme vlastním měřením, bez dat z reklamního systému.
+- **Měření: vlastní anonymní eventy do Supabase, žádné GA4, pixel ani cookie lišta.** Stránka posílá eventy (příchod, hloubka scrollu, interakce s prvky, otevření formuláře, odeslání) přes `/api/…`. ID návštěvy žije jen v paměti po dobu jednoho načtení stránky; nic se neukládá do prohlížeče (žádné cookies, `localStorage` ani `sessionStorage`). Trychtýř se počítá SQL dotazem. Proč: GA4 by potřebovalo souhlas a cookie lišta na mobilu zdržuje a ubírá konverze.
+- **Správce osobních údajů: zatím počítáme s Clientelem.** V textech je jako placeholder `[TODO správce: Clientelo]`. Proč: správce zatím nevíme a placeholder jde před spuštěním dohledat a nahradit.
+- **Supabase projekt v EU regionu.** Proč: ukládáme e-maily českých návštěvníků a databáze má být blízko funkcím ve Frankfurtu.
+- **Denní keep-alive přes Vercel cron.** Proč: bezplatný Supabase projekt se po čase bez aktivity pozastaví a hodnotitel může stránku otevřít až za dva týdny.
+- **Vercel funkce v regionu `fra1` (Frankfurt).** Proč: kratší odezva pro české návštěvníky i k databázi v EU.
+
 ## Pravidla
 
 ### 1. Mobile-first a rychlost
@@ -39,7 +54,7 @@ Návštěvník přichází z reklamy na mobilu, často na mobilních datech. Ka�
 - CSS piš od nejužšího displeje (360 px), širší layouty přidávej přes `min-width` media queries. Kontroluj na 360 px, ne na desktopu.
 - Žádné frameworky, UI knihovny, knihovny na grafy ani animace. Každá nová závislost, i jediný skript z CDN, jen po mém souhlasu a se zdůvodněním, proč to bez ní nejde.
 - JavaScriptu minimum: jen interaktivní prvky a odeslání formuláře. Obsah první obrazovky musí být vidět i bez JS.
-- Žádné skripty třetích stran kromě měření, na kterém se domluvíme.
+- Žádné skripty třetích stran, ani měřicí (měříme vlastním řešením, viz Rozhodnutí).
 - Obrázky: WebP nebo AVIF, v rozměru, v jakém se zobrazují, s `width` a `height` v HTML (žádné poskakování layoutu). Pod první obrazovkou `loading="lazy"`. Ikony jako inline SVG.
 - Fonty: přednostně systémové. Webový font jen self-hostovaný WOFF2 se subsetem latin-ext (kvůli češtině), nejvýš 2 řezy, `font-display: swap`, hlavní řez přes `preload`.
 - Cílové hodnoty (Lighthouse, mobilní režim): Performance ≥ 95, LCP < 2,5 s, CLS < 0,1. První načtení do 200 kB přenesených dat, z toho JS do 20 kB. Když je něco nad limitem, řekni to a navrhni, co ubrat.
@@ -70,7 +85,7 @@ Stránka mluví o penězích. Jedno vymyšlené číslo zničí důvěryhodnost 
 - Žádné generické fráze typu „objevte svět investic“, „investujte chytře“, „vaše finanční budoucnost“, „odemkněte potenciál“, „v dnešní době“, „jednoduše a rychle“. Každá věta musí říct něco konkrétního: číslo, srovnání, co návštěvník získá.
 - Odborné pojmy (ETF, TER) vysvětli při prvním výskytu jednou větou, nebo je nepoužívej.
 - Neslibuj výnosy a nedávej investiční doporučení typu „kupte X“. Stránka srovnává a vysvětluje.
-- Tykání, nebo vykání: `TODO`, zatím nerozhodnuto. Než napíšeš první texty stránky, zeptej se.
+- Tykáme, přirozeně a bez podbízení.
 - Česká typografie: desetinná čárka (0,03 %), mezera mezi tisíci (10 000 Kč), nezlomitelná mezera mezi číslem a jednotkou a za jednopísmennými předložkami a spojkami (v, k, s, z, o, u, a, i), uvozovky „…“, pomlčka – s mezerami místo spojovníku.
 
 ### 5. Commity
