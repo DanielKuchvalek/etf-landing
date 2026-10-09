@@ -1,0 +1,25 @@
+# Tajné klíče – nikdy do repa. Šablona s názvy proměnných je v .env.example.
+.env
+.env.*
+!.env.example
+
+# Vercel CLI (propojení s projektem, stažené proměnné prostředí)
+.vercel/
+
+# Supabase CLI (lokální dočasné soubory)
+supabase/.temp/
+supabase/.branches/
+
+# Node – pro případ, že api/ bude potřebovat závislosti
+node_modules/
+npm-debug.log*
+
+# Lokální nastavení Claude Code
+.claude/settings.local.json
+
+# Systém a editory
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
