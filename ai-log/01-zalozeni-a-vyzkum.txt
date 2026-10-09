@@ -1,0 +1,1199 @@
+
+❯ <ide_opened_file>The user opened the file /Users/daniel/etfLanding/ZADANI.md
+  in the IDE. This may or may not be related to the current
+  task.</ide_opened_file>
+
+❯ Zakládáme projekt do výběrového řízení. Zadání je v ZADANI.md, přečti si ho
+  celé.
+
+  Rozhodnutí, která už jsem udělal:
+  - Frontend: čisté HTML + CSS + vanilla JS, bez frameworků a bez build kroku.
+  Důvod: jedna landing page pro placený mobilní traffic, priorita je rychlost
+  načtení.
+  - Hosting: Vercel (statická stránka + serverless funkce ve složce api/ pro
+  zpracování formuláře).
+  - Ukládání kontaktů: Supabase (PostgreSQL), zápis pouze ze serverless funkce.
+  - Jazyk stránky: čeština.
+
+  Úkol (zatím NEPIŠ žádný kód stránky ani funkce):
+  1. Vytvoř CLAUDE.md s pravidly pro práci na projektu:
+     - mobile-first, cíl je rychlost (žádné těžké knihovny, minimum JS,
+  optimalizované obrázky a fonty)
+     - žádná vymyšlená data: každý údaj o ETF musí mít zdroj a datum; když údaj
+  nemáš ověřený, označ ho TODO a neodhaduj
+     - klíče k Supabase pouze v proměnných prostředí (Vercel env, lokálně
+  .env.local v .gitignore); do repa jen .env.example; service role klíč nikdy
+  nesmí být ve frontendu
+     - texty v přirozené češtině, bez generických frází typu "objevte svět
+  investic"
+     - po každém dokončeném kroku malý commit s popisnou zprávou v češtině
+     - než řekneš, že je něco hotové, ověř to (spusť, otestuj) a napiš mi, jak
+  jsi to ověřil
+  2. Vytvoř kostru README.md se sekcemi, které zadání vyžaduje: cílová skupina,
+  lead magnet a moment žádosti o kontakt, pořadí sekcí a zdůvodnění, dvě verze
+  reklam, zdroje dat, měření cesty návštěvníka, očekávaná konverze, 3 hypotézy
+  na A/B test seřazené podle dopadu, technická rozhodnutí, jak jsem pracoval s
+  AI, co v řešení chybí. Sekce zatím nech prázdné s poznámkou TODO.
+  3. Navrhni strukturu složek (včetně ai-log/ a api/) a .gitignore.
+  4. Udělej commit.
+     Na konci napiš:
+  1. Krátké shrnutí, co jsi vytvořil (max 10 řádků).
+  2. Číslovaný seznam věcí, které ti v zadání přijdou nejasné nebo rozporuplné,
+  u každé jednou větou proč.
+  3. Pokud některé z mých rozhodnutí považuješ za chybné nebo riskantní, řekni
+  to otevřeně.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Write(CLAUDE.md)
+  ⎿  Wrote 103 lines to CLAUDE.md
+       1 # CLAUDE.md
+       3 Pravidla pro práci na tomto projektu. Platí pro každou session i
+         la, která se ho týkají.
+       4
+       6
+         (zadání B), odevzdání 16. 10. 2026.
+       9 - **Co:** srovnání ETF obchodovaných na NYSE pro českého drobnéh
+         o investora. Přichází z placené reklamy na mobilu a stránce dá p
+      10 - **Účel:** lead magnet. Návštěvník dostane hodnotu a výměnou ne
+         ?
+     … +163 lines (ctrl+o to expand)
+
+⏺ Write(README.md)
+  ⎿  Wrote 59 lines to README.md
+      1 # Srovnání ETF z NYSE – konverzní landing page
+      2
+      3 Řešení zadání B (konverzní landing page) do výběrového řízení na
+        pozici Junior AI Developer.
+      4
+      5 - **Stránka:** TODO (URL na Vercelu)
+      6 - **Obě verze reklamy:** [reklamy/](reklamy/)
+      7 - **Exporty konverzací s AI:** [ai-log/](ai-log/)
+      8
+      9 ## Cílová skupina
+     … +67 lines (ctrl+o to expand)
+
+⏺ Write(.gitignore)
+  ⎿  Wrote 25 lines to .gitignore
+       1 # Tajné klíče – nikdy do repa. Šablona s názvy proměnných je v .
+         env.example.
+       2 .env
+       3 .env.*
+       4 !.env.example
+       6 # Vercel CLI (propojení s projektem, stažené proměnné prostředí)
+       7 .vercel/
+       8
+       9 # Supabase CLI (lokální dočasné soubory)
+      10 supabase/.temp/
+     … +16 lines (ctrl+o to expand)
+
+⏺ Write(.env.example)
+  ⎿  Wrote 9 lines to .env.example
+      1 # Šablona proměnných prostředí – jen názvy, žádné hodnoty.
+      2 # Skutečné hodnoty patří lokálně do .env.local, na Vercelu do Env
+        ironment Variables.
+      3
+      4 # URL projektu v Supabase
+      6
+      7 # Service role (secret) klíč – obchází RLS. Používá ho JEN server
+        less funkce v api/,
+      8 # nikdy public/ ani žádný kód, který běží v prohlížeči.
+      9 SUPABASE_SERVICE_ROLE_KEY=
+     … +1 line (ctrl+o to expand)
+
+⏺ Write(ai-log/denik.md)
+  ⎿  Wrote 11 lines to ai-log/denik.md
+       1 # Deník práce s AI
+       2
+       3 Doplňuje exporty konverzací (`/export`), které nezachytí celý pr
+          v README.
+       4
+       5 ## Formát záznamu
+       6
+       8
+       9 - **Zadání pro AI / agenta:** …
+      10 - **Kontrola výstupu:** …
+     … +3 lines (ctrl+o to expand)
+
+⏺ Soubory jsou napsané. Teď ověřím, že .gitignore opravdu chytá tajné soubory a
+  nechá projít .env.example, a zkontroluju sekce README.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Ignorování funguje, README má všech 11 požadovaných sekcí plus jednu navíc
+  (vysvětlím níž). Commituju jen vytvořené soubory a ZADANI.md záměrně
+  vynechávám.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Hotovo a zacommitováno (9300775). ZADANI.md jsem do commitu záměrně nedal,
+  důvod je na konci.
+
+  1. Co jsem vytvořil
+
+  - CLAUDE.md obsahuje tvých 6 pravidel a dvě, která jsem přidal: „nejasnost →
+    zeptat se a rozhodnutí zapsat do README“ a „vést deník práce s AI“. Přidal
+    jsem i konkrétní cíle rychlosti (Lighthouse ≥ 95, LCP < 2,5 s, ≤ 200 kB, JS
+    ≤ 20 kB). Ty jsem nastavil sám, klidně je uprav. Tykání, nebo vykání na
+    stránce je zatím TODO.
+  - README.md má tvých 11 sekcí s TODO. Přidal jsem dvanáctou, „Nejasnosti v
+    zadání a moje rozhodnutí“, protože ji zadání výslovně chce („rozhodněte
+    podle sebe a v README zdůvodněte“) a v tvém seznamu chyběla.
+  - Struktura je popsaná v CLAUDE.md: public/, api/, data/, supabase/, reklamy/,
+    ai-log/. Jako jediná se na webu bude zobrazovat public/, aby ai-log/ a
+    supabase/ nebyly veřejně dostupné. Ostatní složky vzniknou, až budou
+    potřeba.
+  - .gitignore, .env.example a ai-log/denik.md. Deník je tam proto, že /export
+    nezachytí celou práci subagentů.
+  - Jak jsem to ověřil: přes git check-ignore jsem prošel 8 souborů, které mají
+    být ignorované (.env, .env.local, .vercel/… a další), a 8, které ignorované
+    být nesmí (.env.example, api/lead.js, public/index.html a další). Všech 16
+    vyšlo správně. Nadpisy v README jsem zkontroloval přes grep. Podle git log
+    --stat je v commitu přesně 5 souborů.
+
+  2. Nejasnosti v zadání
+
+  1. ETF z NYSE a český drobný investor. Pokud vím (stav k polovině 2026, musím
+     ověřit), evropští brokeři drobným investorům americké ETF jako VOO nebo SPY
+     kvůli nařízení PRIIPs (chybí dokument KID) nedovolí koupit, takže bychom
+     srovnávali fondy, které si návštěvník nekoupí. Navrhuju ke každému ukázat i
+     jeho evropskou obdobu UCITS.
+  2. Co znamená „na NYSE“. SPY, VOO a VTI jsou pokud vím na NYSE Arca a QQQ na
+     Nasdaqu, takže není jasné, jestli se počítá jen NYSE v užším smyslu.
+  3. Komu kontakty patří. Bez toho, kdo kontakt zpracuje a co mu slíbíme, nejde
+     napsat souhlas se zpracováním osobních údajů ani to, co přijde po odeslání
+     formuláře.
+  4. Co je „kontakt“. Při co nejmenším počtu polí stačí e-mail, ale pokud
+     zadavatel chce telefon pro obchodníky, je to jiný formulář i jiná konverze.
+  5. Hodnota před formulářem vs. lead magnet. Když ukážeme všechno, nemá
+     návštěvník důvod nechat kontakt, a když schováme moc, hodnotu neuvidí,
+     takže je potřeba rozhodnout, co je zdarma a co až za kontakt.
+  6. Dvě verze reklamy. Chybí platforma a formát (Meta, nebo Google, obrázek,
+     nebo video) a není jasné, v jaké podobě mají být v repu.
+  7. Očekávaná konverze. Není řečeno, kterého kroku se týká (proklik → kontakt,
+     nebo návštěva → kontakt), a bez dat o návštěvnosti to bude odhad z
+     benchmarků, který podle našeho pravidla musí mít zdroj.
+  8. Měření celé cesty vs. cookies. GA4 i Meta Pixel potřebují v ČR předchozí
+     souhlas, takže cookie lišta zpomalí stránku, sníží konverzi a část cesty
+     neuvidíme.
+  9. „Skutečná data“. Není jasné, jestli stačí stav k určitému datu, nebo jsou
+     potřeba živá data, a u agregátorů (Morningstar, justETF) je navíc potřeba
+     ověřit, jestli podmínky dovolují data přebírat. Proto bych bral data z webů
+     emitentů s datem.
+  10. „Zítra spustit reklamu“. Ostrá finanční kampaň potřebuje zásady ochrany
+      osobních údajů, upozornění na rizika a splnění pravidel reklamních
+      platforem pro finanční služby, což kandidát dodá jen zčásti.
+  11. /export a subagenti. README má popsat, jaké pokyny agenti dostali a kde se
+      spletli, ale export zachytí hlavně hlavní konverzaci.
+
+  3. Riziková rozhodnutí
+
+  - Čisté HTML bez buildu: souhlasím. Jediná cena je ruční minifikace a
+    optimalizace obrázků.
+  - Vercel Hobby: podle podmínek je jen pro nekomerční osobní použití. Pro
+    ukázku do výběrka je to v pořádku, pro ostrou placenou kampaň by byl potřeba
+    Pro (ověřit). Výchozí region funkcí je pokud vím v USA, takže bych ho
+    přepnul na Frankfurt kvůli rychlosti a GDPR.
+  - Supabase free: tohle je reálné riziko. Neaktivní projekty se po zhruba týdnu
+    pozastaví. Když hodnotitel otevře stránku za dva týdny po odevzdání,
+    formulář nebude fungovat. Řešení je denní dotaz do databáze, aby projekt
+    zůstal aktivní (Vercel cron), srozumitelná chybová hláška ve formuláři a
+    projekt v EU regionu.
+  - Co v rozhodnutích chybí:
+    - nástroj na měření a řešení souhlasu s cookies (bod 8),
+    - jak se lead magnet doručí: Supabase neposílá e-maily na libovolné adresy,
+      takže je potřeba služba typu Resend nebo Brevo, případně výsledek rovnou
+      na děkovací obrazovce,
+    - ochrana formuláře proti botům. Do CLAUDE.md jsem zatím dal aspoň skryté
+      pole proti botům (honeypot).
+  - Největší riziko ale není technické, je to bod 2.1. Pokud se potvrdí, mění
+    to, co vlastně návštěvníkovi nabízíme.
+
+  K ZADANI.md: repo bude veřejné a zadavatel nemusí chtít, aby jeho zadání
+  leželo na GitHubu. Proto jsem ho necommitnul. Mám ho přidat, nebo dát do
+  .gitignore? Mimochodem, text je v souboru dvakrát za sebou, nejspíš chyba při
+  vkládání.
+
+❯ Prošel jsem si, co jsi udělal, a vypadá to dobře. Pár věcí k tomu:
+
+  Pravidla a cíle, které jsi do CLAUDE.md přidal sám (cíle rychlosti Lighthouse
+  ≥ 95, LCP < 2,5 s, max 200 kB, JS do 20 kB, deník práce s AI a "při
+  nejasnosti se zeptat a zapsat do README"), jsem zkontroloval a schvaluju,
+  nech je tam. Dvanáctá sekce v README o nejasnostech je taky dobrý nápad, ta
+  mi v seznamu opravdu chyběla.
+
+  Teď k tvým otázkám a nejasnostem:
+
+  ZADANI.md dej do .gitignore, máš pravdu, že by zadání nemělo být veřejně. A
+  díky za upozornění na tu duplicitu, to byla moje chyba při vkládání, smaž
+  prosím ten druhý opakovaný text.
+
+  Stránka bude tykat. Cílovka jsou spíš mladší lidi, kteří přijdou z reklamy na
+  Instagramu nebo Facebooku, a vykání by tam působilo strojeně.
+
+  NYSE beru i s NYSE Arca, protože tam je většina ETF a patří to pod NYSE
+  Group. Fondy, které se obchodují hlavně na Nasdaqu (třeba QQQ), vynecháme.
+
+  S tím PRIIPs je to podle mě zásadní věc. Pokud se to potvrdí, chci stránku
+  postavit tak, že srovná ETF z NYSE, ale ke každému ukáže i evropskou UCITS
+  obdobu, kterou si Čech opravdu koupí. Nechci návštěvníkovi slibovat něco, co
+  nemůže udělat.
+
+  Kontakt bude jen e-mail, žádný telefon. Konverzi počítáme jako návštěva →
+  odeslaný formulář.
+
+  K měření: GA4 ani cookie lištu nechci. Udělám vlastní anonymní měření,
+  stránka bude posílat eventy do tabulky v Supabase (příchod, jak daleko člověk
+  doscrolloval, interakce s prvky, otevření formuláře, odeslání). ID návštěvy
+  bude jen v paměti pro jedno načtení stránky, do prohlížeče se nic neukládá,
+  takže nepotřebujeme souhlas. Trychtýř si pak spočítám SQL dotazem.
+
+  Správce osobních údajů zatím nevíme, takže počítejme s Clientelem a v textech
+  to nech jako placeholder.
+
+  Tvůj návrh s Supabase beru: EU region a denní keep-alive přes Vercel cron, ať
+  formulář funguje, i když se na to hodnotitel podívá až za dva týdny. Vercel
+  funkce dej do regionu fra1.
+
+  Co bych teď potřeboval (pořád bez kódu stránky):
+
+  1. Zapiš tahle rozhodnutí do CLAUDE.md a do sekce s nejasnostmi v README, u
+  každého stačí jedna věta proč.
+  2. Udělej výzkum, ale z primárních zdrojů, ne z blogů:
+     - Ověř, jestli a proč čeští drobní investoři nemůžou u evropských brokerů
+  koupit americké ETF (PRIIPs/KID). Ideálně ČNB, ESMA, EUR-Lex nebo stránky
+  brokerů.
+     - Navrhni 6–8 ETF z NYSE / NYSE Arca, které dávají smysl pro začínajícího
+  českého investora. Chci tam různé typy, třeba S&P 500, celý americký trh,
+  celý svět, dividendové. U každého ověř burzu přímo na webu emitenta.
+     - Ke každému najdi UCITS obdobu (ISIN, burza, kde se dá koupit).
+  3. Data ulož do data/etf.json: ticker, název, emitent, burza, index, TER,
+  velikost fondu, počet titulů, dividendová politika a UCITS obdoba (název,
+  ISIN, TER, burza). U každého údaje chci zdroj a datum, kdy jsi ho ověřil. Co
+  neověříš, dej null s poznámkou, nic neodhaduj.
+  4. Krátce shrň výsledek výzkumu do data/README.md: co platí, odkud to máš a
+  co se ověřit nepodařilo.
+  5. Commitni to.
+
+  Pak mi napiš, jaké ETF jsi vybral a u každého jednou větou proč, co se
+  nepodařilo ověřit a jestli se ten PRIIPs potvrdil.
+
+⏺ Beru to jako tvoji odpověď a jdu na to. Začnu zapsáním rozhodnutí, úpravou
+  .gitignore a odstraněním duplicity v ZADANI.md, pak udělám výzkum.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Bash(S=/private/tmp/claude-501/-Users-daniel-etfLanding/65a1b1d0-4c48-4b63-b5f
+      e-0203afe326c3/scratchpad && mkdir -p $S && python3 - "$S" <<'EOF'
+      import sys…)
+  ⎿  Updated ZADANI.md (+1 -22)
+      19  Termín: 16. 10. 2026. Odkaz na veřejný repozitář na GitHubu a U
+          RL stránky. V repozitáři musí být:
+      20  - obě verze reklamy
+      21  - kód s průběžnou historií commitů
+      22 -- ve složce ai-log export konverzací s Claude Code (příkaz /exp
+         -ort)# Zadání – Junior AI Developer (Clientelo)                 
+      23 -                                                               
+      24 -## Obecné pokyny (z úvodu e-mailu)                             
+      25 -                                                               
+      26 -Pracovat můžete v Claude Code nebo v podobném nástroji. Pokud n
+         -estihnete všechno, upřednostněte podstatné části a uveďte, co v
+         - řešení chybí. V README prosím popište, jak jste s AI pracovali
+         - (jaké pokyny dostali agenti, jak jste kontrolovali jejich výst
+         -up a kde se spletli). Pokud vám v zadání něco nebude jasné, roz
+         -hodněte podle sebe a v README zdůvodněte, proč jste se tak rozh
+         -odli.                                                          
+      27 -                                                               
+      28 -## ZADÁNÍ B: Konverzní landing page                            
+      29 -                                                               
+      30 -Cílem je landing page se srovnáním ETF obchodovaných na NYSE pr
+         -o českého drobného investora, který přichází z reklamy na mobil
+         -u a stránce věnuje jen několik sekund. Stránka má fungovat jako
+         - lead magnet: nabídnout návštěvníkovi hodnotu a výměnou za ni z
+         -ískat jeho kontakt. Pěkný design nestačí, stránka musí být opti
+         -malizovaná na získávání kontaktů. Zároveň nesmí působit jako zá
+         -kladní výstup od Claude. Design i texty mají být promyšlené pro
+         - tuto cílovou skupinu. Při hodnocení se budu řídit hlavně otázk
+         -ou, zda bychom na ni mohli zítra spustit reklamu.              
+      31 -                                                               
+      32 -Určete cílovou skupinu, co návštěvník dostane výměnou za kontak
+         -t a v kterém okamžiku o něj požádáte. Hodnota by měla být zřejm
+         -á ještě před vyplněním formuláře. Navrhněte také dvě verze rekl
+         -amy. První obrazovka stránky by měla navazovat na příslib rekla
+         -my a okamžitě komunikovat, co návštěvník získá.                
+      33 -                                                               
+      34 -Výběr interaktivních prvků, například srovnání fondů, kalkulačk
+         -y poplatků nebo skládání portfolia, nechávám na vás. Každý z ni
+         -ch by měl vést ke kontaktu. Formulář by měl mít co nejméně polí
+         -. Promyslete také, co návštěvník dostane po jeho odeslání.     
+      35 -                                                               
+      36 -Použijte skutečná data s uvedením zdroje a měřte celou cestu od
+         - příchodu po odeslání formuláře. V README zdůvodněte pořadí sek
+         -cí, uveďte očekávanou konverzi a tři hypotézy na A/B test seřaz
+         -ené podle očekávaného dopadu. Stránku nasaďte na bezplatný host
+         -ing, například Vercel.                                         
+      37 -                                                               
+      38 -## Odevzdání                                                   
+      39 -                                                               
+      40 -Termín: 16. 10. 2026. Odkaz na veřejný repozitář na GitHubu a U
+         -RL stránky. V repozitáři musí být:                             
+      41 -- obě verze reklamy                                            
+      42 -- kód s průběžnou historií commitů                             
+      43 -- ve složce ai-log export konverzací s Claude Code (příkaz /exp
+         -ort)                                                           
+      22 +- ve složce ai-log export konverzací s Claude Code (příkaz /exp
+         +ort)                                                           
+  ⎿  (files that changed while this command ran, by the command or by
+     another process; a convenience view, not a review or audit of the
+     command)
+
+⏺ Obě kopie byly shodné, nechal jsem jen první (záloha originálu je ve
+  scratchpadu). Teď zapíšu rozhodnutí.
+
+⏺ Update(CLAUDE.md)
+  ⎿  Added 2 lines, removed 2 lines
+       4  
+       5  ## Projekt
+       6  
+       7 -Landing page do výběrového řízení. Celé zadání je v `ZADANI.md`
+         - (zadání B), odevzdání 16. 10. 2026.                           
+       7 +Landing page do výběrového řízení. Celé zadání je v `ZADANI.md`
+         + (zadání B; jen lokálně, je v `.gitignore`), odevzdání 16. 10. 
+         +2026.                                                          
+       8  
+       9 -- **Co:** srovnání ETF obchodovaných na NYSE pro českého drobné
+         -ho investora. Přichází z placené reklamy na mobilu a stránce dá
+         - pár sekund.                                                   
+       9 +- **Co:** srovnání ETF obchodovaných na NYSE pro českého drobné
+         +ho investora. Spíš mladší lidé, přicházejí z placené reklamy na
+         + Instagramu nebo Facebooku na mobilu a stránce dají pár sekund.
+      10  - **Účel:** lead magnet. Návštěvník dostane hodnotu a výměnou n
+          echá kontakt. Měřítko: dala by se na stránku zítra pustit rekla
+          ma?
+      11  - **Stack:** čisté HTML + CSS + vanilla JS, bez frameworků a be
+          z build kroku · Vercel (statika + serverless funkce v `api/`) ·
+           Supabase (PostgreSQL) pro kontakty, zápis jen ze serverless fu
+          nkce.
+      12  - **Jazyk stránky:** čeština.
+
+⏺ Update(CLAUDE.md)
+  ⎿  Added 15 lines
+      30  
+      31  `public/` nastav ve `vercel.json` explicitně jako výstupní slož
+          ku, aby se omylem neservíroval celý kořen repa (`ai-log/`, `sup
+          abase/`, `CLAUDE.md`). Novou složku v kořeni nezakládej bez dom
+          luvy. Když se struktura změní, uprav tuhle sekci.
+      32  
+      33 +## Rozhodnutí                                                  
+      34 +                                                               
+      35 +Už rozhodnuté, neotevírej znovu. Když narazíš na důvod rozhodnu
+         +tí změnit, napiš mi ho.                                        
+      36 +                                                               
+      37 +- **NYSE = NYSE i NYSE Arca.** Fondy obchodované hlavně na Nasd
+         +aqu (např. QQQ) vynecháváme. Proč: většina amerických ETF je na
+         + NYSE Arca, která patří pod NYSE Group.                        
+      38 +- **Ke každému ETF z NYSE i evropská UCITS obdoba,** kterou si 
+         +Čech opravdu koupí. Proč: drobný investor v EU americké ETF kvů
+         +li PRIIPs u evropského brokera nekoupí a stránka nesmí slibovat
+         + něco, co návštěvník nemůže udělat (podklady v `data/README.md`
+         +).                                                             
+      39 +- **Tykáme.** Proč: cílovka jsou spíš mladší lidé z Instagramu 
+         +a Facebooku, vykání by tam působilo strojeně.                  
+      40 +- **Kontakt = jen e-mail,** žádný telefon. Proč: zadání chce co
+         + nejméně polí a e-mail stačí k doručení toho, co slibujeme.    
+      41 +- **Konverze = návštěva → odeslaný formulář.** Proč: oba konce 
+         +trychtýře změříme vlastním měřením, bez dat z reklamního systém
+         +u.                                                             
+      42 +- **Měření: vlastní anonymní eventy do Supabase, žádné GA4, pix
+         +el ani cookie lišta.** Stránka posílá eventy (příchod, hloubka 
+         +scrollu, interakce s prvky, otevření formuláře, odeslání) přes 
+         +`/api/…`. ID návštěvy žije jen v paměti po dobu jednoho načtení
+         + stránky; nic se neukládá do prohlížeče (žádné cookies, `localS
+         +torage` ani `sessionStorage`). Trychtýř se počítá SQL dotazem. 
+         +Proč: GA4 by potřebovalo souhlas a cookie lišta na mobilu zdržu
+         +je a ubírá konverze.                                           
+      43 +- **Správce osobních údajů: zatím počítáme s Clientelem.** V te
+         +xtech je jako placeholder `[TODO správce: Clientelo]`. Proč: sp
+         +rávce zatím nevíme a placeholder jde před spuštěním dohledat a 
+         +nahradit.                                                      
+      44 +- **Supabase projekt v EU regionu.** Proč: ukládáme e-maily čes
+         +kých návštěvníků a databáze má být blízko funkcím ve Frankfurtu
+         +.                                                              
+      45 +- **Denní keep-alive přes Vercel cron.** Proč: bezplatný Supaba
+         +se projekt se po čase bez aktivity pozastaví a hodnotitel může 
+         +stránku otevřít až za dva týdny.                               
+      46 +- **Vercel funkce v regionu `fra1` (Frankfurt).** Proč: kratší 
+         +odezva pro české návštěvníky i k databázi v EU.                
+      47 +                                                               
+      48  ## Pravidla
+      49  
+      50  ### 1. Mobile-first a rychlost
+
+⏺ Update(CLAUDE.md)
+  ⎿  Added 1 line, removed 1 line
+      54  - CSS piš od nejužšího displeje (360 px), širší layouty přidáve
+          j přes `min-width` media queries. Kontroluj na 360 px, ne na de
+          sktopu.
+      55  - Žádné frameworky, UI knihovny, knihovny na grafy ani animace.
+           Každá nová závislost, i jediný skript z CDN, jen po mém souhla
+          su a se zdůvodněním, proč to bez ní nejde.
+      56  - JavaScriptu minimum: jen interaktivní prvky a odeslání formul
+          áře. Obsah první obrazovky musí být vidět i bez JS.
+      57 -- Žádné skripty třetích stran kromě měření, na kterém se domluv
+         -íme.                                                           
+      57 +- Žádné skripty třetích stran, ani měřicí (měříme vlastním řeše
+         +ním, viz Rozhodnutí).                                          
+      58  - Obrázky: WebP nebo AVIF, v rozměru, v jakém se zobrazují, s `
+          width` a `height` v HTML (žádné poskakování layoutu). Pod první
+           obrazovkou `loading="lazy"`. Ikony jako inline SVG.
+      59  - Fonty: přednostně systémové. Webový font jen self-hostovaný W
+          OFF2 se subsetem latin-ext (kvůli češtině), nejvýš 2 řezy, `fon
+          t-display: swap`, hlavní řez přes `preload`.
+      60  - Cílové hodnoty (Lighthouse, mobilní režim): Performance ≥ 95,
+           LCP < 2,5 s, CLS < 0,1. První načtení do 200 kB přenesených da
+          t, z toho JS do 20 kB. Když je něco nad limitem, řekni to a nav
+          rhni, co ubrat.
+
+⏺ Update(CLAUDE.md)
+  ⎿  Added 1 line, removed 1 line
+      85  - Žádné generické fráze typu „objevte svět investic“, „investuj
+          te chytře“, „vaše finanční budoucnost“, „odemkněte potenciál“, 
+          „v dnešní době“, „jednoduše a rychle“. Každá věta musí říct něc
+          o konkrétního: číslo, srovnání, co návštěvník získá.
+      86  - Odborné pojmy (ETF, TER) vysvětli při prvním výskytu jednou v
+          ětou, nebo je nepoužívej.
+      87  - Neslibuj výnosy a nedávej investiční doporučení typu „kupte X
+          “. Stránka srovnává a vysvětluje.
+      88 -- Tykání, nebo vykání: `TODO`, zatím nerozhodnuto. Než napíšeš 
+         -první texty stránky, zeptej se.                                
+      88 +- Tykáme, přirozeně a bez podbízení.                           
+      89  - Česká typografie: desetinná čárka (0,03 %), mezera mezi tisíc
+          i (10 000 Kč), nezlomitelná mezera mezi číslem a jednotkou a za
+           jednopísmennými předložkami a spojkami (v, k, s, z, o, u, a, i
+          ), uvozovky „…“, pomlčka – s mezerami místo spojovníku.
+      90  
+      91  ### 5. Commity
+
+⏺ Update(.gitignore)
+  ⎿  Added 3 lines
+      1 +# Zadání výběrového řízení – repo je veřejné, zadání v něm být n
+        +emá.                                                            
+      2 +ZADANI.md                                                       
+      3 +                                                                
+      4  # Tajné klíče – nikdy do repa. Šablona s názvy proměnných je v .
+         env.example.
+      5  .env
+      6  .env.*
+
+⏺ Update(CLAUDE.md)
+  ⎿  Added 1 line, removed 1 line
+      35  Už rozhodnuté, neotevírej znovu. Když narazíš na důvod rozhodnu
+          tí změnit, napiš mi ho.
+      36  
+      37  - **NYSE = NYSE i NYSE Arca.** Fondy obchodované hlavně na Nasd
+          aqu (např. QQQ) vynecháváme. Proč: většina amerických ETF je na
+           NYSE Arca, která patří pod NYSE Group.
+      38 -- **Ke každému ETF z NYSE i evropská UCITS obdoba,** kterou si 
+         -Čech opravdu koupí. Proč: drobný investor v EU americké ETF kvů
+         -li PRIIPs u evropského brokera nekoupí a stránka nesmí slibovat
+         - něco, co návštěvník nemůže udělat (podklady v `data/README.md`
+         -).                                                             
+      38 +- **Ke každému ETF z NYSE i evropská UCITS obdoba,** kterou si 
+         +Čech opravdu koupí. Proč: drobný investor v EU americké ETF kvů
+         +li PRIIPs u evropského brokera nejspíš nekoupí (ověřuje se, výs
+         +ledek bude v `data/README.md`) a stránka nesmí slibovat něco, c
+         +o návštěvník nemůže udělat.                                    
+      39  - **Tykáme.** Proč: cílovka jsou spíš mladší lidé z Instagramu 
+          a Facebooku, vykání by tam působilo strojeně.
+      40  - **Kontakt = jen e-mail,** žádný telefon. Proč: zadání chce co
+           nejméně polí a e-mail stačí k doručení toho, co slibujeme.
+      41  - **Konverze = návštěva → odeslaný formulář.** Proč: oba konce 
+          trychtýře změříme vlastním měřením, bez dat z reklamního systém
+          u.
+
+⏺ Update(README.md)  ⎿  Added 11 lines, removed 1 line
+      46  
+      47  _TODO: stack a proč (čisté HTML/CSS/JS bez build kroku, Vercel,
+           Supabase), zpracování formuláře, zabezpečení klíčů, rychlost n
+          ačtení._
+      48  
+      49 +- **Supabase projekt v EU regionu.** Ukládáme e-maily českých n
+         +ávštěvníků a databáze má být blízko serverless funkcím ve Frank
+         +furtu.                                                         
+      50 +- **Denní keep-alive přes Vercel cron.** Bezplatný Supabase pro
+         +jekt se po čase bez aktivity pozastaví a formulář musí fungovat
+         +, i když stránku někdo otevře až za dva týdny.                 
+      51 +- **Serverless funkce v regionu `fra1` (Frankfurt).** Kratší od
+         +ezva pro české návštěvníky i k databázi v EU.                  
+      52 +                                                               
+      53  ## Nejasnosti v zadání a moje rozhodnutí
+      54  
+      51 -_TODO: co v zadání nebylo jednoznačné, jaké rozhodnutí padlo a 
+         -proč._                                                         
+      55 +- **„ETF obchodované na NYSE“:** beru NYSE i NYSE Arca, fondy o
+         +bchodované hlavně na Nasdaqu (např. QQQ) vynechávám. Většina am
+         +erických ETF je kotovaná na NYSE Arca, která patří pod NYSE Gro
+         +up.                                                            
+      56 +- **Americké ETF a český drobný investor:** ke každému ETF z NY
+         +SE ukazuju i evropskou UCITS obdobu, kterou si Čech opravdu kou
+         +pí. Drobný investor v EU si americké ETF kvůli nařízení PRIIPs 
+         +u evropského brokera nejspíš nekoupí (ověřuje se, viz [data/REA
+         +DME.md](data/README.md)) a stránka mu nemá slibovat něco, co ne
+         +může udělat.                                                   
+      57 +- **Co je „kontakt“:** jen e-mail, žádný telefon. Zadání chce c
+         +o nejméně polí a e-mail stačí k doručení toho, co návštěvníkovi
+         + slibujeme.                                                    
+      58 +- **Co je konverze:** návštěva → odeslaný formulář. Oba konce t
+         +rychtýře změříme vlastním měřením, bez dat z reklamního systému
+         +.                                                              
+      59 +- **Měření celé cesty bez cookie lišty:** vlastní anonymní even
+         +ty (příchod, hloubka scrollu, interakce s prvky, otevření formu
+         +láře, odeslání) ukládané do Supabase, místo GA4. ID návštěvy ex
+         +istuje jen v paměti po dobu jednoho načtení stránky a do prohlí
+         +žeče se nic neukládá. GA4 by potřebovalo souhlas a cookie lišta
+         + na mobilu zdržuje a ubírá konverze. Trychtýř se počítá SQL dot
+         +azem.                                                          
+      60 +- **Správce osobních údajů:** zadání ho neuvádí, počítám s Clie
+         +ntelem a v textech je zřetelný placeholder. Bez správce nejde n
+         +apsat informaci o zpracování údajů a placeholder jde před spušt
+         +ěním snadno nahradit.                                          
+      61 +- **Tón textů:** stránka tyká. Cílovka jsou spíš mladší lidé z 
+         +reklamy na Instagramu a Facebooku, vykání by tam působilo stroj
+         +eně.                                                           
+      62  
+      63  ## Jak jsem pracoval s AI
+      64  
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Rozhodnutí jsou v commitu. Teď výzkum, nejdřív PRIIPs z primárních zdrojů.
+
+  Called plugin:context-mode:context-mode 2 times (ctrl+o to expand)
+
+⏺ Fetch(https://eur-lex.europa.eu/legal-content/CS/TXT/HTML/?uri=CELEX:32014R128
+       6)
+  ⎿  Error: PreToolUse:WebFetch hook error: context-mode: WebFetch redirected.
+     Call mcp__plugin_context-mode_context-mode__ctx_fetch_and_index(url: "https
+     ://eur-lex.europa.eu/legal-content/CS/TXT/HTML/?uri=CELEX:32014R1286",
+     source: "...") to fetch + index the page, then
+     mcp__plugin_context-mode_context-mode__ctx_search(queries: [...]) to query
+     the indexed content — the raw page bytes stay in storage instead of
+     entering your conversation. Or call
+     mcp__plugin_context-mode_context-mode__ctx_execute(language, code) when you
+     want to derive your answer in one round trip (parse, extract, count)
+     without persisting the response. Both have full network access. Retry the
+     same call on a transient DNS error (EAI_AGAIN, ETIMEDOUT, ENETUNREACH).
+
+  Called plugin:context-mode:context-mode 2 times (ctrl+o to expand)
+
+⏺ Mám z EUR-Lexu (přes API Úřadu pro publikace) české znění čl. 5 odst. 1 a čl.
+  13 odst. 1 nařízení PRIIPs. Dál dohledám informace od ESMA, ČNB a brokerů,
+  poté se zaměřím na data k ETF.
+
+  Called plugin:context-mode:context-mode (ctrl+o to expand)
+
+⏺ Web Search("Joint Committee Q&A PRIIPs KID execution-only non-EU funds
+            esma.europa.eu")
+  ⎿  Did 1 search in 7s
+
+⏺ Web Search("PRIIPs KID US ETF retail clients EU why can't I buy help center
+            broker")
+  ⎿  Did 1 search in 8s
+
+  Called plugin:context-mode:context-mode 2 times (ctrl+o to expand)
+
+⏺ Narazil jsem na zjištění, že ČNB v Q&A k PRIIPs uvádí, že broker pouze
+  vykonávající pokyny na zahraniční burze bez nabídky nebo rady nemá povinnost z
+  čl. 13 odst. 1 – což odporuje běžnému výkladu. Teď si přečtu celou odpověď a
+  ověřím datum.
+
+  Called plugin:context-mode:context-mode (ctrl+o to expand)
+
+⏺ Mám kompletní ČNB Q&A z 22. 10. 2018, takže výsledek k PRIIPs uzavírám jako
+  „potvrzeno s výhradou“. Teď ověřím praxi přímo na stránkách brokerů
+  používaných Čechy (IBKR, XTB, Trading 212, Degiro, Fio).
+
+⏺ Web Search("Trading 212 help US ETFs not available KID PRIIPs")
+  ⎿  Did 1 search in 6s
+
+⏺ Web Search("XTB americké ETF nelze koupit KID PRIIPs")
+  ⎿  Did 1 search in 8s
+
+⏺ Web Search("Fio banka americké ETF KID nákup retailový klient")
+  ⎿  Did 1 search in 8s
+
+⏺ Web Search("DEGIRO US ETF KID PRIIPs not tradable retail helpdesk")
+  ⎿  Did 1 search in 8s
+
+  Called plugin:context-mode:context-mode 4 times (ctrl+o to expand)
+
+⏺ Stránka Fio jen potvrzuje obecné vyjádření a jejich seznam ETF je zastaralý,
+  takže z toho nic nevyplývá. Zkusím ještě nápovědu IBKR, Trading 212 a XTB
+  přímo na jejich doménách.
+
+⏺ Web Search("PRIIPs KID ETF retail clients restriction")
+  ⎿  Did 1 search in 8s
+
+⏺ Web Search("US ETF KID not available buy")
+  ⎿  Did 1 search in 8s
+
+⏺ Web Search("ETF USA KID retailový klient nelze koupit")
+  ⎿  Did 2 searches in 12s
+
+  Called plugin:context-mode:context-mode 5 times (ctrl+o to expand)
+
+⏺ Lynx potvrzuje, že drobní investoři bez statusu profesionálního klienta si
+  americké ETF nemohou koupit, protože emitenti nemají KID podle EU. Ještě
+  dohledám, jestli tato pravidla v letech 2025–2026 nezměnila Retail Investment
+  Strategy.
+
+⏺ Web Search("Retail Investment Strategy PRIIPs amendment provisional agreement
+            Council Parliament KID")
+  ⎿  Did 1 search in 9s
+
+  Called plugin:context-mode:context-mode 2 times (ctrl+o to expand)
+
+⏺ Vyhledávání naznačuje, že revize PRIIPs v rámci Retail Investment Strategy
+  byla předběžně dohodnuta v prosinci 2025 s účinností až 18 měsíců po vstupu v
+  platnost, ale stránky Rady a Parlamentu blokují stahování, takže to označím
+  jako neověřené. Dál se podívám na data k ETF z webů emitentů.
+
+  Made 1 scratchpad edit +42, called plugin:context-mode:context-mode (ctrl+o to expand)
+⏺ iShares a Vanguard jdou stáhnout přímo (Vanguard má navíc JSON API), Schwab
+  vrací 403. Podívám se, co vrací API Vanguardu.
+
+  Called plugin:context-mode:context-mode 6 times (ctrl+o to expand)
+
+⏺ Stav: API Vanguardu vrací přesná data s datem (TER, aktiva, počet akcií,
+  frekvenci dividend). Teď stahuji pět vanguardích ETF najednou, burzu ověřuji z
+  textu na jejich stránce.
+
+  Called plugin:context-mode:context-mode (ctrl+o to expand)
+
+⏺ Vanguard má potvrzená data u všech šesti fondů – zajímavé je, že VTI nyní
+  sleduje Morningstar index, ne CRSP, jak bych uvedl z paměti. Dál se podívám na
+  evropské UCITS fondy Vanguardu.
+
+  Called plugin:context-mode:context-mode (ctrl+o to expand)
+
+⏺ Vanguard UK stránky obsahují vše potřebné (ISIN, TER, burzy), ale odhadnuté ID
+  produktu 9679 vedlo na FTSE All-World Acc místo S&P 500. Teď vyhledám
+  správnou stránku podle ISINu.
+
+  Called plugin:context-mode:context-mode 2 times (ctrl+o to expand)
+
+⏺ Mám správná ID: S&P 500 Acc je 9694, FTSE All-World Acc 9679 a Emerging
+  Markets Acc 9678. Teď z nich vytáhnu údaje.
+
+  Called plugin:context-mode:context-mode 2 times (ctrl+o to expand)
+
+⏺ Vanguard UCITS jsou hotové (VUAA, VWCE, VFEA a dividendový VGWE). Teď iShares:
+  americký AGG a hledání UCITS fondů na americké dluhopisy a technologie.
+
+  Called plugin:context-mode:context-mode (ctrl+o to expand)
+
+⏺ Web Search("iShares US Aggregate Bond UCITS ETF Acc ISIN")
+  ⎿  Did 1 search in 5s
+
+⏺ Web Search("iShares S&P 500 Information Technology Sector UCITS ETF
+            IE00B3WJKG14")
+  ⎿  Did 1 search in 7s
+
+⏺ Web Search("SPDR S&P US Dividend Aristocrats UCITS ETF ISIN IE00B6YX5D40")
+  ⎿  Did 1 search in 6s
+
+  Called plugin:context-mode:context-mode 2 times (ctrl+o to expand)
+
+⏺ iShares mám (IUAA a IUIT včetně burz). Zbývá dividendový pár od State Street
+  (SDY a jeho UCITS obdoba SPYD) a UCITS obdoba k VTI.
+
+  Called plugin:context-mode:context-mode 2 times (ctrl+o to expand)
+
+⏺ Pár SDY a SPYD je hotový. U SPYD stránka emitenta navíc uvádí registraci k
+  prodeji v ČR. Teď hledám UCITS fond na celý americký trh včetně malých firem
+  (obdoba VTI).
+
+⏺ Web Search("UCITS ETF US total stock market all cap including small caps MSCI
+            USA IMI OR "Total Market" Ireland domiciled")
+  ⎿  Did 2 searches in 10s
+
+⏺ Přesnou UCITS obdobu VTI (celý trh včetně malých firem) jsem nenašel. Ověřím
+  aspoň nejbližší kandidáty na webu emitenta, Xtrackers MSCI USA (DWS).
+
+  Called plugin:context-mode:context-mode (ctrl+o to expand)
+
+⏺ Web Search("iShares MSCI USA UCITS ETF CSUS IE00B52SFT06 product page")
+  ⎿  Did 1 search in 7s
+
+  Called plugin:context-mode:context-mode (ctrl+o to expand)
+
+⏺ Zjistil jsem, že nejbližší obdobou VTI je iShares MSCI USA UCITS ETF (Acc),
+  IE00B52SFT06, TER 0,03 %, na Xetře SXR4 – pokrývá ale jen velké a střední
+  firmy, což si poznačím. Teď ověřím dostupnost u brokera XTB.
+
+⏺ Web Search("xtb.com/cz etf VWCE Vanguard FTSE All-World")
+  ⎿  Did 1 search in 8s
+
+⏺ XTB má české stránky produktů (např. VWCE.DE). Vyhledám je i pro ostatní UCITS
+  fondy, všechny dotazy pouštím najednou.
+
+⏺ Web Search("Investujte do ETF VUAA.DE XTB")
+  ⎿  Did 1 search in 6s
+
+⏺ Web Search("Investujte do ETF VFEA.DE XTB")
+  ⎿  Did 1 search in 9s
+
+⏺ Web Search("Investujte do ETF SXR4.DE XTB iShares MSCI USA")
+  ⎿  Did 1 search in 9s
+
+⏺ Web Search("Investujte do ETF QDVE.DE XTB")  ⎿  Did 1 search in 9s
+
+⏺ Web Search("Investujte do ETF SPYD.DE XTB Dividend Aristocrats")
+  ⎿  Did 1 search in 9s
+
+⏺ Web Search("Investujte do ETF IUAA.UK XTB US Aggregate Bond")
+  ⎿  Did 1 search in 8s
+
+  Called plugin:context-mode:context-mode (ctrl+o to expand)
+
+⏺ U všech 7 UCITS fondů má XTB českou stránku „Investujte do ETF <ticker>“, tedy
+  skutečné ETF, ne CFD. Pro kontrast zjistím, v jaké podobě XTB nabízí americké
+  originály.
+
+  Called plugin:context-mode:context-mode (ctrl+o to expand)
+
+⏺ Zjistil jsem, že XTB nabízí VOO.US zvlášť jako skutečnou ETF investici,
+  zatímco VTI, VT, VWO, VGT a AGG mají jen jako CFD. Teď prověřím, proč je tomu
+  tak, protože to může ovlivnit závěr k PRIIPs.
+
+  Called plugin:context-mode:context-mode (ctrl+o to expand)
+
+⏺ Web Search("Vanguard VOO PRIIPs KID key information document US9229083632")
+  ⎿  Did 1 search in 7s
+
+⏺ Vanguard má KID na adresách ve tvaru
+  fund-docs.vanguard.com/<isin>_priipskid_en.pdf. Ověřím, jestli takový dokument
+  existuje i pro VOO.
+
+  Called plugin:context-mode:context-mode (ctrl+o to expand)
+
+⏺ Na Vanguardu jsem našel KID pro irské UCITS fondy (VWRL, VUAA), ale pro VOO,
+  VTI a VT ne (403) – stránku XTB to nevysvětluje, nechám jako otevřený bod. Teď
+  ještě ověřím popisy indexů, abych měl rozdíly mezi páry podložené zdrojem.
+
+  Called plugin:context-mode:context-mode (ctrl+o to expand)
+
+⏺ Mám všechny údaje ověřené přímo u emitentů, teď je skriptem ve scratchpadu
+  zpracuji do data/etf.json – každá hodnota bude mít zdroj, datum platnosti a
+  datum ověření.
+
+  Made 3 scratchpad edits +399 -6, ran 2 shell commands (ctrl+o to expand)
+
+⏺ Píšu data/etf.json. Skript v Bash dostal od Vanguard API prázdnou odpověď,
+  přitom stejné volání přes jiný nástroj fungovalo. Zjišťuji, jestli Bash nemá
+  omezenou síť.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Jen chybějící certifikáty v Pythonu (instalace z python.org). Spustím ho se
+  systémovým balíkem certifikátů.
+
+⏺ Bash(SSL_CERT_FILE=/etc/ssl/cert.pem python3
+      /private/tmp/claude-501/-Users-daniel-etfLanding/65a1b1d0-4c48-4b63-b5fe-0
+      203afe326c3/scratchpad/build_etf_json.py /User…)
+  ⎿  1 file changed (binary, mode only or too large to show)
+  ⎿  (timeout 5m)
+
+⏺ Jeden údaj chybí: index u SDY. JSON na stránce je HTML-escapovaný, regex proto
+  musí běžet nad textem, ne nad surovým HTML. Opravím to i u velikosti fondu.
+
+  Made 3 scratchpad edits +77 -3 (ctrl+o to expand)
+
+⏺ Bash(S=/private/tmp/claude-501/-Users-daniel-etfLanding/65a1b1d0-4c48-4b63-b5f
+      e-0203afe326c3/scratchpad; SSL_CERT_FILE=/etc/ssl/cert.pem python3
+      $S/build_etf_json.py…)
+  ⎿  Updated data/etf.json (+4 -4)
+      846          "overeno": "2026-10-10"
+      847        },
+      848        "index": {
+      849 -        "hodnota": null,                                      
+      849 +        "hodnota": "S&P High Yield Dividend Aristocrats Index"
+          +,                                                             
+      850          "zdroj": "https://www.ssga.com/us/en/intermediary/etfs
+           /state-street-spdr-sp-dividend-etf-sdy",
+      851          "k_datu": null,
+      852          "overeno": "2026-10-10"
+     ...
+      860          "jednotka": "% ročně"
+      861        },
+      862        "velikost_fondu": {
+      863 -        "hodnota": null,                                      
+      863 +        "hodnota": 20750120000,                               
+      864          "zdroj": "https://www.ssga.com/us/en/intermediary/etfs
+           /state-street-spdr-sp-dividend-etf-sdy",
+      865 -        "k_datu": null,                                       
+      865 +        "k_datu": "2026-10-08",                               
+      866          "overeno": "2026-10-10",
+      867          "jednotka": "USD",
+      868 -        "hodnota_ve_zdroji": null                             
+      868 +        "hodnota_ve_zdroji": "$20,750.12 M"                   
+      869        },
+      870        "pocet_titulu": {
+      871          "hodnota": 155,
+  ⎿  (timeout 5m)
+
+⏺ Validace prošla, kromě jedné chyby: u AGG byla jako burza UCITS fondu chybně
+  zvolena mexická burza. Opravím pořadí na Xetru, poté LSE v USD, a zkontroluji
+  rozparsované kotace.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Kotace sedí. Opravím výběr hlavní burzy (Xetra EUR, jinak LSE USD) a sjednotím
+  zápis „NYSE ARCA“ na „NYSE Arca“, původní tvar ze zdroje nechám v
+  hodnota_ve_zdroji.
+
+  Made 2 scratchpad edits +9 -6 (ctrl+o to expand)
+
+⏺ Bash(S=/private/tmp/claude-501/-Users-daniel-etfLanding/65a1b1d0-4c48-4b63-b5f
+      e-0203afe326c3/scratchpad; SSL_CERT_FILE=/etc/ssl/cert.pem python3
+      $S/build_etf_json.py…)
+  ⎿  Updated data/etf.json (+12 -11)
+      143            "zdroj": "https://www.vanguard.co.uk/professional/pr
+           oduct/etf/equity/9694/sp-500-ucits-etf-usd-accumulating",
+      144            "k_datu": null,
+      145            "overeno": "2026-10-10",
+      146 -          "poznamka": "Kotace vhodná pro českého investora: Xe
+          -tra v EUR, pokud existuje; jinak první uvedená."              
+      146 +          "poznamka": "Kotace vhodná pro českého investora: Xe
+          +tra v EUR, pokud existuje; jinak London Stock Exchange v USD."
+      147          },
+      148          "kotace": {
+      149            "hodnota": [
+     ...
+      338            "zdroj": "https://www.ishares.com/uk/individual/en/p
+           roducts/253740/ishares-msci-usa-b-ucits-etf",
+      339            "k_datu": null,
+      340            "overeno": "2026-10-10",
+      341 -          "poznamka": "Kotace vhodná pro českého investora: Xe
+          -tra v EUR, pokud existuje; jinak první uvedená."              
+      341 +          "poznamka": "Kotace vhodná pro českého investora: Xe
+          +tra v EUR, pokud existuje; jinak London Stock Exchange v USD."
+      342          },
+      343          "kotace": {
+      344            "hodnota": [
+     ...
+      545            "zdroj": "https://www.vanguard.co.uk/professional/pr
+           oduct/etf/equity/9679/ftse-all-world-ucits-etf-usd-accumulatin
+           g",
+      546            "k_datu": null,
+      547            "overeno": "2026-10-10",
+      548 -          "poznamka": "Kotace vhodná pro českého investora: Xe
+          -tra v EUR, pokud existuje; jinak první uvedená."              
+      548 +          "poznamka": "Kotace vhodná pro českého investora: Xe
+          +tra v EUR, pokud existuje; jinak London Stock Exchange v USD."
+      549          },
+      550          "kotace": {
+      551            "hodnota": [
+     ...
+      752            "zdroj": "https://www.vanguard.co.uk/professional/pr
+           oduct/etf/equity/9678/ftse-emerging-markets-ucits-etf-usd-accu
+           mulating",
+      753            "k_datu": null,
+      754            "overeno": "2026-10-10",
+      755 -          "poznamka": "Kotace vhodná pro českého investora: Xe
+          -tra v EUR, pokud existuje; jinak první uvedená."              
+      755 +          "poznamka": "Kotace vhodná pro českého investora: Xe
+          +tra v EUR, pokud existuje; jinak London Stock Exchange v USD."
+      756          },
+      757          "kotace": {
+      758            "hodnota": [
+     ...
+      840          "overeno": "2026-10-10"
+      841        },
+      842        "burza": {
+      843 -        "hodnota": "NYSE ARCA",                               
+      843 +        "hodnota": "NYSE Arca",                               
+      844          "zdroj": "https://www.ssga.com/us/en/intermediary/etfs
+           /state-street-spdr-sp-dividend-etf-sdy",
+      845          "k_datu": "2026-10-09",
+      846 -        "overeno": "2026-10-10"                               
+     … 38 more lines (ctrl+o to expand)
+  ⎿  (timeout 5m)
+
+⏺ Data sedí. Ještě ověřím, že všechny zdrojové URL v souboru opravdu odpovídají
+  (HTTP 200).
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Všech 42 zdrojových URL vrací 200. Teď napíšu data/README.md se shrnutím
+  výzkumu.
+
+⏺ Write(data/README.md)
+  ⎿  Wrote 66 lines to data/README.md
+       1 # Data o ETF
+       3 [`etf.json`](etf.json) obsahuje 7 ETF z NYSE Arca a ke každému j
+         L), `k_datu` (ke kterému dni údaj platí podle zdroje, `null` = z
+         věřit nepodařilo, je `null` s poznámkou. Vše ověřeno 10. 10. 202
+       4
+       5 ## Proč ke každému ETF hledáme UCITS obdobu (PRIIPs)
+       7 **Potvrzeno, s výhradou:** český drobný investor si americké ETF
+         Blokují to brokeři, protože americké fondy nemají sdělení klíčov
+       8
+      10   - čl. 5 odst. 1: tvůrce prod
+     … +115 lines (ctrl+o to expand)
+
+⏺ Než to dokončím, ověřím jedno tvrzení, které jsem napsal bez zdroje: že Lynx
+  působí i v ČR.
+
+  Ran 1 shell command (ctrl+o to expand)
+⏺ Lynx má český web, tvrzení nechám a doplním k němu odkaz. Pak aktualizuji
+  rozhodnutí v CLAUDE.md a README podle výsledku.
+
+⏺ Update(data/README.md)
+  ⎿  Added 1 line, removed 1 line
+      13    - Zdroj: [EUR-Lex, CELEX 32014R1286](https://eur-lex.europa.e
+          u/legal-content/CS/TXT/?uri=CELEX:32014R1286). Text jsem četl p
+          řes [API Úřadu pro publikace EU](http://publications.europa.eu/
+          resource/celex/32014R1286), protože EUR-Lex automatické stažení
+           blokuje.
+      14  - **Americké fondy KID nemají.** Na dokumentovém serveru Vangua
+          rdu existuje KID pro irský [VUAA](https://fund-docs.vanguard.co
+          m/ie00bfmxxd54_priipskid_en.pdf), ale na stejné adrese pro [VOO
+          ](https://fund-docs.vanguard.com/us9229083632_priipskid_en.pdf)
+           (ani pro VTI a VT) server vrací 403. To dokládá jen, že tam KI
+          D není, ne že neexistuje vůbec.
+      15  - **Praxe brokerů:**
+      16 -  - [Lynx](https://www.lynxbroker.com/service/products-and-regu
+         -lations/regulations/key-information-document/) (působí i v ČR) 
+         -píše výslovně: americká ETF si retailový klient nekoupí, pokud 
+         -není profesionální klient. Existující pozice může držet a proda
+         -t.                                                             
+      16 +  - [Lynx](https://www.lynxbroker.com/service/products-and-regu
+         +lations/regulations/key-information-document/) (má český web [l
+         +ynxbroker.cz](https://www.lynxbroker.cz/)) píše výslovně: ameri
+         +cká ETF si retailový klient nekoupí, pokud není profesionální k
+         +lient. Existující pozice může držet a prodat.                  
+      17    - XTB nabízí VTI, VT, VWO, VGT a AGG českým klientům jen jako
+           CFD, tedy derivát, ne vlastnictví fondu. Odkazy jsou v `etf.js
+          on` v poli `original_u_xtb_cz`.
+      18  - **Výhrada: výklad ČNB.** [Q&A ČNB k PRIIPs](https://www.cnb.c
+          z/cs/dohled-financni-trh/legislativni-zakladna/stanoviska-k-reg
+          ulaci-financniho-trhu/RS2018-12) (22. 10. 2018, otázka B.2) řík
+          á, že broker, který jen provádí pokyny z podnětu klienta (execu
+          tion-only) a produkt sám nenabízí ani k němu neradí, povinnost 
+          z čl. 13 odst. 1 nemá. Česká legislativa tedy prostor nechává, 
+          záleží na brokerovi. [Fio](https://fio.cz/akcie-investice/etf/v
+          ypis-etf) o sobě uvádí, že ETF nenabízí a jen zpřístupňuje trhy
+          .
+      19  
+
+⏺ Update(CLAUDE.md)
+  ⎿  Added 1 line, removed 1 line
+      35  Už rozhodnuté, neotevírej znovu. Když narazíš na důvod rozhodnu
+          tí změnit, napiš mi ho.
+      36  
+      37  - **NYSE = NYSE i NYSE Arca.** Fondy obchodované hlavně na Nasd
+          aqu (např. QQQ) vynecháváme. Proč: většina amerických ETF je na
+           NYSE Arca, která patří pod NYSE Group.
+      38 -- **Ke každému ETF z NYSE i evropská UCITS obdoba,** kterou si 
+         -Čech opravdu koupí. Proč: drobný investor v EU americké ETF kvů
+         -li PRIIPs u evropského brokera nejspíš nekoupí (ověřuje se, výs
+         -ledek bude v `data/README.md`) a stránka nesmí slibovat něco, c
+         -o návštěvník nemůže udělat.                                    
+      38 +- **Ke každému ETF z NYSE i evropská UCITS obdoba,** kterou si 
+         +Čech opravdu koupí. Proč: brokeři v EU drobným investorům ameri
+         +cké ETF kvůli PRIIPs (chybí KID) neprodají a stránka nesmí slib
+         +ovat něco, co návštěvník nemůže udělat. Ověřeno 10. 10. 2026, v
+         +ýhrady a zdroje jsou v `data/README.md`. V textech piš „u větši
+         +ny brokerů si to nekoupíš“, ne „zakazuje to zákon“.            
+      39  - **Tykáme.** Proč: cílovka jsou spíš mladší lidé z Instagramu 
+          a Facebooku, vykání by tam působilo strojeně.
+      40  - **Kontakt = jen e-mail,** žádný telefon. Proč: zadání chce co
+           nejméně polí a e-mail stačí k doručení toho, co slibujeme.
+      41  - **Konverze = návštěva → odeslaný formulář.** Proč: oba konce 
+          trychtýře změříme vlastním měřením, bez dat z reklamního systém
+          u.
+
+⏺ Update(README.md)
+  ⎿  Added 1 line, removed 1 line
+      53  ## Nejasnosti v zadání a moje rozhodnutí
+      54  
+      55  - **„ETF obchodované na NYSE“:** beru NYSE i NYSE Arca, fondy o
+          bchodované hlavně na Nasdaqu (např. QQQ) vynechávám. Většina am
+          erických ETF je kotovaná na NYSE Arca, která patří pod NYSE Gro
+          up.
+      56 -- **Americké ETF a český drobný investor:** ke každému ETF z NY
+         -SE ukazuju i evropskou UCITS obdobu, kterou si Čech opravdu kou
+         -pí. Drobný investor v EU si americké ETF kvůli nařízení PRIIPs 
+         -u evropského brokera nejspíš nekoupí (ověřuje se, viz [data/REA
+         -DME.md](data/README.md)) a stránka mu nemá slibovat něco, co ne
+         -může udělat.                                                   
+      56 +- **Americké ETF a český drobný investor:** ke každému ETF z NY
+         +SE ukazuju i evropskou UCITS obdobu, kterou si Čech opravdu kou
+         +pí. Brokeři v EU drobným investorům americké ETF neprodají, pro
+         +tože americké fondy nemají sdělení klíčových informací (KID) po
+         +dle nařízení PRIIPs. Ověření z primárních zdrojů i výhrady (výk
+         +lad ČNB k execution-only) jsou v [data/README.md](data/README.m
+         +d). Stránka návštěvníkovi nemá slibovat něco, co nemůže udělat.
+      57  - **Co je „kontakt“:** jen e-mail, žádný telefon. Zadání chce c
+          o nejméně polí a e-mail stačí k doručení toho, co návštěvníkovi
+           slibujeme.
+      58  - **Co je konverze:** návštěva → odeslaný formulář. Oba konce t
+          rychtýře změříme vlastním měřením, bez dat z reklamního systému
+          .
+      59  - **Měření celé cesty bez cookie lišty:** vlastní anonymní even
+          ty (příchod, hloubka scrollu, interakce s prvky, otevření formu
+          láře, odeslání) ukládané do Supabase, místo GA4. ID návštěvy ex
+          istuje jen v paměti po dobu jednoho načtení stránky a do prohlí
+          žeče se nic neukládá. GA4 by potřebovalo souhlas a cookie lišta
+           na mobilu zdržuje a ubírá konverze. Trychtýř se počítá SQL dot
+          azem.
+
+⏺ Update(README.md)
+  ⎿  Added 2 lines
+      26  
+      27  _TODO: odkud jsou údaje o ETF, ke kterému datu platí a jak čast
+          o je potřeba je aktualizovat._
+      28  
+      29 +Podklady: [data/etf.json](data/etf.json) (každý údaj se zdrojem
+         + a datem) a shrnutí ověření v [data/README.md](data/README.md).
+      30 +                                                               
+      31  ## Měření cesty návštěvníka
+      32  
+      33  _TODO: jaké události měříme od příchodu po odeslání formuláře, 
+          čím a kde se dají zobrazit; jak je vyřešený souhlas s cookies._
+
+⏺ Update(ai-log/denik.md)
+  ⎿  Added 17 lines
+       9  - **Zadání pro AI / agenta:** …
+      10  - **Kontrola výstupu:** …
+      11  - **Kde se AI spletla a jak se na to přišlo:** …
+      12 +                                                               
+      13 +## Záznamy                                                     
+      14 +                                                               
+      15 +### 2026-10-10 – výzkum PRIIPs a data o ETF                    
+      16 +                                                               
+      17 +- **Zadání pro AI:** ověřit z primárních zdrojů (EUR-Lex, ČNB, 
+         +ESMA, brokeři), proč Čech nekoupí americké ETF; vybrat 6–8 ETF 
+         +z NYSE / NYSE Arca, burzu ověřit u emitenta; ke každému najít U
+         +CITS obdobu; vše uložit do `data/etf.json` se zdrojem a datem. 
+         +Bez subagentů, jedna konverzace.                               
+      18 +- **Kontrola výstupu:**                                        
+      19 +  - data z webů emitentů vytáhl skript (bez ručního přepisování
+         +),                                                             
+      20 +  - kontrolní skript ověřil, že každý údaj má zdroj a datum a n
+         +ull jen s poznámkou,                                           
+      21 +  - ISINy prošly kontrolou kontrolní číslice,                  
+      22 +  - všech 42 zdrojových URL vrací HTTP 200.                    
+      23 +- **Kde se AI spletla nebo by se spletla:**                    
+      24 +  - Odhadnuté ID produktové stránky Vanguard UK (9679) vedlo na
+         + FTSE All-World, ne na S&P 500. Přišlo se na to podle ISINu na 
+         +stránce; správná ID se pak dohledala.                          
+      25 +  - VTI se dnes jmenuje „Vanguard Morningstar Total Stock Marke
+         +t ETF“ a sleduje index Morningstar. Z paměti by AI uvedla jiný 
+         +název a index; opravilo se díky čtení přímo z API Vanguardu.   
+      26 +  - Regex na index u SDY selhal, protože JSON v HTML byl escapo
+         +vaný. Kontrolní výpis skriptu to zachytil („index: nenalezeno“)
+         +.                                                              
+      27 +  - Volba hlavní burzy u UCITS fondu AGG nejdřív vybrala mexick
+         +ou burzu (první v seznamu). Zjistilo se to při čtení souhrnu a 
+         +pravidlo se změnilo na Xetra EUR → LSE USD.                    
+      28 +  - Původní předpoklad „PRIIPs = zákaz“ byl příliš zjednodušený
+         +: ČNB připouští execution-only bez KID a XTB má VOO.US jako str
+         +ánku ETF. Zapsáno jako výhrada v `data/README.md`.             
+
+⏺ Teď dva commity: data zvlášť, aktualizace rozhodnutí a deník zvlášť. Předtím
+  zkontroluji staged změny na nechtěný obsah.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Hotovo, přibyly tři commity a pracovní adresář je čistý. ZADANI.md je v
+  .gitignore a duplicitní text jsem z něj smazal (obě kopie byly shodné).
+
+  Rozhodnutí jsou zapsaná v CLAUDE.md a v README. Jedna odchylka od zadání:
+  Supabase v EU, keep-alive a region fra1 jsem v README dal do „Technická
+  rozhodnutí“, ne do sekce s nejasnostmi, protože tak to říká tvoje schválené
+  pravidlo 7. Klidně je přesunu.
+
+  Potvrdil se PRIIPs?
+
+  Ano, ale s výhradou. Nezakazuje to přímo zákon, nákup blokují brokeři.
+
+  - Nařízení 1286/2014 (EUR-Lex
+    (https://eur-lex.europa.eu/legal-content/CS/TXT/?uri=CELEX:32014R1286)): čl.
+    5 odst. 1 a čl. 13 odst. 1 říkají, že bez dokumentu KID nesmí prodejce ani
+    poradce produkt drobnému investorovi prodat.
+  - Americké fondy KID nemají. Na dokumentovém serveru Vanguardu je KID pro
+    irský VUAA, ale pro VOO, VTI ani VT ne.
+  - Praxe brokerů: Lynx (https://www.lynxbroker.com/service/products-and-regulat
+    ions/regulations/key-information-document/) píše výslovně, že americká ETF
+    jsou jen pro profesionální klienty. XTB nabízí VTI, VT, VWO, VGT a AGG
+    českým klientům jen jako CFD (derivát, ne vlastnictví fondu).
+  - Výhrada ČNB: Q&A ČNB (https://www.cnb.cz/cs/dohled-financni-trh/legislativni
+    -zakladna/stanoviska-k-regulaci-financniho-trhu/RS2018-12) říká, že broker,
+    který jen provádí pokyny a nic nenabízí ani neradí, povinnost z čl. 13 nemá.
+    Česká legislativa tedy prostor nechává.
+  - Nevysvětlený nález: XTB má VOO.US na českém webu jako normální ETF, ne jako
+    CFD. Nevím, jestli ho prodá i drobnému investorovi.
+
+  Do CLAUDE.md jsem kvůli tomu doplnil, že stránka má psát „u většiny brokerů si
+  to nekoupíš“, ne „zakazuje to zákon“.
+
+  Vybraná ETF (všechna na NYSE Arca, ověřeno u emitenta)
+
+  1. VOO (S&P 500): 500 velkých amerických firem za 0,03 % ročně. UCITS obdoba
+     VUAA sleduje stejný index za 0,07 %.
+  2. VTI (celý americký trh, 3 507 akcií): širší než S&P 500, obsahuje i menší
+     firmy. Obdoba SXR4 sleduje užší index a má jen 515 titulů.
+  3. VT (celý svět, 10 088 akcií): nejjednodušší portfolio na jeden nákup.
+     Obdoba VWCE je bez malých firem.
+  4. VWO (rozvíjející se trhy): doplněk k USA a vyspělému světu. Obdoba VFEA je
+     bez malých firem.
+  5. SDY (dividendové firmy): vybral jsem ho místo populárnějšího SCHD, protože
+     má UCITS fond SPYD na úplně stejný index a se stejným TER. Web Schwabu
+     navíc vracel chybu 403, takže SCHD nešel ověřit.
+  6. VGT (technologie): náhrada za QQQ, které je na Nasdaqu. Obdoba QDVE
+     obsahuje jen technologické firmy z S&P 500.
+  7. AGG (americké dluhopisy): jediný dluhopisový fond ve výběru, protiváha k
+     akciím. Obdoba IUAA sleduje stejný index, ale na Xetře není (je na
+     londýnské burze v USD).
+
+  Všech sedm UCITS fondů má na českém webu XTB stránku „Investujte do ETF …“,
+  jde tedy o skutečné ETF, ne CFD.
+
+  Jedna věc, kterou bych z paměti napsal špatně: VTI se dnes jmenuje „Vanguard
+  Morningstar Total Stock Market ETF“ a sleduje index Morningstar. Data jsem
+  proto bral přímo z API Vanguardu.
+
+  Co se ověřit nepodařilo
+
+  - Dostupnost u jiných brokerů než XTB (Fio, Trading 212, Degiro, IBKR, Portu).
+    V datech je null.
+  - Jestli XTB prodá VOO.US drobnému investorovi a jestli americká ETF jdou
+    koupit u Fio.
+  - Přesná UCITS obdoba VTI (celý trh včetně malých firem) neexistuje nebo jsem
+    ji nenašel.
+  - Stránka SDY.US na XTB se nenašla.
+  - U TER většina emitentů neuvádí datum, takže tam je k_datu: null.
+  - Nestáhl jsem FAQ Interactive Brokers, Q&A dozorových úřadů EU k PRIIPs ani
+    tiskové zprávy Rady a Parlamentu k chystané revizi PRIIPs. Že se revize
+    uplatní až 18 měsíců po vstupu v platnost, mám jen z výsledků vyhledávání.
+  - Nařízení PRIIPs jsem četl v původním znění z roku 2014, ne v konsolidovaném
+    se změnami.
+
+  Jak jsem to ověřil
+
+  - Hodnoty z webů emitentů vytáhl skript, ručně jsem nic nepřepisoval.
+  - Kontrolní skript prošel všech 155 údajů: každý má zdroj a datum a 8
+    prázdných hodnot má poznámku proč.
+  - Všechny ISINy prošly kontrolou kontrolní číslice a všech 42 zdrojových
+    odkazů vrací HTTP 200.
+  - Kde jsem se cestou spletl, je zapsané v ai-log/denik.md.
+
+  Výsledky jsou v data/etf.json a data/README.md.
+
+  K měření (neověřeno): evropský sbor pro ochranu osobních údajů (EDPB) ve svých
+  pokynech 2/2023 podle mých znalostí vykládá pravidla pro souhlas šířeji.
+  Souhlas se podle nich může týkat i JS, který z prohlížeče odesílá data, i když
+  nic neukládá. Před spuštěním bych to ověřil. A ID návštěvy bych neukládal k
+  e-mailu, jinak se z anonymních eventů stanou osobní údaje.
