@@ -26,6 +26,8 @@ _TODO: obě verze (text a vizuál, soubory v `reklamy/`), pro jakou platformu a 
 
 _TODO: odkud jsou údaje o ETF, ke kterému datu platí a jak často je potřeba je aktualizovat._
 
+Podklady: [data/etf.json](data/etf.json) (každý údaj se zdrojem a datem) a shrnutí ověření v [data/README.md](data/README.md).
+
 ## Měření cesty návštěvníka
 
 _TODO: jaké události měříme od příchodu po odeslání formuláře, čím a kde se dají zobrazit; jak je vyřešený souhlas s cookies._
@@ -53,7 +55,7 @@ _TODO: stack a proč (čisté HTML/CSS/JS bez build kroku, Vercel, Supabase), zp
 ## Nejasnosti v zadání a moje rozhodnutí
 
 - **„ETF obchodované na NYSE“:** beru NYSE i NYSE Arca, fondy obchodované hlavně na Nasdaqu (např. QQQ) vynechávám. Většina amerických ETF je kotovaná na NYSE Arca, která patří pod NYSE Group.
-- **Americké ETF a český drobný investor:** ke každému ETF z NYSE ukazuju i evropskou UCITS obdobu, kterou si Čech opravdu koupí. Drobný investor v EU si americké ETF kvůli nařízení PRIIPs u evropského brokera nejspíš nekoupí (ověřuje se, viz [data/README.md](data/README.md)) a stránka mu nemá slibovat něco, co nemůže udělat.
+- **Americké ETF a český drobný investor:** ke každému ETF z NYSE ukazuju i evropskou UCITS obdobu, kterou si Čech opravdu koupí. Brokeři v EU drobným investorům americké ETF neprodají, protože americké fondy nemají sdělení klíčových informací (KID) podle nařízení PRIIPs. Ověření z primárních zdrojů i výhrady (výklad ČNB k execution-only) jsou v [data/README.md](data/README.md). Stránka návštěvníkovi nemá slibovat něco, co nemůže udělat.
 - **Co je „kontakt“:** jen e-mail, žádný telefon. Zadání chce co nejméně polí a e-mail stačí k doručení toho, co návštěvníkovi slibujeme.
 - **Co je konverze:** návštěva → odeslaný formulář. Oba konce trychtýře změříme vlastním měřením, bez dat z reklamního systému.
 - **Měření celé cesty bez cookie lišty:** vlastní anonymní eventy (příchod, hloubka scrollu, interakce s prvky, otevření formuláře, odeslání) ukládané do Supabase, místo GA4. ID návštěvy existuje jen v paměti po dobu jednoho načtení stránky a do prohlížeče se nic neukládá. GA4 by potřebovalo souhlas a cookie lišta na mobilu zdržuje a ubírá konverze. Trychtýř se počítá SQL dotazem.

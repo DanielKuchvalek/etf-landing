@@ -35,7 +35,7 @@ README.md      dokumentace pro hodnotitele
 Už rozhodnuté, neotevírej znovu. Když narazíš na důvod rozhodnutí změnit, napiš mi ho.
 
 - **NYSE = NYSE i NYSE Arca.** Fondy obchodované hlavně na Nasdaqu (např. QQQ) vynecháváme. Proč: většina amerických ETF je na NYSE Arca, která patří pod NYSE Group.
-- **Ke každému ETF z NYSE i evropská UCITS obdoba,** kterou si Čech opravdu koupí. Proč: drobný investor v EU americké ETF kvůli PRIIPs u evropského brokera nejspíš nekoupí (ověřuje se, výsledek bude v `data/README.md`) a stránka nesmí slibovat něco, co návštěvník nemůže udělat.
+- **Ke každému ETF z NYSE i evropská UCITS obdoba,** kterou si Čech opravdu koupí. Proč: brokeři v EU drobným investorům americké ETF kvůli PRIIPs (chybí KID) neprodají a stránka nesmí slibovat něco, co návštěvník nemůže udělat. Ověřeno 10. 10. 2026, výhrady a zdroje jsou v `data/README.md`. V textech piš „u většiny brokerů si to nekoupíš“, ne „zakazuje to zákon“.
 - **Tykáme.** Proč: cílovka jsou spíš mladší lidé z Instagramu a Facebooku, vykání by tam působilo strojeně.
 - **Kontakt = jen e-mail,** žádný telefon. Proč: zadání chce co nejméně polí a e-mail stačí k doručení toho, co slibujeme.
 - **Konverze = návštěva → odeslaný formulář.** Proč: oba konce trychtýře změříme vlastním měřením, bez dat z reklamního systému.
