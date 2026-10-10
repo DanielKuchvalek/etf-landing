@@ -42,7 +42,7 @@ for e in data["etf"]:
 
     art = re.search(rf'<article[^>]*data-etf="{tk}".*?</article>', page, re.S)
     text = plain(art.group(0)) if art else ""
-    expected = [twin, f"{cz(u['ter']['hodnota'])} %", f"{kc(u['ter']['hodnota'])} Kč z každých 10 000 Kč",
+    expected = [twin, f"{cz(u['ter']['hodnota'])} %", f"{kc(u['ter']['hodnota'])} Kč ročně z každých 10 000 Kč",
                 {"EUR": "v eurech", "USD": "v dolarech"}[u["burza"]["hodnota"]["mena"]],
                 "Stejný index" if same else "Podobný, ne stejný"]
     if e["ter"]["hodnota"] != u["ter"]["hodnota"]:
@@ -57,10 +57,21 @@ for e in data["etf"]:
         if not kk[key]["hodnota"] and name in text:
             missing.append(f"jmenuje {name}, ale v datech není ověřeno")
 
+    broker_names = [n.replace("Degir", "Degiro") for k, n in BROKERS if kk[k]["hodnota"]]
     card = re.search(rf'<li[^>]*id="par-{tk.lower()}".*?</li>', page, re.S)
-    card_text = plain(card.group(0)) if card else ""
-    fee_shown = f"{kc(u['ter']['hodnota'])} Kč" in card_text or f"{cz(u['ter']['hodnota'])} %" in card_text
-    card_missing = ([] if twin in card_text else [twin]) + ([] if fee_shown else ["poplatek dvojčete"])
+    card_html = card.group(0) if card else ""
+    card_text = plain(card_html)
+    fix = re.search(r'<span class="fix">(.*?)</span>', card_html, re.S)
+    card_missing = [x for x in [twin, f"{kc(u['ter']['hodnota'])} Kč ročně z 10 000 Kč", "koupíš u " + ", ".join(broker_names)] if x not in card_text]
+    if "<mark" in card_html or not fix or "Kč" in plain(fix.group(1)) or "koupíš u" not in plain(fix.group(1)):
+        card_missing.append("žlutě má být „koupíš u …“, ne poplatek")
+
+    # zadní strana lístku: dvojče, kde koupit, poplatek v Kč, stejný/podobný index
+    card_back = re.search(rf'<a class="listek[^"]*"[^>]*data-etf="{tk}".*?</a>', page, re.S)
+    back_text = plain(card_back.group(0)) if card_back else ""
+    back_missing = [x for x in [twin, "✓ " + ", ".join(broker_names), f"{kc(u['ter']['hodnota'])} Kč ročně z 10 000 Kč",
+                                "stejný index" if same else "podobný index"] if x not in back_text]
+    card_missing += [f"lístek: {x}" for x in back_missing]
 
     sources_ok = e["emitent"]["zdroj"] in page and u["nazev"]["zdroj"] in page
     ok = not missing and not card_missing and sources_ok
