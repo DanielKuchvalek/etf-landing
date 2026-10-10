@@ -85,15 +85,15 @@ Provozovatel, kontakt, „Nejde o investiční doporučení. Investování nese 
 
 | # | Údaj | Kde v taháku | Stav | Co je potřeba |
 |---|---|---|---|---|
-| 1 | Dostupnost dvojčat u jiných brokerů než XTB (Fio, Trading 212, Degiro, IBKR, Portu, Lynx) | 3, 5 | v datech `null` | ověřit na webu nebo v aplikaci každého brokera, uložit se zdrojem a datem |
+| 1 | Dostupnost dvojčat u brokerů | 3, 5 | ✅ XTB a Trading 212 u všech 7, Degiro u 3 (`data/README.md`) | Fio, IBKR, Portu a Lynx neověřeny |
 | 2 | Jestli XTB prodá VOO.US retailovému klientovi | 2 | neověřeno | zkusit v aplikaci s retailovým účtem |
-| 3 | Postup založení účtu, vkladu a nákupu | 5 | neověřeno | projít u jednoho brokera a popsat podle jeho nápovědy |
-| 4 | Poplatky brokerů za nákup a směnu měn | 6 | není v datech | Na webu XTB (stránka VOO.US) bylo 10. 10. 2026 vidět „0 % do 100 000 EUR měsíčně, nad limit 0,2 % (min. 10 EUR)“ a „poplatek 0,5 % za konverzi měn“. Je to jen v exportu konverzace, ne v datech; doplnit do `etf.json` se zdrojem a znovu ověřit. |
+| 3 | Postup založení účtu, vkladu a nákupu | 5 | ✅ v PDF podle nápověd XTB a Trading 212, zdroj u každého kroku | Fio a Degiro nepopsány |
+| 4 | Poplatky brokerů za nákup a směnu měn | 6 | ✅ v PDF se zdrojem (XTB: 0,2 % nad 100 000 EUR/měsíc, konverze 0,5 %; Trading 212: převod měny 0,15 %) | do `etf.json` zatím neuložené |
 | 5 | Měna fondu (base currency) | 4, 6 | na stránkách správců je, v datech ne | doplnit do `etf.json` |
 | 6 | Odkaz na KID každého dvojčete | 4 | ověřený jen VUAA (`data/README.md`) | dohledat u všech 7 |
 | 7 | Datum platnosti TER | 3 | u většiny `k_datu: null` | ponechat „stav k 10. 10. 2026“, nebo datum z prospektu |
 | 8 | Datum velikosti fondu u dvojčat od Vanguardu | 4 | `k_datu: null` | uvést „stav k 10. 10. 2026“ |
-| 9 | Daně | 6 | nezkoumáno | vynechat, nebo zdroj a daňový poradce |
-| 10 | Minimální částka a zlomky podílů | 5 | neověřeno | podle nápovědy brokera |
+| 9 | Daně | 6 | v PDF výslovně „tahák neřeší, zjisti u daňového poradce“ | nezkoumáno |
+| 10 | Minimální částka a zlomky podílů | 5 | ✅ XTB: nejmenší pokyn 1 EUR (produktová stránka); Trading 212 neověřeno | |
 | 11 | Výkonnost fondů | není v osnově | nesbírá se | nezařazovat; pokud ano, s obdobím, měnou, zdrojem a upozorněním |
-| 12 | Správce, kontakt, zásady ochrany osobních údajů | 1, 8 | `[TODO]` | dodá zadavatel |
+| 12 | Správce, kontakt, zásady ochrany osobních údajů | 1, 8 | Clientelo Czech s.r.o. (předpoklad), zásady jen návrh | IČO, sídlo, kontakt dodá zadavatel |
