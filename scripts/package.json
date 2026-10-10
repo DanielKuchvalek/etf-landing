@@ -1,0 +1,16 @@
+{
+  "name": "etf-dvojcata-scripts",
+  "private": true,
+  "type": "module",
+  "description": "Testy, snímky obrazovky, Lighthouse a generování PDF taháku. Nejsou součástí webu.",
+  "scripts": {
+    "test": "node test-page.mjs",
+    "shots": "node screenshots.mjs",
+    "lighthouse": "node lighthouse.mjs",
+    "pdf": "node pdf.mjs"
+  },
+  "devDependencies": {
+    "lighthouse": "13.5.0",
+    "puppeteer-core": "25.13.0"
+  }
+}
