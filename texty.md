@@ -33,20 +33,23 @@ Nadpis a podnadpis se mění podle parametru v URL (viz `reklamy/README.md`). Zb
 ### Výchozí verze (bez parametru, organická návštěva)
 
 - **H1:** Najdi evropské dvojče k VOO, VT a dalším ETF z USA
-- **Podnadpis:** Americká ETF ti broker v Česku často nenabídne. Jejich evropská dvojčata koupíš normálně.
+- **Podnadpis (jedna věta):** Americká ti broker často nenabídne, evropská ano.
+- **Fixem přetažené slovo v H1:** dvojče
   `[r: PRIIPs]` `[d: * › ucits_obdoba.kde_koupit]`
 
 ### Verze A „Dvojče“ (`?v=dvojce`)
 
 - **H1:** Broker ti nenabídl VOO? Není to chyba.
-- **Podnadpis:** Americká ETF ti broker v Česku často nenabídne, evropská dvojčata ano. Tady je dvojče VOO a dalších 6 fondů z USA.
+- **Podnadpis (jedna věta):** Tady je jeho evropské dvojče a 6 dalších.
+- **Fixem přetažené v H1:** Není to chyba.
   `[r: PRIIPs]` `[d: * › ucits_obdoba.kde_koupit]`
 - Háček platí, i kdyby VOO některý broker prodával: netvrdíme, že VOO koupit nejde.
 
 ### Verze B „Začátek“ (`?v=zacatek`)
 
 - **H1:** Nevíš, kterým ETF začít?
-- **Podnadpis:** Tady je 7 známých fondů z USA. Co v nich je, kolik stojí a jejich evropské verze, které si koupíš z Česka.
+- **Podnadpis (jedna věta):** 7 známých fondů z USA a co v nich je.
+- **Fixem přetažené v H1:** začít
   `[d: * › typ]` `[d: * › ter]` `[d: * › ucits_obdoba.kde_koupit]`
 - **Drobně pod podnadpisem:** Nic ti nedoporučujeme, jen ukazujeme, co existuje.
 - „7 známých“ místo „7 nejznámějších“: nejvyšší stupeň neumíme doložit (SDY je výrazně menší než ostatní, `[d: SDY › velikost_fondu]`).
@@ -176,7 +179,7 @@ U řádku „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnos
 
 ---
 
-## 4. Proč americká ETF nekoupíš
+## 4. Proč ti broker americká ETF často nenabídne
 
 - **H2:** Proč ti broker americká ETF často nenabídne
 - **Text:** Fondy, které se v EU prodávají drobným investorům, potřebují dokument s klíčovými informacemi (KID). Americké fondy jako VOO ho nevydávají, a tak je brokeři často nenabízejí, nebo jen jako CFD. To je derivát, se kterým fond samotný nevlastníš. Evropská dvojčata KID mají, takže je koupíš normálně.

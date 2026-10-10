@@ -4,7 +4,7 @@
 
 ## Proč ke každému ETF hledáme UCITS obdobu (PRIIPs)
 
-**Potvrzeno, s výhradou:** český drobný investor si americké ETF u běžného brokera v EU nekoupí, ale nezakazuje to přímo zákon. Blokují to brokeři, protože americké fondy nemají sdělení klíčových informací (KID).
+**Potvrzeno, s výhradou:** český drobný investor si americké ETF u běžného brokera v EU často nekoupí, ale nezakazuje to přímo zákon. Blokují to brokeři, protože americké fondy nemají sdělení klíčových informací (KID).
 
 - **Nařízení PRIIPs (EU) č. 1286/2014**, české znění:
   - čl. 5 odst. 1: tvůrce produktu musí před nabízením retailovým investorům vypracovat KID a zveřejnit ho na svém webu,
@@ -17,7 +17,7 @@
   - XTB nabízí VTI, VT, VWO, VGT a AGG českým klientům jen jako CFD, tedy derivát, ne vlastnictví fondu. Odkazy jsou v `etf.json` v poli `original_u_xtb_cz`.
 - **Výhrada: výklad ČNB.** [Q&A ČNB k PRIIPs](https://www.cnb.cz/cs/dohled-financni-trh/legislativni-zakladna/stanoviska-k-regulaci-financniho-trhu/RS2018-12) (22. 10. 2018, otázka B.2) říká, že broker, který jen provádí pokyny z podnětu klienta (execution-only) a produkt sám nenabízí ani k němu neradí, povinnost z čl. 13 odst. 1 nemá. Česká legislativa tedy prostor nechává, záleží na brokerovi. [Fio](https://fio.cz/akcie-investice/etf/vypis-etf) o sobě uvádí, že ETF nenabízí a jen zpřístupňuje trhy.
 
-**Co z toho plyne pro texty stránky:** psát „u většiny brokerů si americké ETF jako drobný investor nekoupíš“, ne „zákon to zakazuje“.
+**Co z toho plyne pro texty stránky:** psát „broker ti americká ETF často nenabídne“, ne „nekoupíš“ ani „zákon to zakazuje“.
 
 ## Výběr
 
