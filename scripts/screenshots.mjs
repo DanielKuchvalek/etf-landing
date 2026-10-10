@@ -15,14 +15,19 @@ try {
   const shot = async (name) => { await sleep(400); await page.screenshot({ path: join(OUT, `${prefix}-${name}.png`) }); console.log(`uloženo ${prefix}-${name}.png`); };
   const toTop = (sel) => page.evaluate((s) => document.querySelector(s).scrollIntoView({ block: 'start', behavior: 'instant' }), sel);
 
-  // 1) úvod
-  await page.goto(BASE_URL, { waitUntil: 'networkidle0' });
-  await shot('1-uvod');
+  // 1) úvod ve všech třech verzích
+  for (const [name, q] of [['1-uvod', ''], ['1b-uvod-dvojce', '?v=dvojce'], ['1c-uvod-zacatek', '?v=zacatek']]) {
+    await page.goto(BASE_URL + q, { waitUntil: 'networkidle0' });
+    await sleep(2200); // po „nakouknutí“ prvního lístku
+    await shot(name);
+  }
 
-  // 2) výsledek po klepnutí na VOO (kartička / výsledek)
+  // 2) otočený lístek VOO (výzva k taháku se ukáže pod lístky)
+  await page.goto(BASE_URL, { waitUntil: 'networkidle0' });
   await page.tap('[data-etf="VOO"]');
-  await sleep(1200);
-  await shot('2-vysledek-voo');
+  await sleep(900);
+  await toTop('#vyber');
+  await shot('2-otoceny-listek');
 
   // 3) karty párů
   await toTop('#pary');
@@ -31,6 +36,7 @@ try {
   // 4) formulář v sekci Tahák
   await page.goto(BASE_URL, { waitUntil: 'networkidle0' });
   await toTop('#tahak');
+  await page.waitForFunction(() => { const i = document.querySelector('.nahled img'); return !i || (i.complete && i.naturalWidth > 0); });
   await shot('4-formular');
 
   // 5) poděkování po odeslání formuláře v sekci Tahák
