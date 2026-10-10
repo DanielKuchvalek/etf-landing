@@ -8,15 +8,42 @@
 
 ## Cílová skupina
 
-_TODO: kdo přesně je návštěvník, v jaké situaci přichází z reklamy, co ho trápí a co od stránky čeká._
+**Začínající investoři ve věku 25–40 let.** O ETF už slyšeli z YouTube, TikToku nebo od kamaráda. Někteří zkoušeli VOO najít u brokera a nešlo to. Chtějí začít, ale bojí se, že vyberou špatně nebo přeplatí na poplatcích. Přicházejí z reklamy na Instagramu nebo Facebooku, na mobilu, a stránce dají pár sekund.
+
+**Proč právě oni:**
+
+- Vědí, co je ETF, a mají konkrétní problém: fond, o kterém slyšeli, u brokera nenajdou. Stránka jim ten problém vyřeší jedním klepnutím, takže hodnotu vidí okamžitě.
+- Jsou blízko k akci. Nepotřebují vysvětlovat, proč investovat, jen co koupit a jak.
+- Lidi, kteří ETF ještě neřeší, oslovuje reklama B (poplatky). Tím testujeme, jestli stránka funguje i pro ně.
+
+**Stavíme na ověřeném faktu:** americká ETF si Čech u většiny brokerů nekoupí, evropská obdoba ano (viz [data/README.md](data/README.md)). Tuhle informaci jinde snadno nenajde, a je to hlavní důvod, proč na stránce zůstat.
 
 ## Lead magnet a moment žádosti o kontakt
 
-_TODO: co návštěvník dostane výměnou za kontakt, proč je hodnota zřejmá ještě před formulářem, v kterém okamžiku o kontakt žádáme, jaká pole formulář má a co návštěvník dostane po odeslání._
+**Co návštěvník dostane:** PDF „Tahák: 7 ETF z NYSE a jejich dvojčata, která koupíš z Česka“. Obsahuje ISINy, poplatky, kde koupit a postup nákupu krok za krokem. Osnova a chybějící podklady jsou v [tahak.md](tahak.md).
+
+**Hodnota je vidět ještě před formulářem.** Interaktivní prvek „Najdi dvojče“ na první obrazovce ukáže k vybranému ETF jeho evropskou obdobu, rozdíl v poplatku a kde ji koupit. Zdarma, bez e-mailu. Dělba je jasná: na stránce návštěvník vidí, **co** koupit, v taháku dostane, **jak** to udělat.
+
+**Kdy žádáme o kontakt:**
+
+1. Hned po prvním výsledku „Najdi dvojče“ výzvou „Pošli mi tahák se všemi 7 dvojčaty“. V tu chvíli návštěvník právě dostal hodnotu a ví, že zbylých 6 párů a postup jsou v taháku.
+2. Tlačítkem, které je na mobilu pořád vidět dole na obrazovce. Kdo projde stránku dál, nemusí formulář hledat.
+
+**Formulář:** jen e-mail a souhlas se zpracováním. Žádné jméno ani telefon.
+
+**Po odeslání:** poděkování a okamžité stažení PDF, nikdo nečeká na e-mail. Rozeslání taháku e-mailem doplníme, jen pokud zbude čas.
+
+Texty všech částí jsou v [texty.md](texty.md).
 
 ## Pořadí sekcí a zdůvodnění
 
-_TODO: sekce stránky v pořadí a u každé, proč je právě tam; jak první obrazovka navazuje na příslib reklamy; jak každý interaktivní prvek vede ke kontaktu._
+1. **Úvod navazující na reklamu a rovnou „Najdi dvojče“.** Návštěvník má jen pár sekund. První obrazovka musí zopakovat slib reklamy a nabídnout akci bez scrollování. Nadpis se mění podle toho, ze které reklamy návštěvník přišel (viz [reklamy/](reklamy/)).
+2. **Výsledek a výzva k taháku.** Výsledek je okamžitá hodnota zdarma. Výzva přichází ve chvíli, kdy je zájem nejvyšší.
+3. **Přehled všech 7 párů v kompaktních kartách.** Pro ty, kdo chtějí vidět celek, než se rozhodnou. Karty ukazují jen základ (originál → dvojče, poplatky); ISINy a postup zůstávají v taháku.
+4. **Proč VOO nekoupíš (2–3 věty).** Vysvětlení, proč dvojčata vůbec potřebujeme. Až tady, protože ten, kdo přišel z reklamy „Dvojče“, už důvod zná z úvodu a nechce ho číst před výsledkem.
+5. **Důvěra: zdroje dat s datem a upozornění, že nejde o investiční doporučení.** Těsně před formulářem odpovídá na otázku „můžu tomu věřit?“.
+6. **Formulář (e-mail a souhlas).** Pro ty, kdo dočetli až sem. Výzvy ze sekce 2 a z tlačítka dole vedou sem.
+7. **Krátké FAQ (Je to zdarma? Co s mým e-mailem?).** Odstraní poslední obavy u formuláře, hlavně strach ze spamu.
 
 ## Dvě verze reklamy
 
@@ -31,6 +58,9 @@ Podklady: [data/etf.json](data/etf.json) (každý údaj se zdrojem a datem) a sh
 ## Měření cesty návštěvníka
 
 _TODO: jaké události měříme od příchodu po odeslání formuláře, čím a kde se dají zobrazit; jak je vyřešený souhlas s cookies._
+
+- **ID návštěvy se nikdy nespojuje s e-mailem.** Eventy a kontakty jsou oddělené, jinak by se z anonymních eventů staly osobní údaje.
+- **Před ostrou kampaní by měl měření posoudit právník.** Do prohlížeče sice nic neukládáme, ale i JavaScript, který z prohlížeče odesílá data, může podle výkladu Evropského sboru pro ochranu osobních údajů (pokyny 2/2023) vyžadovat souhlas. Tenhle výklad jsme z primárního zdroje neověřovali, proto ho necháváme na právníkovi.
 
 ## Očekávaná konverze
 

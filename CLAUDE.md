@@ -25,6 +25,9 @@ supabase/      SQL schéma tabulek a RLS politiky
 reklamy/       obě verze reklamy (texty a vizuály)
 ai-log/        exporty konverzací z Claude Code (/export) a deník práce s AI
 README.md      dokumentace pro hodnotitele
+texty.md       všechny texty stránky s odkazy na data, ze kterých vycházejí
+tahak.md       osnova PDF taháku a co pro něj chybí
+design.md      návrhy směru designu
 .env.example   názvy proměnných prostředí bez hodnot
 ```
 
@@ -40,6 +43,8 @@ Už rozhodnuté, neotevírej znovu. Když narazíš na důvod rozhodnutí změni
 - **Kontakt = jen e-mail,** žádný telefon. Proč: zadání chce co nejméně polí a e-mail stačí k doručení toho, co slibujeme.
 - **Konverze = návštěva → odeslaný formulář.** Proč: oba konce trychtýře změříme vlastním měřením, bez dat z reklamního systému.
 - **Měření: vlastní anonymní eventy do Supabase, žádné GA4, pixel ani cookie lišta.** Stránka posílá eventy (příchod, hloubka scrollu, interakce s prvky, otevření formuláře, odeslání) přes `/api/…`. ID návštěvy žije jen v paměti po dobu jednoho načtení stránky; nic se neukládá do prohlížeče (žádné cookies, `localStorage` ani `sessionStorage`). Trychtýř se počítá SQL dotazem. Proč: GA4 by potřebovalo souhlas a cookie lišta na mobilu zdržuje a ubírá konverze.
+- **ID návštěvy se nikdy nespojuje s e-mailem.** Neukládej ho do tabulky kontaktů a neposílej ho spolu s e-mailem. Proč: z anonymních eventů by se staly osobní údaje. Před ostrou kampaní posoudí měření právník (poznámka je v README).
+- **Koncept stránky: „dvojčata“.** Návštěvník klepne na americké ETF a uvidí jeho evropskou UCITS obdobu. Lead magnet je PDF tahák; o e-mail žádáme po prvním výsledku a tlačítkem pořád vidět dole. Detaily (cílovka, pořadí sekcí, proč) jsou v README, texty v `texty.md`, reklamy v `reklamy/`. Proč: stavíme na ověřeném faktu, který návštěvník jinde snadno nenajde.
 - **Správce osobních údajů: zatím počítáme s Clientelem.** V textech je jako placeholder `[TODO správce: Clientelo]`. Proč: správce zatím nevíme a placeholder jde před spuštěním dohledat a nahradit.
 - **Supabase projekt v EU regionu.** Proč: ukládáme e-maily českých návštěvníků a databáze má být blízko funkcím ve Frankfurtu.
 - **Denní keep-alive přes Vercel cron.** Proč: bezplatný Supabase projekt se po čase bez aktivity pozastaví a hodnotitel může stránku otevřít až za dva týdny.
@@ -86,6 +91,7 @@ Stránka mluví o penězích. Jedno vymyšlené číslo zničí důvěryhodnost 
 - Odborné pojmy (ETF, TER) vysvětli při prvním výskytu jednou větou, nebo je nepoužívej.
 - Neslibuj výnosy a nedávej investiční doporučení typu „kupte X“. Stránka srovnává a vysvětluje.
 - Tykáme, přirozeně a bez podbízení.
+- Tykání bez rodu: ve 2. osobě nepoužívej minulý čas ani tvary s rodem („hledal jsi“, „sám“, „připravený“). Piš přítomný čas a rozkazovací způsob („hledáš“, „vyber“). Text musí sedět na ženy i muže.
 - Česká typografie: desetinná čárka (0,03 %), mezera mezi tisíci (10 000 Kč), nezlomitelná mezera mezi číslem a jednotkou a za jednopísmennými předložkami a spojkami (v, k, s, z, o, u, a, i), uvozovky „…“, pomlčka – s mezerami místo spojovníku.
 
 ### 5. Commity
