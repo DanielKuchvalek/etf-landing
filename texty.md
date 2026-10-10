@@ -20,8 +20,8 @@ Všechny texty landing page v pořadí sekcí. Tykáme, bez rodu (žádné „hl
 
 ## 0. Titulek a náhled pro sdílení
 
-- **`<title>`:** Evropská dvojčata amerických ETF | `[TODO název stránky]`
-- **Meta description a OG popis:** VOO, VT a dalších 5 ETF z USA ti většina brokerů v Česku neprodá. Najdi jejich evropská dvojčata, která koupíš.
+- **`<title>`:** Evropská dvojčata amerických ETF | ETF dvojčata
+- **Meta description a OG popis:** VOO, VT a dalších 5 ETF z USA ti broker v Česku často nenabídne. Najdi jejich evropská dvojčata, která koupíš.
   `[r: PRIIPs]` `[d: * › ucits_obdoba.kde_koupit.xtb_cz]`
 
 ---
@@ -33,22 +33,23 @@ Nadpis a podnadpis se mění podle parametru v URL (viz `reklamy/README.md`). Zb
 ### Výchozí verze (bez parametru, organická návštěva)
 
 - **H1:** Najdi evropské dvojče k VOO, VT a dalším ETF z USA
-- **Podnadpis:** Americká ETF ti většina brokerů v Česku neprodá. Jejich evropská dvojčata koupíš normálně.
-  `[r: PRIIPs]` `[d: * › ucits_obdoba.kde_koupit.xtb_cz]`
+- **Podnadpis:** Americká ETF ti broker v Česku často nenabídne. Jejich evropská dvojčata koupíš normálně.
+  `[r: PRIIPs]` `[d: * › ucits_obdoba.kde_koupit]`
 
 ### Verze A „Dvojče“ (`?v=dvojce`)
 
-- **H1:** Chceš VOO a broker ho nenabízí? Má evropské dvojče.
-- **Podnadpis:** Americká ETF ti většina brokerů v Česku neprodá. Dvojče se stejným nebo podobným indexem koupíš normálně.
-  `[r: PRIIPs]` `[d: * › ucits_obdoba.rozdil_oproti_originalu]` `[d: * › ucits_obdoba.kde_koupit.xtb_cz]`
+- **H1:** Broker ti nenabídl VOO? Není to chyba.
+- **Podnadpis:** Americká ETF ti broker v Česku často nenabídne, evropská dvojčata ano. Tady je dvojče VOO a dalších 6 fondů z USA.
+  `[r: PRIIPs]` `[d: * › ucits_obdoba.kde_koupit]`
+- Háček platí, i kdyby VOO některý broker prodával: netvrdíme, že VOO koupit nejde.
 
-### Verze B „Poplatky“ (`?v=poplatky`)
+### Verze B „Začátek“ (`?v=zacatek`)
 
-- **H1:** Fond na americké akcie za 3 Kč ročně z každých 10 000 Kč
-  `[d: VTI › ucits_obdoba.ter = 0,03]` `[výpočet: 0,03 × 100 = 3 Kč]`
-- **Podnadpis:** Tolik si bere SXR4, evropské dvojče amerického VTI. Podívej se, kolik stojí dvojčata VOO, VT a dalších – všechna koupíš z Česka.
-  `[d: VTI › ucits_obdoba.burza.ticker = SXR4]` `[d: * › ucits_obdoba.kde_koupit.xtb_cz]`
-- **Drobně pod podnadpisem:** Jde o roční poplatek fondu (TER). Poplatky brokera a za směnu měny platíš zvlášť.
+- **H1:** Nevíš, kterým ETF začít?
+- **Podnadpis:** Tady je 7 známých fondů z USA. Co v nich je, kolik stojí a jejich evropské verze, které si koupíš z Česka.
+  `[d: * › typ]` `[d: * › ter]` `[d: * › ucits_obdoba.kde_koupit]`
+- **Drobně pod podnadpisem:** Nic ti nedoporučujeme, jen ukazujeme, co existuje.
+- „7 známých“ místo „7 nejznámějších“: nejvyšší stupeň neumíme doložit (SDY je výrazně menší než ostatní, `[d: SDY › velikost_fondu]`).
 
 ### Výběr ETF (pro všechny verze)
 
@@ -78,12 +79,10 @@ Výsledek se objeví hned pod výběrem, bez přechodu na jinou stránku.
 4. **Poplatek:** dvojče vs. originál
 5. **Dividendy**
 6. **Kde koupit**
-7. **Tlačítko:**
-   - tvoje znění: „Pošli mi tahák se všemi 7 dvojčaty“
-   - můj návrh: **„Chci tahák se všemi 7 dvojčaty“**. Tahák se stáhne hned, nic neposíláme, a „Pošli mi“ by slibovalo e-mail. `[ROZHODNOUT]`
+7. **Tlačítko:** Chci tahák se všemi 7 dvojčaty. Po klepnutí se formulář rozbalí přímo pod výsledkem.
 8. **Pod tlačítkem:** ISINy, poplatky a postup nákupu krok za krokem. PDF hned a zdarma.
 
-U řádku „Kde koupit“ je „Nabízí ho třeba XTB.“ XTB je jediný broker, u kterého jsme dostupnost ověřili. `[ROZHODNOUT: jmenovat brokera na stránce? Pokud je zákazník kampaně sám broker, je to problém. Bez jména zůstane jen burza a ticker.]`
+U řádku „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnost ověřili na jejich webu (`[d: X › ucits_obdoba.kde_koupit]`).
 
 ### VOO → VUAA
 
@@ -173,11 +172,10 @@ U řádku „Kde koupit“ je „Nabízí ho třeba XTB.“ XTB je jediný broke
 
 ## 4. Proč americká ETF nekoupíš
 
-- **H2:** Proč americká ETF v Česku většinou nekoupíš
-- **Text:** Fondy, které se v EU prodávají drobným investorům, potřebují dokument s klíčovými informacemi (KID). Americké fondy jako VOO ho nevydávají, a tak ti je většina brokerů neprodá, nanejvýš jako CFD. To je derivát, se kterým fond samotný nevlastníš. Evropská dvojčata KID mají, takže je koupíš normálně.
-  `[r: PRIIPs]` (čl. 5 odst. 1 a čl. 13 odst. 1 nařízení PRIIPs; Lynx; XTB nabízí americké originály jen jako CFD: `[d: * › original_u_xtb_cz]`)
-  - `[TODO]` „Většina brokerů“ zatím stojí na Lynxu a XTB. Doplnit Fio, Trading 212 a Degiro, ať tvrzení obstojí.
-  - `[TODO]` Ověřit VOO u XTB: XTB má VOO.US jako stránku ETF, ne CFD (`[d: VOO › original_u_xtb_cz]`). Pokud ho XTB retailu prodá, vyměnit příklad VOO za VT.
+- **H2:** Proč ti broker americká ETF často nenabídne
+- **Text:** Fondy, které se v EU prodávají drobným investorům, potřebují dokument s klíčovými informacemi (KID). Americké fondy jako VOO ho nevydávají, a tak je brokeři často nenabízejí, nebo jen jako CFD. To je derivát, se kterým fond samotný nevlastníš. Evropská dvojčata KID mají, takže je koupíš normálně.
+  `[r: PRIIPs]` (čl. 5 odst. 1 a čl. 13 odst. 1 nařízení PRIIPs; Lynx; XTB nabízí americké originály kromě VOO jen jako CFD: `[d: * › original_u_xtb_cz]`; KID pro VOO na serveru Vanguardu není)
+  - „Často“, ne „vždy“: XTB má VOO.US jako stránku ETF a ČNB připouští execution-only bez KID.
 
 ---
 
@@ -255,8 +253,8 @@ U řádku „Kde koupit“ je „Nabízí ho třeba XTB.“ XTB je jediný broke
 - **Je dvojče úplně stejné jako originál?**
   U VOO, SDY a AGG sleduje dvojče stejný index. U VTI, VT, VWO a VGT je index podobný, ne stejný. Rozdíl vždycky píšeme u výsledku.
   `[d: * › ucits_obdoba.rozdil_oproti_originalu]`
-- **Opravdu VOO nikde nekoupím?**
-  Výjimky jsou. Když tě broker vede jako profesionálního klienta, KID nepotřebuje. A ČNB připouští, že broker, který jen provádí tvoje pokyny a nic ti nenabízí ani nedoporučuje, KID dávat nemusí. Běžně ti ale broker americké ETF nenabídne.
+- **Dá se VOO někde koupit?**
+  Někdy ano. Když tě broker vede jako profesionálního klienta, KID nepotřebuje. A ČNB připouští, že broker, který jen provádí tvoje pokyny a nic ti nenabízí ani nedoporučuje, KID dávat nemusí. Běžný broker ti ale americké ETF často nenabídne.
   `[r: PRIIPs]` (výklad ČNB, Q&A B.2; Lynx o profesionálních klientech)
 - **Radíte mi, co koupit?**
   Ne. Ukazujeme, co existuje a kolik to stojí. Rozhodnutí je na tobě.
@@ -271,11 +269,15 @@ U řádku „Kde koupit“ je „Nabízí ho třeba XTB.“ XTB je jediný broke
 
 ---
 
-## Otevřená rozhodnutí v textech
+## Rozhodnutí (10. 10. 2026)
 
-1. Text tlačítka: „Pošli mi tahák…“ (tvoje), nebo „Chci tahák…“ (můj návrh, protože se nic neposílá).
-2. Jmenovat na stránce XTB, nebo ukázat jen burzu a ticker.
-3. Smí být tahák podmíněný souhlasem s marketingovými e-maily? (Na právníka.)
-4. VOO jako hlavní příklad zůstává, jen pokud se potvrdí, že ho XTB retailu neprodá.
-5. Název stránky (do `<title>` a patičky).
-6. Co a jak často budeme posílat e-mailem (FAQ).
+- **Tlačítko:** „Chci tahák se všemi 7 dvojčaty“.
+- **Brokeři:** jmenujeme všechny, u kterých se dostupnost podaří ověřit na jejich webu.
+- **VOO zůstává hlavním příkladem.** Háček je formulovaný tak, aby platil, i kdyby VOO některý broker prodával.
+- **Název stránky:** ETF dvojčata.
+- **Formulář** se otevírá na místě: pod výsledkem, nebo jako panel ze spodního tlačítka.
+
+## Stále otevřené
+
+1. Smí být tahák podmíněný souhlasem s marketingovými e-maily? Na právníka, zatím placeholder.
+2. Co a jak často budeme posílat e-mailem (FAQ). Rozhodne správce.

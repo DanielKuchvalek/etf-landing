@@ -8,9 +8,9 @@
 ## Texty
 
 - **Primární text:**
-  > Chceš VOO, ale broker ho nenabízí? Americká ETF ti většina brokerů v Česku neprodá.
+  > Broker ti nenabídl VOO? Není to chyba. Americká ETF ti broker v Česku často nenabídne, evropská dvojčata ano.
   >
-  > Jejich evropská dvojčata ano. K VOO a dalším 6 ETF jsme je dohledali a ověřili u správců fondů. Najdi to svoje jedním klepnutím.
+  > K VOO a dalším 6 ETF jsme je dohledali a ověřili u správců fondů. Najdi to svoje jedním klepnutím.
 
   Zdroje: `[r: PRIIPs]` (`data/README.md`), dvojčata `[d: * › ucits_obdoba]`, ověření `[d: meta.overeno_dne]`.
 - **Nadpis:** Najdi evropské dvojče k VOO
@@ -33,14 +33,10 @@
 
 ## Navazující úvod stránky
 
-- **H1:** Chceš VOO a broker ho nenabízí? Má evropské dvojče.
+- **H1:** Broker ti nenabídl VOO? Není to chyba.
 - Pod ním hned výběr ETF, VOO je mezi prvními.
 - Plné znění je v [texty.md](../texty.md), sekce 1, verze A.
 
-## Riziko, které musíme ověřit před spuštěním
+## Proč háček nic absolutního netvrdí
 
-XTB má VOO.US na svém webu jako stránku ETF, ne CFD (`[d: VOO › original_u_xtb_cz]`). Pokud ho XTB prodá i retailovým klientům, je háček této reklamy pro jeho klienty nepravdivý. Tedy:
-
-- **Ověřit v aplikaci XTB** s retailovým účtem, jestli jde VOO.US koupit.
-- **Pokud ano**, vyměnit VOO za VT (u XTB jen jako CFD, `[d: VT › original_u_xtb_cz]`). Primární text pak: „Chceš VT, ale broker ho nenabízí? …“, obrázek VT → VWCE.
-- **„Většina brokerů“** zatím stojí na Lynxu a XTB. Doplnit aspoň Fio, Trading 212 a Degiro.
+XTB má VOO.US na webu jako stránku ETF, ne CFD (`[d: VOO › original_u_xtb_cz]`), a ČNB připouští execution-only bez KID. Proto netvrdíme, že VOO koupit nejde. Říkáme jen, že ho broker často nenabídne, a to platí i v případě, že ho XTB prodává.

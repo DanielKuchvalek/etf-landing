@@ -14,7 +14,7 @@
 
 - Vědí, co je ETF, a mají konkrétní problém: fond, o kterém slyšeli, u brokera nenajdou. Stránka jim ten problém vyřeší jedním klepnutím, takže hodnotu vidí okamžitě.
 - Jsou blízko k akci. Nepotřebují vysvětlovat, proč investovat, jen co koupit a jak.
-- Lidi, kteří ETF ještě neřeší, oslovuje reklama B (poplatky). Tím testujeme, jestli stránka funguje i pro ně.
+- Začátečníky, kteří nevědí, kterým ETF začít, oslovuje reklama B. Testujeme tak druhou motivaci: nejistotu místo zklamání z brokera.
 
 **Stavíme na ověřeném faktu:** americká ETF si Čech u většiny brokerů nekoupí, evropská obdoba ano (viz [data/README.md](data/README.md)). Tuhle informaci jinde snadno nenajde, a je to hlavní důvod, proč na stránce zůstat.
 
@@ -26,8 +26,10 @@
 
 **Kdy žádáme o kontakt:**
 
-1. Hned po prvním výsledku „Najdi dvojče“ výzvou „Pošli mi tahák se všemi 7 dvojčaty“. V tu chvíli návštěvník právě dostal hodnotu a ví, že zbylých 6 párů a postup jsou v taháku.
-2. Tlačítkem, které je na mobilu pořád vidět dole na obrazovce. Kdo projde stránku dál, nemusí formulář hledat.
+1. Hned po prvním výsledku „Najdi dvojče“ tlačítkem „Chci tahák se všemi 7 dvojčaty“. V tu chvíli návštěvník právě dostal hodnotu a ví, že zbylých 6 párů a postup jsou v taháku. Formulář se rozbalí přímo pod výsledkem.
+2. Tlačítkem, které je na mobilu pořád vidět dole na obrazovce. Formulář se otevře jako panel ve spodní části obrazovky, na místě, kde návštěvník právě je.
+
+Formulář se nikdy neotevírá odkazem dolů na sekci 6. Přeskočení přes tři sekce stojí konverze a návštěvník ztratí kontext. Tuhle úpravu navrhla AI (Claude Code).
 
 **Formulář:** jen e-mail a souhlas se zpracováním. Žádné jméno ani telefon.
 
@@ -38,11 +40,11 @@ Texty všech částí jsou v [texty.md](texty.md).
 ## Pořadí sekcí a zdůvodnění
 
 1. **Úvod navazující na reklamu a rovnou „Najdi dvojče“.** Návštěvník má jen pár sekund. První obrazovka musí zopakovat slib reklamy a nabídnout akci bez scrollování. Nadpis se mění podle toho, ze které reklamy návštěvník přišel (viz [reklamy/](reklamy/)).
-2. **Výsledek a výzva k taháku.** Výsledek je okamžitá hodnota zdarma. Výzva přichází ve chvíli, kdy je zájem nejvyšší.
+2. **Výsledek a výzva k taháku.** Výsledek je okamžitá hodnota zdarma. Výzva přichází ve chvíli, kdy je zájem nejvyšší, a formulář se rozbalí přímo pod výsledkem.
 3. **Přehled všech 7 párů v kompaktních kartách.** Pro ty, kdo chtějí vidět celek, než se rozhodnou. Karty ukazují jen základ (originál → dvojče, poplatky); ISINy a postup zůstávají v taháku.
 4. **Proč VOO nekoupíš (2–3 věty).** Vysvětlení, proč dvojčata vůbec potřebujeme. Až tady, protože ten, kdo přišel z reklamy „Dvojče“, už důvod zná z úvodu a nechce ho číst před výsledkem.
 5. **Důvěra: zdroje dat s datem a upozornění, že nejde o investiční doporučení.** Těsně před formulářem odpovídá na otázku „můžu tomu věřit?“.
-6. **Formulář (e-mail a souhlas).** Pro ty, kdo dočetli až sem. Výzvy ze sekce 2 a z tlačítka dole vedou sem.
+6. **Formulář (e-mail a souhlas).** Pro ty, kdo dočetli až sem. Výzvy ze sekce 2 a z tlačítka dole sem nevedou, otevírají formulář na místě. Tuhle změnu oproti původnímu návrhu navrhla AI (Claude Code): méně kroků a žádné přeskakování stránkou.
 7. **Krátké FAQ (Je to zdarma? Co s mým e-mailem?).** Odstraní poslední obavy u formuláře, hlavně strach ze spamu.
 
 ## Dvě verze reklamy

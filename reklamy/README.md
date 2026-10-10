@@ -2,13 +2,16 @@
 
 Dvě verze pro Meta (Facebook a Instagram), mobil. Testují dva úhly:
 
-| | A „Dvojče“ | B „Poplatky“ |
+| | A „Dvojče“ | B „Začátek“ |
 |---|---|---|
-| Soubor | [a-dvojce.md](a-dvojce.md) | [b-poplatky.md](b-poplatky.md) |
-| Háček | VOO, které v Česku většinou nekoupíš | kolik stojí poplatek fondu |
-| Pro koho | lidi, kteří už o ETF slyšeli a možná je zkoušeli koupit | lidi, kteří ETF ještě neřeší |
-| Parametr pro úvod stránky | `?v=dvojce` | `?v=poplatky` |
-| `utm_content` | `a-dvojce` | `b-poplatky` |
+| Soubor | [a-dvojce.md](a-dvojce.md) | [b-zacatek.md](b-zacatek.md) |
+| Háček | broker ti nenabídl VOO, není to chyba | nevíš, kterým ETF začít |
+| Motivace | zklamání z brokera | nejistota |
+| Pro koho | lidi, kteří už o ETF slyšeli a možná je zkoušeli koupit | začátečníci, kteří konkrétní fond zatím nehledají |
+| Parametr pro úvod stránky | `?v=dvojce` | `?v=zacatek` |
+| `utm_content` | `a-dvojce` | `b-zacatek` |
+
+Původní reklamu B „Poplatky“ jsme zahodili. Bez srovnávacího fondu se zdrojem by její čísla nikoho nezaujala (historie v gitu).
 
 ## Formát
 
@@ -42,7 +45,7 @@ Nadpis a podnadpis první obrazovky se mají měnit, aby návštěvník hned vid
 
 ```
 https://[TODO doména]/?v=dvojce&utm_source=meta&utm_medium=paid_social&utm_campaign=etf-dvojcata&utm_content=a-dvojce
-https://[TODO doména]/?v=poplatky&utm_source=meta&utm_medium=paid_social&utm_campaign=etf-dvojcata&utm_content=b-poplatky
+https://[TODO doména]/?v=zacatek&utm_source=meta&utm_medium=paid_social&utm_campaign=etf-dvojcata&utm_content=b-zacatek
 ```
 
 ## Nastavení testu

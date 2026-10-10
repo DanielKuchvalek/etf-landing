@@ -54,3 +54,21 @@ Vybraný směr převezmou i obrázky reklam.
 ## Doporučení
 
 **B.** Navazuje na název taháku, vychází z české školní zkušenosti (tahák zná každý), zvýrazňovač přirozeně táhne oko k poplatkům a světlé pozadí je bezpečnější pro důvěru u začátečníků. A je originálnější, ale užší: sedí hlavně na lidi, kteří už VOO znají.
+
+## Vybráno: B „Tahák v sešitě“ (10. 10. 2026)
+
+U peněz to nesmí působit dětsky. Pravidla:
+
+- **Mřížka** je jen jemný podklad. Karty, výsledek a formulář jsou na čistém bílém papíře s tenkým okrajem.
+- **Čísla:** písmo s pevnou šířkou číslic (`font-variant-numeric: tabular-nums`), zarovnaná a vždy s jednotkou. Zvýrazňovač jen pod čísly poplatků, nikde jinde.
+- **Propiska:** modrá jen pro šipky, popisky a odkazy, ne pro velké plochy.
+- **Červená:** jen přeškrtnutý ticker originálu ve výsledku. Žádné červené varování ani výkřiky.
+- **Písmo:**
+  - žádné rukopisné ani komiksové,
+  - jen systémové písmo, takže se nic nestahuje,
+  - nadpisy tučně s těsnějším prokladem.
+- **Ilustrace:** jen jednoduché SVG šipky a podtržení, žádné kliparty, maskoti ani emoji.
+- **Klid:**
+  - hodně bílého místa,
+  - jedna hlavní akce na obrazovce,
+  - animace jen krátké a vypnuté při `prefers-reduced-motion`.
