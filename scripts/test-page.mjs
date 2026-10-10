@@ -109,7 +109,9 @@ try {
     check('měření: nikde e-mail', !JSON.stringify(evs).includes('@'));
     const names = evs.map((e) => e.udalost);
     for (const n of ['prichod', 'vyber_etf', 'cta', 'formular_otevren', 'formular_zacatek', 'odeslani_pokus', 'odeslani_chyba', 'odeslano']) check(`měření: událost ${n}`, names.includes(n));
-    check('varování: PDF zatím neexistuje', logs.some((l) => l.type === 'warn' && l.text.includes('PDF zatím neexistuje')));
+    const pdf = await page.evaluate(() => fetch('/tahak.pdf', { method: 'HEAD' }).then((r) => `${r.status} ${r.headers.get('content-type')}`));
+    check('tahák PDF je dostupný', pdf.startsWith('200') && pdf.includes('pdf'), pdf);
+    check('žádné varování o chybějícím PDF', !logs.some((l) => l.type === 'warn' && l.text.includes('PDF zatím neexistuje')));
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     check('bez vodorovného přetečení (s výsledkem)', overflow === 0, `${overflow}px`);
     check('bez chyb v konzoli', !realErrors(logs).length, realErrors(logs).map((l) => l.text).join(' | '));

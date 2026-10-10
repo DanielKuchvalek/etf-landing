@@ -18,8 +18,12 @@ Navržená struktura. Složky vznikají, až jsou potřeba.
 ```
 public/        web – jediná složka, kterou Vercel servíruje
   index.html   celá stránka; CSS a JS jsou inline (jeden požadavek)
-  tahak.pdf    lead magnet (zatím neexistuje)
+  tahak.pdf    lead magnet, generovaný (needitovat ručně)
+  ochrana-osobnich-udaju.html   návrh zásad (musí schválit právník)
 api/           serverless funkce (zpracování formuláře)
+tahak/         zdroj PDF taháku (tahak.html), generuje scripts/pdf.mjs
+scripts/       testy, Lighthouse, snímky obrazovky, generování PDF (návod v scripts/README.md)
+docs/screenshots/  snímky obrazovky před a po úpravách
 data/          podklady k údajům o ETF: hodnota, zdroj (URL), datum
 supabase/      SQL schéma tabulek a RLS politiky
 reklamy/       obě verze reklamy (texty a vizuály)

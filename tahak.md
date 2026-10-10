@@ -3,6 +3,8 @@
 **Název:** Tahák: 7 ETF z NYSE a jejich dvojčata, která koupíš z Česka
 **Slib ze stránky:** ISINy, poplatky, kde koupit a postup nákupu krok za krokem. Na stránce je, **co** koupit, v taháku je, **jak** na to.
 
+**Stav (10. 10. 2026):** PDF existuje: `public/tahak.pdf`, 8 stran A5. Zdrojem je `tahak/tahak.html`, údaje o fondech se při generování berou z `data/etf.json`. Přegenerování: `cd scripts && node pdf.mjs`, kontrola proti datům: `python3 scripts/check_pdf.py`. Postup nákupu je napsaný podle veřejných nápověd XTB (česká) a Trading 212 (anglická), se zdrojem u každého kroku.
+
 **Formát:** PDF se stahuje hned po odeslání formuláře, takže ho většina lidí otevře na mobilu.
 
 - Sazba v jednom sloupci, velké písmo, tabulky úzké nebo rozdělené na karty. Klasická dvousloupcová A4 by se na telefonu špatně četla.

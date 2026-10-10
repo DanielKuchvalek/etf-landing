@@ -29,6 +29,9 @@ node test-page.mjs                 # interakce na 375 px: výběr ETF, formulá�
 node lighthouse.mjs                # Lighthouse (mobil) pro všechny verze úvodu
 node screenshots.mjs po            # snímky do docs/screenshots/po-*.png
 node pdf.mjs                       # vygeneruje public/tahak.pdf z tahak/tahak.html a data/etf.json
+cd ..
+python3 scripts/check_pdf.py       # PDF obsahuje správné ISINy, poplatky a brokery (macOS, PDFKit)
+swift scripts/pdf-to-png.swift public/tahak.pdf /tmp/tahak 700   # stránky PDF jako PNG ke kontrole
 ```
 
 Skripty vracejí nenulový návratový kód, když něco neprojde.

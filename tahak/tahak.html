@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<title>Tahák: 7 ETF z NYSE a jejich dvojčata, která koupíš z Česka</title>
+<!--
+  Zdroj PDF taháku. Generuje se příkazem: cd scripts && node pdf.mjs → public/tahak.pdf
+  Údaje o fondech se při generování berou z data/etf.json (window.ETF_DATA), nic se nepřepisuje ručně.
+  Postup nákupu je napsaný podle veřejných nápověd XTB a Trading 212, ověřeno 10. 10. 2026; zdroj je u každého kroku.
+-->
+<style>
+@page{size:A5;margin:12mm 12mm 16mm}
+:root{--paper:#FFFDF5;--ink:#141414;--ink-2:#4A4A4A;--line:#D8D4C8;--hl:#FFE45C;--ok:#177A41}
+*{box-sizing:border-box}
+html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{margin:0;background:#fff;color:var(--ink);font:400 9.6pt/1.45 "Helvetica Neue",Helvetica,Arial,sans-serif;font-variant-numeric:tabular-nums}
+h1,h2,h3{margin:0 0 .4em;font-weight:800;line-height:1.12;letter-spacing:-.01em}
+h1{font-size:23pt}
+h2{font-size:14pt;margin-top:0}
+h3{font-size:11pt}
+p{margin:0 0 .6em}
+a{color:var(--ink)}
+.hl{background:linear-gradient(transparent 55%,var(--hl) 55%);padding:0 2px}
+.page{break-after:page}
+.page:last-child{break-after:auto}
+.kicker{font-size:8.5pt;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+.muted{color:var(--ink-2)}
+.small{font-size:8pt;color:var(--ink-2)}
+.ok{color:var(--ok);font-weight:700}
+/* titulní strana */
+.cover h1{margin:6mm 0 3mm}
+.pairs{margin:5mm 0 0;padding:0;list-style:none;border-top:1.5px solid var(--ink)}
+.pairs li{display:grid;grid-template-columns:30mm 1fr;gap:2mm;align-items:baseline;padding:2.4mm 0;border-bottom:1px dashed var(--line)}
+.pairs .tk{font-size:12pt;font-weight:800;white-space:nowrap}
+.pairs .tk s{color:var(--ink-2);text-decoration-thickness:1.5px}
+.pairs .what{font-size:9pt}
+.note{margin-top:5mm;padding:3mm 3.5mm;border:1.5px solid var(--ink);border-radius:2mm}
+/* karty párů */
+.card{break-inside:avoid;margin:0 0 3mm;padding:2.6mm 3.4mm;border:1.5px solid var(--ink);border-radius:2mm;background:#fff}
+.card h3{font-size:12pt;margin-bottom:.5mm}
+.card .full{font-size:7.8pt;color:var(--ink-2);margin-bottom:1.5mm}
+.card dl{margin:0;display:grid;grid-template-columns:17mm 1fr;gap:.6mm 2.5mm;font-size:8.8pt;line-height:1.35}
+.card dt{font-weight:700;font-size:8pt}
+.card dd{margin:0}
+.mono{font-family:Menlo,ui-monospace,monospace;font-size:8.3pt;letter-spacing:.02em}
+/* postup */
+.steps{margin:0;padding:0;list-style:none;counter-reset:s}
+.steps li{position:relative;break-inside:avoid;margin:0 0 3mm;padding-left:9mm}
+.steps li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:-.5mm;width:6.5mm;height:6.5mm;border-radius:50%;background:var(--hl);font-weight:800;text-align:center;line-height:6.5mm}
+.steps b{display:block}
+.src{display:block;font-size:7.6pt;color:var(--ink-2);word-break:break-all}
+.broker{margin:0 0 5mm}
+.broker h3{display:inline-block;border-bottom:3px solid var(--hl)}
+.fees{padding:3mm 3.5mm;border-left:3px solid var(--ink);background:#fff}
+ul.plain{margin:0 0 .6em;padding-left:4.5mm}
+ul.plain li{margin:0 0 1.5mm}
+.sources li{font-size:8pt;margin-bottom:1mm}
+</style>
+</head>
+<body>
+
+<section class="page cover">
+  <p class="kicker">ETF dvojčata · tahák</p>
+  <h1>7 ETF z NYSE a jejich <span class="hl">dvojčata</span>, která koupíš z Česka</h1>
+  <p class="muted">Co koupit a jak, když ti broker americké ETF nenabídne. Ke každému fondu jeho evropská verze, ISIN, poplatek a ověření, kde ji koupíš.</p>
+  <ul class="pairs" id="cover-pairs"></ul>
+  <div class="note">
+    <p><b>Jak tahák použít:</b> vyber si pár, opiš ticker nebo ISIN do aplikace brokera a postupuj podle kroků na straně „Jak koupit“.</p>
+    <p class="small" style="margin:0">Data ověřena <span data-date></span> na webech správců fondů a brokerů. Nejde o investiční doporučení. Vydává Clientelo Czech s.r.o.</p>
+  </div>
+</section>
+
+<section class="page">
+  <p class="kicker">Proč dvojčata</p>
+  <h2>Proč ti broker americká ETF často nenabídne</h2>
+  <p>Fondy, které se v EU prodávají drobným investorům, potřebují dokument s klíčovými informacemi (KID). Americké fondy jako VOO ho nevydávají, a tak je brokeři často nenabízejí, nebo jen jako CFD. To je derivát, se kterým fond samotný nevlastníš.</p>
+  <p>Evropská dvojčata KID mají, takže je koupíš normálně. U VOO, SDY a AGG sledují stejný index jako originál, u ostatních podobný. Rozdíl je vždy u páru.</p>
+  <p class="small">Zdroj: nařízení (EU) č. 1286/2014 (PRIIPs), čl. 5 a 13; výklad ČNB a stránky brokerů, viz Zdroje na konci.</p>
+  <h2 style="margin-top:5mm">Všech 7 párů</h2>
+  <div id="cards"></div>
+</section>
+
+<section class="page">
+  <p class="kicker">Jak koupit</p>
+  <h2>Jak koupit dvojče krok za krokem</h2>
+  <p class="muted">Podle veřejných nápověd brokerů, ověřeno <span data-date></span>. U každého kroku je zdroj. Aplikace se mění, názvy tlačítek se můžou lišit.</p>
+
+  <div class="broker">
+    <h3>XTB</h3>
+    <ol class="steps">
+      <li><b>Založ si účet.</b> Na webu nebo v aplikaci XTB. XTB uvádí, že otevření účtu je zdarma a zabere do 15 minut.
+        <a class="src" href="https://www.xtb.com/cz/etf/vanguard-s-p-500-ucits-acc-eur">xtb.com/cz/etf/vanguard-s-p-500-ucits-acc-eur</a></li>
+      <li><b>Pošli peníze.</b> V aplikaci záložka Portfolio → „Vložit prostředky“, na webu tlačítko „Vklad a výběr“ → Vložit prostředky. Bankovním převodem, kartou nebo přes PayPal.
+        <a class="src" href="https://www.xtb.com/cz/help-center/platby-a-poplatky/vklady-na-obchodni-ucet">xtb.com/cz/help-center/platby-a-poplatky/vklady-na-obchodni-ucet</a></li>
+      <li><b>Najdi dvojče.</b> Vyhledej ticker z taháku (např. VUAA.DE, u IUAA je to IUAA.UK). XTB nabízí skutečné akcie a ETF i CFD. Zkontroluj, že kupuješ ETF, ne CFD.
+        <a class="src" href="https://www.xtb.com/cz/help-center/akcie-a-etf/akcie">xtb.com/cz/help-center/akcie-a-etf/akcie</a></li>
+      <li><b>Zadej pokyn.</b> Zvol částku, kterou chceš investovat, a zadej pokyn. Nejmenší pokyn je 1 EUR.
+        <a class="src" href="https://www.xtb.com/cz/etf/vanguard-s-p-500-ucits-acc-eur">xtb.com/cz/etf/vanguard-s-p-500-ucits-acc-eur</a></li>
+    </ol>
+  </div>
+
+  <div class="broker">
+    <h3>Trading 212</h3>
+    <ol class="steps">
+      <li><b>Založ si účet.</b> Na webu nebo v aplikaci. Potřebuješ 18 let, daňové identifikační číslo a ověření totožnosti: fotku dokladu a selfie, obojí v mobilu.
+        <a class="src" href="https://helpcentre.trading212.com/hc/en-us/articles/4592579818397-How-do-I-create-a-Trading-212-account">helpcentre.trading212.com/…/4592579818397</a>
+        <a class="src" href="https://helpcentre.trading212.com/hc/en-us/articles/19180493657245-How-do-I-verify-my-identity">helpcentre.trading212.com/…/19180493657245</a></li>
+      <li><b>Pošli peníze.</b> Menu ☰ → Deposit funds (vklad), vyber způsob platby, zadej částku a postupuj podle pokynů.
+        <a class="src" href="https://helpcentre.trading212.com/hc/en-us/articles/4402594815505-How-do-I-deposit-into-my-account">helpcentre.trading212.com/…/4402594815505</a></li>
+      <li><b>Najdi dvojče.</b> Otevři fond podle tickeru (např. VWCE). V seznamu nástrojů Trading 212 je u každého ISIN, burza a měna, takže si ověříš, že máš ten správný.
+        <a class="src" href="https://www.trading212.com/cs/trading-instruments/invest">trading212.com/cs/trading-instruments/invest</a></li>
+      <li><b>Zvol měnu.</b> Na obrazovce pokynu klepni na měnu vedle ceny a vyber měnu fondu (např. EUR). Při převodu z jiné měny si Trading 212 bere 0,15 % a částku ukáže před odesláním.
+        <a class="src" href="https://helpcentre.trading212.com/hc/en-us/articles/34159237080861-Can-I-choose-the-currency-in-which-to-buy-sell-assets-for-Invest-accounts">helpcentre.trading212.com/…/34159237080861</a>
+        <a class="src" href="https://helpcentre.trading212.com/hc/en-us/articles/360018909758-What-is-the-FX-fee-Invest-Stocks-ISA">helpcentre.trading212.com/…/360018909758</a></li>
+      <li><b>Zadej pokyn.</b> BUY → počet kusů, nebo částka (Value order) → zkontroluj a odešli. Kdo chce určit cenu, zvolí limitní pokyn; ten se ale nemusí provést, když cena na limit nedojde.
+        <a class="src" href="https://helpcentre.trading212.com/hc/en-us/articles/360007081257-Market-Orders">helpcentre.trading212.com/…/360007081257</a>
+        <a class="src" href="https://helpcentre.trading212.com/hc/en-us/articles/360007139778-Limit-Orders">helpcentre.trading212.com/…/360007139778</a></li>
+    </ol>
+  </div>
+</section>
+
+<section class="page">
+  <p class="kicker">Na co si dát pozor</p>
+  <h2>Než klikneš na „koupit“</h2>
+  <ul class="plain">
+    <li><b>Dvojče není vždy totéž co originál.</b> <span id="similar"></span></li>
+    <li><b>Přečti si KID.</b> Broker ti ho musí dát před nákupem. Najdeš v něm rizika a náklady fondu.</li>
+    <li><b>Hodnota v korunách se mění i s kurzem.</b> Fondy drží akcie a dluhopisy v cizích měnách.</li>
+    <li><b>Daně tahák neřeší.</b> Jak se zdaňují zisky a dividendy, zjisti u daňového poradce.</li>
+  </ul>
+  <div class="fees">
+    <h3>Poplatky navíc k poplatku fondu</h3>
+    <p><b>XTB:</b> akcie a ETF bez provize do měsíčního obratu 100 000 EUR, nad něj 0,2 % (min. 10 EUR). Když je účet v jiné měně než fond, přičítá se ke kurzu 0,5 %.
+      <a class="src" href="https://www.xtb.com/cz/help-center/platby-a-poplatky/poplatky-a-provize-v-xtb">xtb.com/cz/help-center/platby-a-poplatky/poplatky-a-provize-v-xtb</a></p>
+    <p style="margin:0"><b>Trading 212:</b> převod měny 0,15 %. Platíš ho, když kupuješ v jiné měně, než je měna fondu.
+      <a class="src" href="https://helpcentre.trading212.com/hc/en-us/articles/360018909758-What-is-the-FX-fee-Invest-Stocks-ISA">helpcentre.trading212.com/…/360018909758</a></p>
+  </div>
+  <p class="small" style="margin-top:4mm"><b>Nejde o investiční doporučení.</b> Tahák ukazuje, jaké fondy existují, kolik stojí a kde je koupíš. Co koupíš, je tvoje rozhodnutí. Hodnota investice může klesnout a zpátky můžeš dostat méně, než vložíš.</p>
+
+</section>
+
+<section class="page">
+  <p class="kicker">Zdroje</p>
+  <h2>Odkud jsou údaje</h2>
+  <p class="muted">Každý údaj v taháku je převzatý ze stránky správce fondu nebo brokera a ověřený <span data-date></span>. Poplatky a velikosti fondů se mění, před nákupem je zkontroluj v KID.</p>
+  <ul class="plain sources" id="sources"></ul>
+  <p class="small">Vydává Clientelo Czech s.r.o. · ETF dvojčata · data ověřena <span data-date></span></p>
+</section>
+
+<script>
+(function () {
+  function render(d) {
+    var NB = ' ';
+    function cz(x) { return x.toFixed(2).replace('.', ','); }
+    function kc(ter) { return Math.round(ter * 100); }            // Kč ročně z 10 000 Kč = TER v % × 100
+    function th(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, NB); }
+    function link(href, text) { var a = document.createElement('a'); a.href = href; a.textContent = text; return a; }
+    function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+    function dateCz(iso) { var p = iso.split('-'); return +p[2] + '.' + NB + +p[1] + '.' + NB + p[0]; }
+    function brokers(kk) {
+      var out = [];
+      if (kk.xtb_cz.hodnota) out.push('XTB');
+      if (kk.trading212 && kk.trading212.hodnota) out.push('Trading 212');
+      if (kk.degiro && kk.degiro.hodnota) out.push('Degiro');
+      return out;
+    }
+    function t212Listing(kk) {
+      var k = (kk.trading212 && kk.trading212.kotace) || [];
+      return k.filter(function (x) { return x.mena === 'EUR' && /Xetra/.test(x.burza); })[0]
+        || k.filter(function (x) { return x.mena === 'EUR'; })[0] || k.filter(function (x) { return x.mena === 'USD'; })[0] || k[0];
+    }
+    var date = dateCz(d.meta.overeno_dne);
+    document.querySelectorAll('[data-date]').forEach(function (s) { s.textContent = date; });
+
+    var cover = document.getElementById('cover-pairs');
+    var cards = document.getElementById('cards');
+    var sources = document.getElementById('sources');
+    var similar = [];
+    d.etf.forEach(function (e) {
+      var u = e.ucits_obdoba, b = u.burza.hodnota, kk = u.kde_koupit;
+      var same = /stejný index/i.test(u.rozdil_oproti_originalu);
+      if (!same) similar.push(e.ticker);
+      var br = brokers(kk);
+
+      var li = el('li');
+      var tk = el('span', 'tk');
+      tk.appendChild(el('s', null, e.ticker)); tk.appendChild(document.createTextNode(' → ' + b.ticker));
+      li.appendChild(tk);
+      var what = el('span', 'what');
+      what.appendChild(el('span', 'ok', '✓ '));
+      what.appendChild(document.createTextNode('koupíš u ' + br.join(', ') + ' · ' + kc(u.ter.hodnota) + NB + 'Kč ročně z 10' + NB + '000' + NB + 'Kč'));
+      li.appendChild(what);
+      cover.appendChild(li);
+
+      var c = el('div', 'card');
+      c.appendChild(el('h3', null, e.ticker + ' → ' + b.ticker));
+      c.appendChild(el('p', 'full', u.nazev.hodnota.replace(/®/g, '') + ' · ' + e.typ));
+      var dl = el('dl');
+      function row(k, v, cls) { dl.appendChild(el('dt', null, k)); var dd = el('dd', cls, v); dl.appendChild(dd); return dd; }
+      row('ISIN', u.isin.hodnota, 'mono');
+      var t = t212Listing(kk);
+      var xtbTk = (kk.xtb_cz.hodnota.match(/– (\S+) jako/) || [])[1];
+      var tdd = row('Ticker', '');
+      [[ 'XTB', xtbTk, null ], [ 'Trading 212', t && t.ticker, t && t.mena ]].forEach(function (x, i) {
+        if (!x[1]) return;
+        if (i && tdd.childNodes.length) tdd.appendChild(document.createTextNode(' · '));
+        tdd.appendChild(document.createTextNode(x[0] + ' '));
+        tdd.appendChild(el('span', 'mono', x[1]));
+        if (x[2]) tdd.appendChild(document.createTextNode(' (' + x[2] + ')'));
+      });
+      row('Poplatek', kc(u.ter.hodnota) + NB + 'Kč ročně z 10' + NB + '000' + NB + 'Kč (TER ' + cz(u.ter.hodnota) + NB + '%). '
+        + e.ticker + ': ' + kc(e.ter.hodnota) + NB + 'Kč (' + cz(e.ter.hodnota) + NB + '%).');
+      row('Dividendy', u.dividendova_politika.hodnota.charAt(0).toUpperCase() + u.dividendova_politika.hodnota.slice(1) + '.');
+      row('Index', same ? 'Stejný jako ' + e.ticker + ': ' + u.index.hodnota + '.'
+        : 'Podobný, ne stejný: ' + u.index.hodnota + ' (' + th(u.pocet_titulu.hodnota) + ' titulů), ' + e.ticker + ' ' + e.index.hodnota + ' (' + th(e.pocet_titulu.hodnota) + ').');
+      var ok = row('Koupíš u', '');
+      ok.appendChild(el('span', 'ok', '✓ ')); ok.appendChild(document.createTextNode(br.join(', ')));
+      c.appendChild(dl);
+      cards.appendChild(c);
+
+      var s = el('li');
+      s.appendChild(document.createTextNode(e.ticker + ' → ' + b.ticker + ': '));
+      s.appendChild(link(e.emitent.zdroj, e.ticker + ' u správce'));
+      s.appendChild(document.createTextNode(' · '));
+      s.appendChild(link(u.nazev.zdroj, b.ticker + ' u správce'));
+      sources.appendChild(s);
+    });
+    document.getElementById('similar').textContent = 'U ' + similar.join(', ') + ' sleduje dvojče podobný, ne stejný index, a drží jiný počet titulů.';
+    [
+      [['https://eur-lex.europa.eu/legal-content/CS/TXT/?uri=CELEX:32014R1286', 'Nařízení PRIIPs (EU) č. 1286/2014']],
+      [['https://www.cnb.cz/cs/dohled-financni-trh/legislativni-zakladna/stanoviska-k-regulaci-financniho-trhu/RS2018-12', 'ČNB: otázky a odpovědi k PRIIPs']],
+      [['https://www.xtb.com/cz/etf', 'XTB'], ['https://www.trading212.com/cs/trading-instruments/invest', 'Trading 212'], ['https://www.degiro.cz/poplatky/etf-core-selection', 'Degiro']]
+    ].forEach(function (group, gi) {
+      var li = el('li');
+      if (gi === 2) li.appendChild(document.createTextNode('Dostupnost u brokerů: '));
+      group.forEach(function (x, i) { if (i) li.appendChild(document.createTextNode(' · ')); li.appendChild(link(x[0], x[1])); });
+      sources.appendChild(li);
+    });
+
+    // česká typografie: nezlomitelné mezery za jednopísmennými předložkami a spojkami
+    var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    var n;
+    while ((n = walker.nextNode())) {
+      if (n.parentNode.closest('script,style,.src,.sources')) continue;
+      n.nodeValue = n.nodeValue.replace(/(^|[\s(])([vVkKsSzZoOuUaAiI]) /g, '$1$2' + NB).replace(/(\d) (%|Kč|EUR|let|minut)/g, '$1' + NB + '$2');
+    }
+    document.body.setAttribute('data-ready', '1');
+  }
+  if (window.ETF_DATA) render(window.ETF_DATA);
+  else fetch('../data/etf.json').then(function (r) { return r.json(); }).then(render);
+})();
+</script>
+</body>
+</html>
