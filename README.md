@@ -80,6 +80,9 @@ _TODO: tři hypotézy seřazené podle očekávaného dopadu. U každé změna, 
 
 _TODO: stack a proč (čisté HTML/CSS/JS bez build kroku, Vercel, Supabase), zpracování formuláře, zabezpečení klíčů, rychlost načtení._
 
+- **Celá stránka je jeden soubor `public/index.html`** s inline CSS a JS a systémovým písmem. Je to jediný požadavek bez externích skriptů a písem: 40 kB, po gzipu 12 kB, z toho JS 3,8 kB. Lighthouse (mobil, 10. 10. 2026, lokálně): 100 ve všech čtyřech kategoriích (výkon, přístupnost, osvědčené postupy, SEO), LCP 0,9 s, CLS 0.
+- **Funguje i bez JavaScriptu.** Obsah je v HTML a tlačítka výběru jsou odkazy na karty párů. JS jen přidává výsledek na místě, formulář na místě a lištu dole.
+- **Úvod podle reklamy:** malý inline skript hned za nadpisem přepíše nadpis podle `?v=` dřív, než se stránka vykreslí, takže se layout neposune (CLS 0 i u varianty s poznámkou navíc).
 - **Supabase projekt v EU regionu.** Ukládáme e-maily českých návštěvníků a databáze má být blízko serverless funkcím ve Frankfurtu.
 - **Denní keep-alive přes Vercel cron.** Bezplatný Supabase projekt se po čase bez aktivity pozastaví a formulář musí fungovat, i když stránku někdo otevře až za dva týdny.
 - **Serverless funkce v regionu `fra1` (Frankfurt).** Kratší odezva pro české návštěvníky i k databázi v EU.

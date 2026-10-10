@@ -84,6 +84,12 @@ Výsledek se objeví hned pod výběrem, bez přechodu na jinou stránku.
 
 U řádku „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnost ověřili na jejich webu (`[d: X › ucits_obdoba.kde_koupit]`).
 
+**Na stránce (`public/index.html`):**
+
+- Řádky mají štítky Index, Poplatek, Dividendy (u AGG Výnosy) a Kde koupit. Věta za štítkem jeho slovo neopakuje, např. štítek „Poplatek“ a za ním „0,07 % ročně, tedy…“.
+- U indexu je odznak „Stejný index“, nebo „Podobný, ne stejný“.
+- Pod výsledkem je odkaz **„Vybrat jiné ETF“**, který vrací k výběru.
+
 ### VOO → VUAA
 
 - **Evropské dvojče VOO je VUAA**
@@ -166,7 +172,7 @@ U řádku „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnos
 | VGT → QDVE | technologie | podobný | 0,09 % → 0,15 % |
 | AGG → IUAA | dluhopisy | stejný | 0,03 % → 0,25 % |
 
-- **Tlačítko pod kartami:** Chci tahák s ISINy a postupem nákupu
+- **Tlačítko pod kartami:** Chci tahák s ISINy a postupem nákupu. Otevře formulář v panelu na místě, nepřeskakuje dolů.
 
 ---
 
@@ -235,7 +241,11 @@ U řádku „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnos
 ## Tlačítko pořád vidět dole (mobil)
 
 - **Text:** Tahák zdarma: všech 7 dvojčat
-- **Tlačítko:** Chci tahák
+- **Tlačítko:** Chci tahák. Otevře panel s formulářem.
+- **Panel:**
+  - nadpis: Tahák: 7 ETF z NYSE a jejich dvojčata, která koupíš z Česka
+  - pod ním: ISINy, poplatky a postup nákupu krok za krokem. PDF hned a zdarma.
+  - zavírací tlačítko „×“ s popiskem pro čtečky „Zavřít“
 - **Chování:**
   - objeví se po prvním výsledku „Najdi dvojče“ nebo po odscrollování pod úvod,
   - schová se, když je na obrazovce formulář,
@@ -245,6 +255,7 @@ U řádku „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnos
 
 ## 7. FAQ
 
+- **H2:** Časté otázky
 - **Je to zdarma?**
   Ano. Srovnání i tahák jsou zdarma. Chceme jen tvůj e-mail.
 - **Co uděláte s mým e-mailem?**

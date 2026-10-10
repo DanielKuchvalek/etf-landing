@@ -17,8 +17,8 @@ Navržená struktura. Složky vznikají, až jsou potřeba.
 
 ```
 public/        web – jediná složka, kterou Vercel servíruje
-  index.html
-  css/  js/  img/  fonts/
+  index.html   celá stránka; CSS a JS jsou inline (jeden požadavek)
+  tahak.pdf    lead magnet (zatím neexistuje)
 api/           serverless funkce (zpracování formuláře)
 data/          podklady k údajům o ETF: hodnota, zdroj (URL), datum
 supabase/      SQL schéma tabulek a RLS politiky
