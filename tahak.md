@@ -18,7 +18,7 @@ Značky `[d: …]`, `[r: …]` a `[TODO]` mají stejný význam jako v [texty.md
 - Název a podtitul: „Co koupit a jak, když VOO u brokera nenajdeš“.
 - „Data ověřena 10. 10. 2026“ `[d: meta.overeno_dne]`
 - „Nejde o investiční doporučení.“
-- Provozovatel: [TODO správce: Clientelo]
+- Provozovatel: Clientelo Czech s.r.o. (předpoklad, viz README)
 
 ### 2. Proč dvojčata (půl strany)
 
@@ -77,7 +77,7 @@ Všechno ověřené, nic nechybí.
 
 ### 8. Patička
 
-Provozovatel, kontakt, „Nejde o investiční doporučení. Investování nese riziko.“ `[TODO správce a kontakt]`
+Provozovatel, kontakt, „Nejde o investiční doporučení. Investování nese riziko.“ `[TODO kontakt]`
 
 ## Co pro tahák chybí nebo není ověřené
 

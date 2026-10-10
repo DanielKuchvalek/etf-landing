@@ -194,7 +194,7 @@ U řádku „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnos
 - **Rozbalovací odkaz:** Zdroje ke každému údaji
   Seznam: u každého páru odkaz na stránku originálu a dvojčete u správce. `[d: * › nazev.zdroj]` `[d: * › ucits_obdoba.nazev.zdroj]`
 - **Upozornění (zvýrazněný blok):** Nejde o investiční doporučení. Ukazujeme, jaké fondy existují a kolik stojí, co koupíš, je tvoje rozhodnutí. Hodnota investice může klesnout a zpátky můžeš dostat méně, než vložíš.
-- **Kdo za stránkou stojí:** Stránku provozuje [TODO správce: Clientelo].
+- **Kdo za stránkou stojí:** Stránku provozuje Clientelo Czech s.r.o. (předpoklad, viz README).
 
 ---
 
@@ -208,8 +208,8 @@ U řádku „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnos
 - **Pole:**
   - popisek: Tvůj e-mail
   - placeholder: jmeno@email.cz
-- **Souhlas (zaškrtávací pole):** Souhlasím, že mi [TODO správce: Clientelo] bude posílat e-maily o investování do ETF. Odhlásit se můžu kdykoli.
-  - odkaz: Jak nakládáme s osobními údaji `[TODO stránka se zásadami]`
+- **Souhlas (zaškrtávací pole):** Souhlasím, že mi Clientelo Czech s.r.o. bude posílat e-maily o investování do ETF. Odhlásit se můžu kdykoli.
+  - odkaz: Jak nakládáme s osobními údaji → `public/ochrana-osobnich-udaju.html` (návrh, musí schválit právník)
   - `[ROZHODNOUT + právník: smí být stažení taháku podmíněné souhlasem s marketingovými e-maily? Pokud ne, souhlas bude dobrovolný a tahák dostane každý, kdo vyplní e-mail.]`
 - **Tlačítko:** Stáhnout tahák
 - **Tlačítko při odesílání:** Odesílám…
@@ -227,7 +227,7 @@ U řádku „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnos
 | bez internetu | Vypadá to, že nejde internet. Zkontroluj připojení a zkus to znovu. |
 | e-mail už máme (není chyba) | Tenhle e-mail už u nás máme. Tahák se ti stahuje. |
 
-### Poděkování (nahradí formulář)
+### Poděkování (nahradí celý blok s formulářem: kartu v sekci, výzvu pod výsledkem i obsah panelu)
 
 - **H2:** Hotovo, tahák se ti stahuje.
 - **Text:** Nestahuje se? Stáhni ho tady. (odkaz na PDF)
@@ -259,8 +259,8 @@ U řádku „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnos
 - **Je to zdarma?**
   Ano. Srovnání i tahák jsou zdarma. Chceme jen tvůj e-mail.
 - **Co uděláte s mým e-mailem?**
-  Uloží ho [TODO správce: Clientelo] a bude ti posílat [TODO: co a jak často]. Odhlásit se můžeš jedním klikem v každém e-mailu. Podrobnosti najdeš v zásadách ochrany osobních údajů.
-  `[TODO: obsah e-mailů, frekvenci a odhlášení musí potvrdit správce; „jedním klikem“ slibujeme jen, pokud to e-mailový nástroj umí]`
+  Uloží ho Clientelo Czech s.r.o. a bude ti posílat e-maily o investování do ETF, jak stojí v souhlasu. Odhlásit se můžeš kdykoli, odkaz bude v každém e-mailu. Podrobnosti najdeš v zásadách ochrany osobních údajů.
+  `[TODO: obsah a frekvenci e-mailů musí potvrdit správce; odkaz na odhlášení v každém e-mailu musí umět e-mailový nástroj]`
 - **Je dvojče úplně stejné jako originál?**
   U VOO, SDY a AGG sleduje dvojče stejný index. U VTI, VT, VWO a VGT je index podobný, ne stejný. Rozdíl vždycky píšeme u výsledku.
   `[d: * › ucits_obdoba.rozdil_oproti_originalu]`
@@ -276,7 +276,7 @@ U řádku „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnos
 
 - Data: weby správců fondů a brokerů, ověřeno 10. 10. 2026. `[d: meta.overeno_dne]`
 - Nejde o investiční doporučení ani nabídku investičního nástroje. Investování nese riziko.
-- Provozovatel: [TODO správce: Clientelo] · Zásady ochrany osobních údajů `[TODO stránka]` · Kontakt `[TODO]`
+- Provozovatel: Clientelo Czech s.r.o. · Zásady ochrany osobních údajů (odkaz na návrh)
 
 ---
 

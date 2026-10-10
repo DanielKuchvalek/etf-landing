@@ -254,7 +254,7 @@ html{scroll-behavior:auto}
     </dl>
   </article>
 
-  <div class="cta" id="vysledek-cta">
+  <div class="cta" id="vysledek-cta" data-host>
     <button class="btn" type="button" data-otevri="vysledek">Chci tahák se všemi 7&nbsp;dvojčaty</button>
     <p class="small">ISINy, poplatky a&nbsp;postup nákupu krok za krokem. PDF hned a&nbsp;zdarma.</p>
     <div class="form-slot" data-slot="vysledek"></div>
@@ -307,13 +307,13 @@ html{scroll-behavior:auto}
   </details>
   <div class="disclaimer">
     <p><b>Nejde o&nbsp;investiční doporučení.</b> Ukazujeme, jaké fondy existují a&nbsp;kolik stojí, co koupíš, je tvoje rozhodnutí. Hodnota investice může klesnout a&nbsp;zpátky můžeš dostat méně, než vložíš.</p>
-    <p class="small">Stránku provozuje <span class="todo">[TODO správce: Clientelo]</span>.</p>
+    <p class="small">Stránku provozuje Clientelo Czech&nbsp;s.r.o..</p>
   </div>
 </section>
 
 <section class="section wrap" id="tahak">
   <h2>Tahák: 7&nbsp;ETF z&nbsp;NYSE a&nbsp;jejich dvojčata, která koupíš z&nbsp;Česka</h2>
-  <div class="form-card">
+  <div class="form-card" data-host>
     <ul class="bullets">
       <li>ISIN a&nbsp;ticker všech 7&nbsp;dvojčat. Zkopíruješ je rovnou do aplikace brokera.</li>
       <li>Poplatky originálů a&nbsp;dvojčat vedle sebe.</li>
@@ -326,7 +326,7 @@ html{scroll-behavior:auto}
         </label>
         <label class="consent">
           <input type="checkbox" name="consent" value="ano" required>
-          <span>Souhlasím, že mi <span class="todo">[TODO správce: Clientelo]</span> bude posílat e-maily o&nbsp;investování do ETF. Odhlásit se můžu kdykoli. <a href="#TODO-zasady">Jak nakládáme s&nbsp;osobními údaji</a></span>
+          <span>Souhlasím, že mi Clientelo Czech&nbsp;s.r.o. bude posílat e-maily o&nbsp;investování do ETF. Odhlásit se můžu kdykoli. <a href="ochrana-osobnich-udaju.html">Jak nakládáme s&nbsp;osobními údaji</a></span>
         </label>
         <div class="hp" aria-hidden="true"><label>Toto pole nech prázdné <input type="text" name="web" tabindex="-1" autocomplete="off"></label></div>
         <p class="form-error" role="alert" hidden></p>
@@ -340,7 +340,7 @@ html{scroll-behavior:auto}
 <section class="section wrap" id="faq">
   <h2>Časté otázky</h2>
   <details><summary>Je to zdarma?</summary><div><p>Ano. Srovnání i&nbsp;tahák jsou zdarma. Chceme jen tvůj e-mail.</p></div></details>
-  <details><summary>Co uděláte s&nbsp;mým e-mailem?</summary><div><p>Uloží ho <span class="todo">[TODO správce: Clientelo]</span> a&nbsp;bude ti posílat <span class="todo">[TODO: co a&nbsp;jak často]</span>. Odhlásit se můžeš jedním klikem v&nbsp;každém e-mailu. Podrobnosti najdeš v <a href="#TODO-zasady">zásadách ochrany osobních údajů</a>.</p></div></details>
+  <details><summary>Co uděláte s&nbsp;mým e-mailem?</summary><div><p>Uloží ho Clientelo Czech&nbsp;s.r.o. a&nbsp;bude ti posílat e-maily o&nbsp;investování do ETF, jak stojí v&nbsp;souhlasu. Odhlásit se můžeš kdykoli, odkaz bude v&nbsp;každém e-mailu. Podrobnosti najdeš v&nbsp;<a href="ochrana-osobnich-udaju.html">zásadách ochrany osobních údajů</a>.</p></div></details>
   <details><summary>Je dvojče úplně stejné jako originál?</summary><div><p>U&nbsp;VOO, SDY a&nbsp;AGG sleduje dvojče stejný index. U&nbsp;VTI, VT, VWO a&nbsp;VGT je index podobný, ne stejný. Rozdíl vždycky píšeme u&nbsp;výsledku.</p></div></details>
   <details><summary>Dá se VOO někde koupit?</summary><div><p>Někdy ano. Když tě broker vede jako profesionálního klienta, KID nepotřebuje. A&nbsp;ČNB připouští, že broker, který jen provádí tvoje pokyny a&nbsp;nic ti nenabízí ani nedoporučuje, KID dávat nemusí. Běžný broker ti ale americké ETF často nenabídne.</p></div></details>
   <details><summary>Radíte mi, co koupit?</summary><div><p>Ne. Ukazujeme, co existuje a&nbsp;kolik to stojí. Rozhodnutí je na tobě.</p></div></details>
@@ -350,7 +350,7 @@ html{scroll-behavior:auto}
 <footer class="foot wrap">
   <p>Data: weby správců fondů a&nbsp;brokerů, ověřeno 10.&nbsp;10.&nbsp;2026.</p>
   <p>Nejde o&nbsp;investiční doporučení ani nabídku investičního nástroje. Investování nese riziko.</p>
-  <p>Provozovatel: <span class="todo">[TODO správce: Clientelo]</span> · <a href="#TODO-zasady">Zásady ochrany osobních údajů</a> · <span class="todo">[TODO kontakt]</span></p>
+  <p>Provozovatel: Clientelo Czech&nbsp;s.r.o. · <a href="ochrana-osobnich-udaju.html">Zásady ochrany osobních údajů</a></p>
 </footer>
 
 <div class="bar" id="lista" hidden>
@@ -363,9 +363,11 @@ html{scroll-behavior:auto}
 <dialog class="sheet" id="panel" aria-labelledby="panel-nadpis">
   <div class="sheet-in">
     <button class="sheet-close" type="button" aria-label="Zavřít" data-zavri>×</button>
+    <div data-host>
     <h2 id="panel-nadpis">Tahák: 7&nbsp;ETF z&nbsp;NYSE a&nbsp;jejich dvojčata, která koupíš z&nbsp;Česka</h2>
     <p class="small">ISINy, poplatky a&nbsp;postup nákupu krok za krokem. PDF hned a&nbsp;zdarma.</p>
     <div class="form-slot" data-slot="lista"></div>
+    </div>
   </div>
 </dialog>
 
@@ -581,8 +583,10 @@ html{scroll-behavior:auto}
     if (done) return;
     done = true;
     var thanksTpl = doc.getElementById('dekujeme');
+    var submittedHost = submitted.closest('[data-host]');
     var focusTarget;
-    doc.querySelectorAll('.lead-form').forEach(function (f) {
+    /* Poděkování nahradí celý blok s formulářem (karta v sekci, výzva pod výsledkem, obsah panelu). */
+    doc.querySelectorAll('[data-host]').forEach(function (host) {
       var t = thanksTpl.content.firstElementChild.cloneNode(true);
       var share = t.querySelector('.share');
       if (navigator.share) {
@@ -592,10 +596,9 @@ html{scroll-behavior:auto}
           navigator.share({ title: doc.title, url: location.origin + location.pathname }).catch(function () {});
         });
       }
-      f.replaceWith(t);
-      if (f === submitted) focusTarget = t;
+      host.replaceChildren(t);
+      if (host === submittedHost) focusTarget = t;
     });
-    ctaBtn.hidden = true;
     updateBar();
     if (focusTarget) focusTarget.focus();
     fetch(PDF, { method: 'HEAD' }).then(function (r) {

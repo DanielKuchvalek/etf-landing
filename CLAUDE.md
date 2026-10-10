@@ -50,7 +50,8 @@ Už rozhodnuté, neotevírej znovu. Když narazíš na důvod rozhodnutí změni
 - **Reklamy:** A „Dvojče“ (zklamání z brokera) a B „Začátek“ (nejistota). Úvod stránky se mění podle `?v=dvojce` / `?v=zacatek`. Proč: testujeme dvě motivace a úvod musí navazovat na slib reklamy.
 - **Formulář se otevírá na místě:** pod výsledkem, nebo jako panel ze spodního tlačítka, nikdy odkazem dolů. Proč: méně kroků, návštěvník neztratí kontext.
 - **Brokery na stránce jmenujeme jen s ověřenou dostupností** (zdroj a datum v `data/etf.json`). Proč: jeden jmenovaný broker by vypadal jako jeho reklama.
-- **Správce osobních údajů: zatím počítáme s Clientelem.** V textech je jako placeholder `[TODO správce: Clientelo]`. Proč: správce zatím nevíme a placeholder jde před spuštěním dohledat a nahradit.
+- **Správce osobních údajů: Clientelo Czech s.r.o.** Je to předpoklad zadavatele, ne ověřený údaj (poznámka je v README). IČO, sídlo a kontakt jsou TODO v návrhu `public/ochrana-osobnich-udaju.html`. Proč: viditelné placeholdery na stránce působí nedodělaně.
+- **Zásady ochrany osobních údajů jsou jen návrh.** Stránka je jasně označená a má `noindex`. Před spuštěním ji musí schválit právník.
 - **Supabase projekt v EU regionu.** Proč: ukládáme e-maily českých návštěvníků a databáze má být blízko funkcím ve Frankfurtu.
 - **Denní keep-alive přes Vercel cron.** Proč: bezplatný Supabase projekt se po čase bez aktivity pozastaví a hodnotitel může stránku otevřít až za dva týdny.
 - **Vercel funkce v regionu `fra1` (Frankfurt).** Proč: kratší odezva pro české návštěvníky i k databázi v EU.

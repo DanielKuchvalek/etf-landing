@@ -95,8 +95,13 @@ try {
     const busy = await text(page, `${F} [type=submit]`);
     check('tlačítko při odesílání', busy === 'Odesílám…', busy);
     await sleep(900);
-    check('poděkování po odeslání', ((await text(page, '[data-slot="vysledek"] .thanks h3')) || '') === 'Hotovo, tahák se ti stahuje.');
+    check('poděkování po odeslání', ((await text(page, '#vysledek-cta .thanks h3')) || '') === 'Hotovo, tahák se ti stahuje.');
     check('všechny formuláře nahrazené poděkováním', (await page.$$('.lead-form')).length === 0);
+    check('poděkování nahradilo celou kartu v sekci (žádné odrážky)', (await page.$$('#tahak .form-card ul, #tahak .form-card .lead-form')).length === 0 && !!(await page.$('#tahak .form-card .thanks')));
+    check('poděkování nahradilo výzvu pod výsledkem', (await page.$$('#vysledek-cta [data-otevri], #vysledek-cta > .small, #vysledek-cta .lead-form')).length === 0);
+    check('poděkování v panelu bez nadpisu formuláře', !(await page.$('#panel h2#panel-nadpis')) && !!(await page.$('#panel .thanks')));
+    check('odkaz na zásady ochrany osobních údajů', await page.$eval('a[href="ochrana-osobnich-udaju.html"]', () => true).catch(() => false));
+    check('na stránce není viditelné TODO', !(await page.evaluate(() => document.body.innerText.includes('TODO'))));
     check('lišta dole po odeslání schovaná', !(await visible(page, '#lista')));
     const lead = logs.find((l) => l.text.startsWith('[formulář]'));
     check('odeslání: e-mail a souhlas, bez ID návštěvy', lead && lead.args[1].email === 'jana@seznam.cz' && lead.args[1].souhlas === true && !('navsteva' in lead.args[1]), JSON.stringify(lead && lead.args[1]));
@@ -160,7 +165,7 @@ try {
     await page.evaluate((F) => { document.querySelector(`${F} input[name=consent]`).checked = true; }, F);
     await page.evaluate((F) => document.querySelector(F).requestSubmit(), F);
     await sleep(300);
-    check('bot: poděkování se ukáže', ((await text(page, '[data-slot="sekce"] .thanks h3')) || '') === 'Hotovo, tahák se ti stahuje.');
+    check('bot: poděkování se ukáže', ((await text(page, '#tahak .form-card .thanks h3')) || '') === 'Hotovo, tahák se ti stahuje.');
     check('bot: kontakt se neodeslal', !logs.some((l) => l.text.startsWith('[formulář]')));
     await page.close();
   }
