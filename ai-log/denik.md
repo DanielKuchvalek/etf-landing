@@ -45,3 +45,23 @@ Doplňuje exporty konverzací (`/export`), které nezachytí celý průběh prá
   - Lišta dole se neukazovala, protože `scroll-padding-top` nechal posledních 12 px úvodu ve výřezu. Zjistil to automatický test; řešením je pozorovat výběr ETF s okrajem 15 %.
   - Hledání na Trading 212 přes vyhledávací pole hlásilo „NENALEZENO“, protože se stránka po prvním hledání přenačetla a pak ji zablokovala ochrana proti botům. Kdyby se výsledek vzal vážně, vyšlo by, že fondy u Trading 212 nejsou. Správná data byla v seznamu nástrojů vloženém ve stránce.
   - Formulář „Seznam ETF“ na fio.cz nevracel nic ani pro fond, který v seznamu prokazatelně je. Proto se Fio zapsalo jako neověřené, ne jako „nenabízí“.
+
+### 2026-10-10 – tahák, opravy po testu na iPhonu, skripty v repu
+
+- **Zadání pro AI:**
+  - opravit nálezy z testu na skutečném iPhonu (dělal ho člověk),
+  - vytvořit PDF tahák ze zdroje v repu, postup nákupu podle nápověd XTB a Trading 212,
+  - přesunout testy do repa,
+  - před předěláním designu nejdřív poslat plán.
+- **Kontrola výstupu:**
+  - test stránky (66 kontrol),
+  - `check_page.py`,
+  - `check_pdf.py` (text PDF proti `etf.json`),
+  - stránky PDF převedené na obrázky a prohlédnuté očima,
+  - seznam vložených písem v PDF.
+- **Kde se AI spletla a jak se na to přišlo:**
+  - Nápověda XTB na `/int/` platí pro klienty mimo EU (uvádí účet v USD a jiné platební metody). Kdyby se použila, postup pro Čechy by byl špatně. Přišlo se na to podle textu „For Non UK/EU Residents“; kroky jsou z české nápovědy.
+  - Systémové písmo macOS se do PDF nevloží, Chrome tak použil Arial s dopočítaným tučným řezem. Ukázal to výpis vložených písem; PDF teď používá Helvetica Neue.
+  - Papírové pozadí v PDF končilo u okrajů stránky jako obdélník a karty párů byly tak velké, že se na stranu vešly jen dvě. Obojí ukázaly obrázky stránek.
+  - V textu kroku byl překlep („podle tahu“) a v návrhu zásad tvar s rodem („udělil(a)“). Obojí se našlo při čtení výstupu.
+  - Po změně poděkování hledal test poděkování ve slotu, který se teď nahrazuje celý. Selhání testu ukázalo, že je potřeba upravit selektory, ne stránku.
