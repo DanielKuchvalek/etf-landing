@@ -65,3 +65,23 @@ Doplňuje exporty konverzací (`/export`), které nezachytí celý průběh prá
   - Papírové pozadí v PDF končilo u okrajů stránky jako obdélník a karty párů byly tak velké, že se na stranu vešly jen dvě. Obojí ukázaly obrázky stránek.
   - V textu kroku byl překlep („podle tahu“) a v návrhu zásad tvar s rodem („udělil(a)“). Obojí se našlo při čtení výstupu.
   - Po změně poděkování hledal test poděkování ve slotu, který se teď nahrazuje celý. Selhání testu ukázalo, že je potřeba upravit selektory, ne stránku.
+
+### 2026-10-10 – předělání designu podle testu na iPhonu
+
+- **Zadání pro AI:**
+  - nejdřív poslat plán a teprve po schválení stavět,
+  - lístky s otočením, žlutý fix, zelená fajfka, bez modré,
+  - náhled taháku generovaný z PDF,
+  - nic absolutního v textech,
+  - testy, Lighthouse a snímky před a po.
+- **Kontrola výstupu:**
+  - test stránky (75 kontrol, nově otočení lístků, pootočení nejvýš 2°, reduced motion, náhled),
+  - `check_page.py` rozšířený o lístky a karty a ověřený podvrženou chybou (dvě úmyslné chyby nahlásil),
+  - Lighthouse u všech tří verzí úvodu,
+  - snímky prohlédnuté očima.
+- **Kde se AI spletla a jak se na to přišlo:**
+  - AI ve svém plánu sama navrhla podnadpis „Americké ti broker nenabídne, evropské ano.“, tedy absolutní tvrzení proti dohodě. Chytil to člověk.
+  - Ručně kreslený kroužek byl moc těsný a přetínal písmena. Ukázal to snímek.
+  - Po prvním otočení se ukázala spodní lišta a překryla třetí řadu lístků, takže klepnutí na SDY a VGT trefilo lištu. Zjistil to automatický test; teď se lišta ukáže, až jsou lístky mimo obrazovku. Skutečná vada UX, ne testu.
+  - „Trading 212“ se zalamovalo mezi slovem a číslem. Ukázal to snímek; doplněná nezlomitelná mezera.
+  - Test po stažení PDF neukončil proces. Doplněný explicitní konec.

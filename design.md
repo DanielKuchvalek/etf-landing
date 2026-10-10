@@ -57,18 +57,31 @@ Vybraný směr převezmou i obrázky reklam.
 
 ## Vybráno: B „Tahák v sešitě“ (10. 10. 2026)
 
-U peněz to nesmí působit dětsky. Pravidla:
+U peněz to nesmí působit dětsky. Hravé jsou jen ozdoby, čísla, zdroje a upozornění zůstávají rovné a čisté.
 
-- **Mřížka** je jen jemný podklad. Karty, výsledek a formulář jsou na čistém bílém papíře s tenkým okrajem.
-- **Čísla:** písmo s pevnou šířkou číslic (`font-variant-numeric: tabular-nums`), zarovnaná a vždy s jednotkou. Zvýrazňovač jen pod čísly poplatků, nikde jinde.
-- **Propiska:** modrá jen pro šipky, popisky a odkazy, ne pro velké plochy.
-- **Červená:** jen přeškrtnutý ticker originálu ve výsledku. Žádné červené varování ani výkřiky.
-- **Písmo:**
-  - žádné rukopisné ani komiksové,
-  - jen systémové písmo, takže se nic nestahuje,
-  - nadpisy tučně s těsnějším prokladem.
-- **Ilustrace:** jen jednoduché SVG šipky a podtržení, žádné kliparty, maskoti ani emoji.
+**Po testu na iPhonu (první verze působila „jako od AI“) byl směr zpřísněn:**
+
+- **Barvy:**
+  - modrá zmizela úplně,
+  - inkoustově černá `#141414` pro text, okraje a hlavní tlačítka,
+  - papír `#FFFDF5` s jemnou mřížkou,
+  - žlutý fix `#FFE45C`,
+  - zelená fajfka `#177A41`,
+  - červená `#C62F3B` jen na přeškrtnutí originálu.
+- **Žlutý fix** je hlavní prvek:
+  - nepravidelný tah (inline SVG) přes klíčová slova v nadpisech a přes „koupíš u …“ na kartách párů,
+  - nikdy přes poplatek, aby oko jako první neviděl „dvojče je dražší“.
+- **Lístky z taháku** místo tlačítek výběru:
+  - pootočené nejvýš o 1,5°, páska jen u každého druhého,
+  - klepnutí lístek otočí (CSS 3D, 0,45 s),
+  - vzadu je dvojče v ručně kresleném kroužku, zelená „✓ kde koupit“, poplatek v Kč a štítek stejný/podobný index,
+  - při `prefers-reduced-motion` se lístek neotáčí, jen se vymění obsah.
+- **Ručně kreslené prvky:** šipka, kroužek, fajfka. Všechno malá inline SVG, žádné písmo navíc.
+- **Tlačítka:** hlavní černá, spodní lišta žlutá.
+- **Formulář:** nad formulářem je náhled titulní strany taháku, pootočený o 1,5° a dole rozmazaný. Generuje se z PDF.
+- **Písmo:** jen systémové, bez rukopisných a komiksových písem.
+- **Čísla:** `font-variant-numeric: tabular-nums`, vždy s jednotkou, poplatky lidsky („7 Kč ročně z 10 000 Kč“).
 - **Klid:**
-  - hodně bílého místa,
+  - hodně místa,
   - jedna hlavní akce na obrazovce,
-  - animace jen krátké a vypnuté při `prefers-reduced-motion`.
+  - animace krátké a vypnuté při `prefers-reduced-motion`.

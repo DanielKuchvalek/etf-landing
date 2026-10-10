@@ -26,7 +26,7 @@
 
 **Kdy žádáme o kontakt:**
 
-1. Hned po prvním výsledku „Najdi dvojče“ tlačítkem „Chci tahák se všemi 7 dvojčaty“. V tu chvíli návštěvník právě dostal hodnotu a ví, že zbylých 6 párů a postup jsou v taháku. Formulář se rozbalí přímo pod výsledkem.
+1. Hned po prvním otočení lístku tlačítkem „Chci tahák se všemi 7 dvojčaty“, které se v tu chvíli objeví pod lístky. Návštěvník právě dostal hodnotu a ví, že zbylých 6 párů a postup jsou v taháku. Formulář se rozbalí na místě.
 2. Tlačítkem, které je na mobilu pořád vidět dole na obrazovce. Formulář se otevře jako panel ve spodní části obrazovky, na místě, kde návštěvník právě je.
 
 Formulář se nikdy neotevírá odkazem dolů na sekci 6. Přeskočení přes tři sekce stojí konverze a návštěvník ztratí kontext. Tuhle úpravu navrhla AI (Claude Code).
@@ -40,8 +40,8 @@ Texty všech částí jsou v [texty.md](texty.md).
 ## Pořadí sekcí a zdůvodnění
 
 1. **Úvod navazující na reklamu a rovnou „Najdi dvojče“.** Návštěvník má jen pár sekund. První obrazovka musí zopakovat slib reklamy a nabídnout akci bez scrollování. Nadpis se mění podle toho, ze které reklamy návštěvník přišel (viz [reklamy/](reklamy/)).
-2. **Výsledek a výzva k taháku.** Výsledek je okamžitá hodnota zdarma. Výzva přichází ve chvíli, kdy je zájem nejvyšší, a formulář se rozbalí přímo pod výsledkem.
-3. **Přehled všech 7 párů v kompaktních kartách.** Pro ty, kdo chtějí vidět celek, než se rozhodnou. Karty ukazují jen základ (originál → dvojče, poplatky); ISINy a postup zůstávají v taháku.
+2. **Výsledek a výzva k taháku.** Otočený lístek ukáže dvojče, kde ho koupíš a kolik stojí: okamžitá hodnota zdarma. Výzva se objeví hned pod lístky ve chvíli, kdy je zájem nejvyšší, a formulář se rozbalí na místě. Pod ní jsou podrobnosti (index, dividendy).
+3. **Přehled všech 7 párů v kompaktních kartách.** Pro ty, kdo chtějí vidět celek, než se rozhodnou. Karty zvýrazňují „✓ koupíš u …“ a poplatek ukazují lidsky v korunách; ISINy a postup zůstávají v taháku.
 4. **Proč ti broker americká ETF často nenabídne (2–3 věty).** Vysvětlení, proč dvojčata vůbec potřebujeme. Až tady, protože ten, kdo přišel z reklamy „Dvojče“, už důvod zná z úvodu a nechce ho číst před výsledkem.
 5. **Důvěra: zdroje dat s datem a upozornění, že nejde o investiční doporučení.** Těsně před formulářem odpovídá na otázku „můžu tomu věřit?“.
 6. **Formulář (e-mail a souhlas).** Pro ty, kdo dočetli až sem. Výzvy ze sekce 2 a z tlačítka dole sem nevedou, otevírají formulář na místě. Tuhle změnu oproti původnímu návrhu navrhla AI (Claude Code): méně kroků a žádné přeskakování stránkou.
@@ -80,7 +80,8 @@ _TODO: tři hypotézy seřazené podle očekávaného dopadu. U každé změna, 
 
 _TODO: stack a proč (čisté HTML/CSS/JS bez build kroku, Vercel, Supabase), zpracování formuláře, zabezpečení klíčů, rychlost načtení._
 
-- **Celá stránka je jeden soubor `public/index.html`** s inline CSS a JS a systémovým písmem. Je to jediný požadavek bez externích skriptů a písem: 40 kB, po gzipu 12 kB, z toho JS 3,8 kB. Lighthouse (mobil, 10. 10. 2026, lokálně): 100 ve všech čtyřech kategoriích (výkon, přístupnost, osvědčené postupy, SEO), LCP 0,9 s, CLS 0.
+- **Celá stránka je jeden soubor `public/index.html`** s inline CSS a JS a systémovým písmem. Bez externích skriptů a písem: 49 kB, po gzipu 13,6 kB, z toho JS 3,8 kB. Jediný obrázek je náhled taháku (WebP, 24 kB), který se načte až u formuláře. Lighthouse po předělání designu (mobil, 10. 10. 2026, lokálně): 100 ve všech čtyřech kategoriích (výkon, přístupnost, osvědčené postupy, SEO) u všech tří verzí úvodu, LCP 1,0 s, CLS 0.
+- **„Ručně kreslené“ prvky bez písma navíc.** Fix, šipky, kroužky a fajfky jsou malá inline SVG. Rukou psané písmo by přidalo desítky kB a probliknutí textu. Lístky se otáčejí jen přes CSS a při `prefers-reduced-motion` se jen vymění obsah.
 - **Funguje i bez JavaScriptu.** Obsah je v HTML a tlačítka výběru jsou odkazy na karty párů. JS jen přidává výsledek na místě, formulář na místě a lištu dole.
 - **Úvod podle reklamy:** malý inline skript hned za nadpisem přepíše nadpis podle `?v=` dřív, než se stránka vykreslí, takže se layout neposune (CLS 0 i u varianty s poznámkou navíc).
 - **Supabase projekt v EU regionu.** Ukládáme e-maily českých návštěvníků a databáze má být blízko serverless funkcím ve Frankfurtu.
@@ -108,7 +109,17 @@ _TODO: jaké pokyny dostali agenti (viz [CLAUDE.md](CLAUDE.md)), jak probíhala 
 - Stav po odeslání byl rozbitý: nad „Hotovo, tahák se ti stahuje“ zůstávaly odrážky z formuláře.
 - Stránka slibovala PDF, které neexistovalo.
 
-Snímky před úpravami a po nich jsou v [docs/screenshots/](docs/screenshots/).
+Snímky před úpravami a po nich jsou v [docs/screenshots/](docs/screenshots/) (375 px, generuje `scripts/screenshots.mjs`):
+
+| | Před | Po |
+|---|---|---|
+| Úvod | <img src="docs/screenshots/pred-1-uvod.png" width="220" alt="Úvod před"> | <img src="docs/screenshots/po-1-uvod.png" width="220" alt="Úvod po"> |
+| Výběr ETF | <img src="docs/screenshots/pred-2-vysledek-voo.png" width="220" alt="Výsledek VOO před"> | <img src="docs/screenshots/po-2-otoceny-listek.png" width="220" alt="Otočený lístek VOO po"> |
+| Karty párů | <img src="docs/screenshots/pred-3-karty-paru.png" width="220" alt="Karty párů před"> | <img src="docs/screenshots/po-3-karty-paru.png" width="220" alt="Karty párů po"> |
+| Formulář | <img src="docs/screenshots/pred-4-formular.png" width="220" alt="Formulář před"> | <img src="docs/screenshots/po-4-formular.png" width="220" alt="Formulář s náhledem taháku po"> |
+| Poděkování | <img src="docs/screenshots/pred-5-podekovani.png" width="220" alt="Rozbité poděkování před"> | <img src="docs/screenshots/po-5-podekovani.png" width="220" alt="Poděkování po"> |
+
+Varianty úvodu po: [?v=dvojce](docs/screenshots/po-1b-uvod-dvojce.png), [?v=zacatek](docs/screenshots/po-1c-uvod-zacatek.png).
 
 ## Co v řešení chybí
 
