@@ -1,0 +1,61 @@
+# Reklamy
+
+Dvě verze pro Meta (Facebook a Instagram), mobil. Testují dva úhly:
+
+| | A „Dvojče“ | B „Poplatky“ |
+|---|---|---|
+| Soubor | [a-dvojce.md](a-dvojce.md) | [b-poplatky.md](b-poplatky.md) |
+| Háček | VOO, které v Česku většinou nekoupíš | kolik stojí poplatek fondu |
+| Pro koho | lidi, kteří už o ETF slyšeli a možná je zkoušeli koupit | lidi, kteří ETF ještě neřeší |
+| Parametr pro úvod stránky | `?v=dvojce` | `?v=poplatky` |
+| `utm_content` | `a-dvojce` | `b-poplatky` |
+
+## Formát
+
+- **Umístění:** Facebook a Instagram feed, Stories a Reels. Jeden statický obrázek, žádné video (rychlá výroba, snadná úprava po testu).
+- **Obrázky:**
+  - feed na výšku 4 : 5 (1080 × 1350 px),
+  - Stories a Reels 9 : 16 (1080 × 1920 px).
+  - `[TODO]` Rozměry a bezpečné zóny pro text ověřit v Meta Ads Guide před výrobou.
+- **Texty:**
+  - primární text je krátký, aby háček byl vidět před zkrácením „… Zobrazit víc“,
+  - nadpis do jednoho řádku,
+  - `[TODO]` Přesné limity znaků ověřit v Ads Manageru.
+- **Tlačítko:** „Zjistit víc“ (Learn more).
+
+## Má se úvod stránky měnit podle reklamy? Ano.
+
+Nadpis a podnadpis první obrazovky se mají měnit, aby návštěvník hned viděl slib, kvůli kterému klepl. Zbytek stránky zůstává pro obě verze stejný. Rozdíl v konverzi tak připíšeme reklamě a úvodu, ne jinému obsahu.
+
+**Jak to udělat:**
+
+- Výchozí nadpis je přímo v HTML, takže bez JavaScriptu i bez parametru stránka funguje.
+- Malý inline skript hned za nadpisem přečte `?v=` a přepíše nadpis a podnadpis. Má pár řádků, nic se nenačítá navíc a text se vymění dřív, než si ho člověk stihne přečíst.
+- Neznámá hodnota parametru znamená výchozí text.
+- Texty všech tří verzí jsou v [texty.md](../texty.md), sekce 1.
+
+**Alternativa:** Vercel rewrite podle parametru na dvě různé HTML stránky by se obešla bez JS. Nedoporučuju ji: obsah by byl dvakrát a při úpravách se rozjede. `[TODO]` Podporu podmínek podle query ve `vercel.json` jsem neověřoval.
+
+**Měření:** hodnota `v` (a `utm_content`) se ukládá ke každému eventu návštěvy, aby šel trychtýř porovnat podle verze. ID návštěvy se ani tady nespojuje s e-mailem.
+
+**Odkazy z reklam:**
+
+```
+https://[TODO doména]/?v=dvojce&utm_source=meta&utm_medium=paid_social&utm_campaign=etf-dvojcata&utm_content=a-dvojce
+https://[TODO doména]/?v=poplatky&utm_source=meta&utm_medium=paid_social&utm_campaign=etf-dvojcata&utm_content=b-poplatky
+```
+
+## Nastavení testu
+
+- Obě reklamy ve stejné kampani, stejné publikum, stejný rozpočet, souběžně.
+- **Hlavní metrika:** odeslané formuláře ÷ návštěvy, podle `utm_content`, z našeho měření.
+- **Vedlejší metriky:**
+  - míra prokliku (CTR) a cena za proklik z Meta,
+  - kolik návštěv použilo „Najdi dvojče“.
+
+## Než se reklama spustí (TODO)
+
+- **Speciální kategorie reklam:** ověřit, jestli kampaň u Meta nespadá do kategorie „Finanční produkty a služby“. Ta může omezit cílení podle věku, takže 25–40 let by nešlo nastavit přesně.
+- **Pravidla Meta pro finanční služby:** ověřit, jestli nevyžadují ověření inzerenta nebo upozornění přímo v reklamě.
+- **Právník:** posoudit texty reklam z pohledu propagace investic (stránka i reklama říkají, že nejde o doporučení).
+- **Vizuály:** bez log správců fondů a brokerů a bez napodobeného rozhraní konkrétní aplikace.
