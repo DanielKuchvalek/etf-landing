@@ -117,6 +117,8 @@ dialog.sheet::backdrop{background:rgb(26 26 26 / .45)}
 .sheet-in h2{font-size:1.25rem;padding-right:40px}
 .sheet-close{position:absolute;top:6px;right:6px;width:44px;height:44px;border:0;background:none;color:var(--ink-2);font-size:1.75rem;line-height:1;cursor:pointer;touch-action:manipulation}
 @keyframes up{from{transform:translateY(100%)}}
+html:has(dialog[open]){overflow:hidden}
+.thanks:focus{outline:none}
 /* patička */
 .foot{padding-block:48px 120px;font-size:.8125rem;color:var(--ink-2)}
 .foot p{margin:0 0 .5em}
@@ -378,5 +380,235 @@ html{scroll-behavior:auto}
     </div>
   </div>
 </template>
+
+<script>
+(function () {
+  'use strict';
+  var doc = document;
+  var qs = new URLSearchParams(location.search);
+  var variant = ['dvojce', 'zacatek'].indexOf(qs.get('v')) >= 0 ? qs.get('v') : 'vychozi';
+  var utm = {};
+  ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'].forEach(function (k) { if (qs.get(k)) utm[k] = qs.get(k); });
+  var visitId = window.crypto && crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2);
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var PDF = '/tahak.pdf';
+
+  /* Měření: zatím jen do konzole, později navigator.sendBeacon na /api/udalost.
+     ID návštěvy žije jen v paměti tohoto načtení stránky a nikdy se neposílá s e-mailem. */
+  function track(name, data) {
+    var e = { udalost: name, navsteva: visitId, varianta: variant, cas: new Date().toISOString() };
+    var k;
+    for (k in utm) e[k] = utm[k];
+    for (k in data || {}) e[k] = data[k];
+    console.log('[měření]', e);
+  }
+
+  /* Odeslání kontaktu: zatím jen do konzole, později POST na /api/lead.
+     Záměrně bez ID návštěvy. */
+  function submitLead(lead) {
+    console.log('[formulář] odeslání (zatím bez serveru):', lead);
+    return new Promise(function (resolve) { setTimeout(resolve, 400); });
+  }
+
+  track('prichod', { sirka: window.innerWidth });
+
+  /* Hloubka scrollu: 25, 50, 75 a 100 %, každá jednou. */
+  var marks = [25, 50, 75, 100];
+  var ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () {
+      ticking = false;
+      var pct = Math.round((window.scrollY + window.innerHeight) / doc.documentElement.scrollHeight * 100);
+      while (marks.length && pct >= marks[0]) track('scroll', { hloubka: marks.shift() });
+      if (!marks.length) window.removeEventListener('scroll', onScroll);
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  /* Spodní lišta: po výběru ETF nebo pod úvodem, ne když je vidět výzva nebo formulář. */
+  var bar = doc.getElementById('lista');
+  var dialog = doc.getElementById('panel');
+  var picked = false;
+  var heroOut = false;
+  var done = false;
+  var blockers = new Set();
+  function updateBar() {
+    bar.hidden = !(!done && (picked || heroOut) && blockers.size === 0 && !dialog.open);
+  }
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) {
+      heroOut = !en[0].isIntersecting && en[0].boundingClientRect.top < window.innerHeight / 2;
+      updateBar();
+    }, { rootMargin: '-15% 0px 0px 0px' }).observe(doc.getElementById('vyber'));
+    var io = new IntersectionObserver(function (ens) {
+      ens.forEach(function (en) { if (en.isIntersecting) blockers.add(en.target); else blockers.delete(en.target); });
+      updateBar();
+    });
+    io.observe(doc.getElementById('vysledek-cta'));
+    io.observe(doc.getElementById('tahak'));
+  }
+
+  /* Najdi dvojče */
+  var result = doc.getElementById('vysledek');
+  var twins = result.querySelectorAll('.twin');
+  var chips = doc.querySelectorAll('.chip[data-etf]');
+  function pick(chip) {
+    var etf = chip.getAttribute('data-etf');
+    var shown;
+    chips.forEach(function (c) { c.setAttribute('aria-pressed', c === chip ? 'true' : 'false'); });
+    twins.forEach(function (t) {
+      var on = t.getAttribute('data-etf') === etf;
+      t.hidden = !on;
+      if (on) shown = t;
+    });
+    result.hidden = false;
+    picked = true;
+    updateBar();
+    result.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    shown.querySelector('h2').focus({ preventScroll: true });
+    track('vyber_etf', { etf: etf });
+  }
+  chips.forEach(function (chip) {
+    chip.setAttribute('role', 'button');
+    chip.setAttribute('aria-pressed', 'false');
+    chip.addEventListener('click', function (e) { e.preventDefault(); pick(chip); });
+    chip.addEventListener('keydown', function (e) { if (e.key === ' ') { e.preventDefault(); pick(chip); } });
+  });
+
+  /* Formuláře: jeden vzor v sekci Tahák, kopie se otevírají na místě (pod výsledkem, v panelu). */
+  var MSG = {
+    prazdny: 'Napiš svůj e-mail.',
+    neplatny: 'Tenhle e-mail nevypadá správně. Zkontroluj ho.',
+    souhlas: 'Zaškrtni prosím souhlas.',
+    offline: 'Vypadá to, že nejde internet. Zkontroluj připojení a zkus to znovu.',
+    server: 'Něco se pokazilo u nás. Zkus to prosím za chvíli znovu.'
+  };
+  var EMAIL = /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/;
+  var tpl = doc.querySelector('[data-slot="sekce"] .lead-form');
+
+  function showError(form, type) {
+    var p = form.querySelector('.form-error');
+    var email = form.elements.email;
+    var emailErr = type === 'prazdny' || type === 'neplatny';
+    p.textContent = MSG[type];
+    p.hidden = false;
+    email.setAttribute('aria-invalid', emailErr ? 'true' : 'false');
+    (emailErr ? email : type === 'souhlas' ? form.elements.consent : form.querySelector('[type=submit]')).focus();
+    track('odeslani_chyba', { typ: type, zdroj: form.getAttribute('data-zdroj') });
+  }
+
+  function bind(form) {
+    var started = false;
+    form.addEventListener('focusin', function () {
+      if (!started) { started = true; track('formular_zacatek', { zdroj: form.getAttribute('data-zdroj') }); }
+    });
+    form.elements.email.addEventListener('input', function () { form.elements.email.removeAttribute('aria-invalid'); });
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var zdroj = form.getAttribute('data-zdroj');
+      var email = form.elements.email.value.trim();
+      var consent = form.elements.consent.checked;
+      track('odeslani_pokus', { zdroj: zdroj });
+      var err = !email ? 'prazdny' : !EMAIL.test(email) ? 'neplatny' : !consent ? 'souhlas' : navigator.onLine === false ? 'offline' : '';
+      if (err) return showError(form, err);
+      form.querySelector('.form-error').hidden = true;
+      if (form.elements.web.value) return finish(form); // skryté pole vyplnil bot: tvářit se úspěšně, nic neukládat
+      var btn = form.querySelector('[type=submit]');
+      var label = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Odesílám…';
+      submitLead({ email: email, souhlas: consent }).then(function () {
+        track('odeslano', { zdroj: zdroj });
+        finish(form);
+      }, function () {
+        btn.disabled = false;
+        btn.textContent = label;
+        showError(form, 'server');
+      });
+    });
+  }
+  tpl.setAttribute('data-zdroj', 'sekce');
+  bind(tpl);
+
+  function mount(slotName, zdroj) {
+    var slot = doc.querySelector('[data-slot="' + slotName + '"]');
+    var form = slot.querySelector('.lead-form');
+    if (!form) {
+      form = tpl.cloneNode(true);
+      form.reset();
+      form.querySelector('.form-error').hidden = true;
+      slot.appendChild(form);
+      bind(form);
+    }
+    form.setAttribute('data-zdroj', zdroj);
+    return form;
+  }
+
+  var ctaBtn = doc.querySelector('[data-otevri="vysledek"]');
+  ctaBtn.addEventListener('click', function () {
+    track('cta', { zdroj: 'vysledek' });
+    if (done) return;
+    var form = mount('vysledek', 'vysledek');
+    ctaBtn.hidden = true;
+    track('formular_otevren', { zdroj: 'vysledek' });
+    form.elements.email.focus();
+  });
+
+  function openSheet(zdroj) {
+    track('cta', { zdroj: zdroj });
+    if (done) return;
+    if (typeof dialog.showModal !== 'function') {
+      doc.getElementById('tahak').scrollIntoView();
+      return;
+    }
+    var form = mount('lista', zdroj);
+    dialog.showModal();
+    updateBar();
+    track('formular_otevren', { zdroj: zdroj });
+    form.elements.email.focus();
+  }
+  doc.querySelectorAll('[data-otevri="lista"], [data-otevri="karty"]').forEach(function (el) {
+    el.addEventListener('click', function (e) { e.preventDefault(); openSheet(el.getAttribute('data-otevri')); });
+  });
+  dialog.querySelector('[data-zavri]').addEventListener('click', function () { dialog.close(); });
+  dialog.addEventListener('click', function (e) { if (e.target === dialog) dialog.close(); });
+  dialog.addEventListener('close', updateBar);
+
+  /* Po odeslání: všechny formuláře nahradí poděkování, stáhne se PDF (pokud už existuje). */
+  function finish(submitted) {
+    if (done) return;
+    done = true;
+    var thanksTpl = doc.getElementById('dekujeme');
+    var focusTarget;
+    doc.querySelectorAll('.lead-form').forEach(function (f) {
+      var t = thanksTpl.content.firstElementChild.cloneNode(true);
+      var share = t.querySelector('.share');
+      if (navigator.share) {
+        share.hidden = false;
+        share.querySelector('button').addEventListener('click', function () {
+          track('sdileni', {});
+          navigator.share({ title: doc.title, url: location.origin + location.pathname }).catch(function () {});
+        });
+      }
+      f.replaceWith(t);
+      if (f === submitted) focusTarget = t;
+    });
+    ctaBtn.hidden = true;
+    updateBar();
+    if (focusTarget) focusTarget.focus();
+    fetch(PDF, { method: 'HEAD' }).then(function (r) {
+      if (!r.ok) throw new Error(r.status);
+      var a = doc.createElement('a');
+      a.href = PDF;
+      a.download = 'tahak-etf-dvojcata.pdf';
+      doc.body.appendChild(a);
+      a.click();
+      a.remove();
+    }).catch(function () { console.warn('[tahák] PDF zatím neexistuje: ' + PDF); });
+  }
+})();
+</script>
 </body>
 </html>
