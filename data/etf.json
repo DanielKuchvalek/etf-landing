@@ -10,7 +10,9 @@
     },
     "jednotky": "TER v procentech ročně; velikost fondu v USD (zaokrouhlení podle zdroje, viz hodnota_ve_zdroji).",
     "vanguard_us_api": "U Vanguard USA jsou zdrojem JSON endpointy investor.vanguard.com/vmf/api/…, ze kterých se plní produktová stránka investor.vanguard.com/investment-products/etfs/profile/<ticker>.",
-    "priips": "Proč ke každému ETF hledáme UCITS obdobu: viz data/README.md."
+    "priips": "Proč ke každému ETF hledáme UCITS obdobu: viz data/README.md.",
+    "brokeri_overeno_dne": "2026-10-10",
+    "trading212_americka_etf": "Ve veřejném seznamu Trading 212 (účet Invest, 2026-10-10) je 1151 ETF s americkým ISINem; 1137 z nich je vyloučeno pro evropské entity T212CY a T212DE."
   },
   "etf": [
     {
@@ -78,6 +80,13 @@
         "k_datu": null,
         "overeno": "2026-10-10",
         "poznamka": "Česká stránka XTB obsahuje „Investujte do ETF VOO.US“ s ISIN fondu. Jestli XTB nákup povolí neprofesionálnímu (retailovému) klientovi, se z veřejné stránky ověřit nepodařilo – TODO."
+      },
+      "original_u_trading212": {
+        "hodnota": "vyloučeno pro evropské entity",
+        "zdroj": "https://www.trading212.com/cs/trading-instruments/invest",
+        "k_datu": null,
+        "overeno": "2026-10-10",
+        "poznamka": "VOO (US9229083632) má v seznamu Trading 212 dealerExclusions ['AVUS', 'AVUSUK', 'T212CY', 'T212DE'], tedy včetně T212CY a T212DE."
       },
       "ucits_obdoba": {
         "nazev": {
@@ -197,12 +206,50 @@
             "overeno": "2026-10-10",
             "poznamka": "Česká stránka XTB obsahuje „Investujte do ETF VUAA.DE“."
           },
+          "trading212": {
+            "hodnota": "ano",
+            "zdroj": "https://www.trading212.com/cs/trading-instruments/invest",
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "Veřejný seznam nástrojů Trading 212 (účet Invest) obsahuje ISIN IE00BFMXXD54 bez vyloučení pro evropské entity (pole dealerExclusions neobsahuje T212CY ani T212DE). Stránka je za ochranou Cloudflare, data byla přečtena ve skutečném prohlížeči.",
+            "kotace": [
+              {
+                "burza": "London Stock Exchange",
+                "ticker": "VUAA",
+                "mena": "USD"
+              },
+              {
+                "burza": "Borsa Italiana",
+                "ticker": "VUAA",
+                "mena": "EUR"
+              },
+              {
+                "burza": "London Stock Exchange",
+                "ticker": "VUAG",
+                "mena": "GBP"
+              }
+            ]
+          },
+          "degiro": {
+            "hodnota": null,
+            "zdroj": "https://www.degiro.cz/poplatky/etf-core-selection",
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "ISIN IE00BFMXXD54 ve veřejném „Základním výběru ETF“ není. Mimo něj může Degiro fond nabízet, ale vyhledávání produktů vyžaduje přihlášení – neověřeno."
+          },
+          "fio": {
+            "hodnota": null,
+            "zdroj": "https://www.fio.cz/akcie-investice/akcie/akcie-nemecko",
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "Neověřeno. Fio uvádí přístup na Xetru („Přes 1 000 akcií a 3 000 ETF/ETP nástrojů“), ale veřejný seznam konkrétních nástrojů nemá: „Seznam ETF“ na fio.cz obsahuje jen zastaralé americké fondy a jeho vyhledávání se automaticky použít nepodařilo. Ověřit v e-Brokeru nebo Smartbrokeru."
+          },
           "ostatni_brokeri": {
             "hodnota": null,
             "zdroj": null,
             "k_datu": null,
             "overeno": "2026-10-10",
-            "poznamka": "Neověřováno. Dostupnost u Fio, Trading 212, Degiro, IBKR, Portu apod. je TODO."
+            "poznamka": "Neověřováno: Interactive Brokers, Lynx, Portu, Revolut a další."
           }
         },
         "rozdil_oproti_originalu": "Stejný index (S&P 500). UCITS třída dividendy reinvestuje, americký VOO je vyplácí; UCITS má vyšší TER."
@@ -273,6 +320,13 @@
         "k_datu": null,
         "overeno": "2026-10-10",
         "poznamka": "Česká stránka XTB: „Investujte do CFD na VTI.US“ – derivát, ne vlastnictví fondu."
+      },
+      "original_u_trading212": {
+        "hodnota": "v seznamu bez vyloučení",
+        "zdroj": "https://www.trading212.com/cs/trading-instruments/invest",
+        "k_datu": null,
+        "overeno": "2026-10-10",
+        "poznamka": "VTI (US9229087690) je v seznamu Trading 212 bez vyloučení. Jestli ho jde jako retailový klient skutečně koupit, z veřejných dat nepoznáme – TODO."
       },
       "ucits_obdoba": {
         "nazev": {
@@ -404,12 +458,50 @@
             "overeno": "2026-10-10",
             "poznamka": "Česká stránka XTB obsahuje „Investujte do ETF SXR4.DE“."
           },
+          "trading212": {
+            "hodnota": "ano",
+            "zdroj": "https://www.trading212.com/cs/trading-instruments/invest",
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "Veřejný seznam nástrojů Trading 212 (účet Invest) obsahuje ISIN IE00B52SFT06 bez vyloučení pro evropské entity (pole dealerExclusions neobsahuje T212CY ani T212DE). Stránka je za ochranou Cloudflare, data byla přečtena ve skutečném prohlížeči.",
+            "kotace": [
+              {
+                "burza": "SIX Swiss Exchange",
+                "ticker": "CSUS",
+                "mena": "USD"
+              },
+              {
+                "burza": "London Stock Exchange",
+                "ticker": "CU1",
+                "mena": "GBX"
+              },
+              {
+                "burza": "Deutsche Börse Xetra",
+                "ticker": "SXR4",
+                "mena": "EUR"
+              }
+            ]
+          },
+          "degiro": {
+            "hodnota": "ano",
+            "zdroj": "https://www.degiro.cz/poplatky/etf-core-selection",
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "ISIN IE00B52SFT06 je v seznamu „Základní výběr ETF“ na degiro.cz."
+          },
+          "fio": {
+            "hodnota": null,
+            "zdroj": "https://www.fio.cz/akcie-investice/akcie/akcie-nemecko",
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "Neověřeno. Fio uvádí přístup na Xetru („Přes 1 000 akcií a 3 000 ETF/ETP nástrojů“), ale veřejný seznam konkrétních nástrojů nemá: „Seznam ETF“ na fio.cz obsahuje jen zastaralé americké fondy a jeho vyhledávání se automaticky použít nepodařilo. Ověřit v e-Brokeru nebo Smartbrokeru."
+          },
           "ostatni_brokeri": {
             "hodnota": null,
             "zdroj": null,
             "k_datu": null,
             "overeno": "2026-10-10",
-            "poznamka": "Neověřováno. Dostupnost u Fio, Trading 212, Degiro, IBKR, Portu apod. je TODO."
+            "poznamka": "Neověřováno: Interactive Brokers, Lynx, Portu, Revolut a další."
           }
         },
         "rozdil_oproti_originalu": "Přesnou UCITS obdobu celého amerického trhu se nepodařilo najít. iShares MSCI USA sleduje jiný, užší index (MSCI USA) a drží výrazně méně titulů než VTI – viz pocet_titulu u obou fondů."
@@ -480,6 +572,13 @@
         "k_datu": null,
         "overeno": "2026-10-10",
         "poznamka": "Česká stránka XTB: „Investujte do CFD na VT.US“ – derivát, ne vlastnictví fondu."
+      },
+      "original_u_trading212": {
+        "hodnota": "vyloučeno pro evropské entity",
+        "zdroj": "https://www.trading212.com/cs/trading-instruments/invest",
+        "k_datu": null,
+        "overeno": "2026-10-10",
+        "poznamka": "VT (US9220427424) má v seznamu Trading 212 dealerExclusions ['AVUS', 'AVUSUK', 'T212CY', 'T212DE'], tedy včetně T212CY a T212DE."
       },
       "ucits_obdoba": {
         "nazev": {
@@ -611,12 +710,55 @@
             "overeno": "2026-10-10",
             "poznamka": "Česká stránka XTB obsahuje „Investujte do ETF VWCE.DE“."
           },
+          "trading212": {
+            "hodnota": "ano",
+            "zdroj": "https://www.trading212.com/cs/trading-instruments/invest",
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "Veřejný seznam nástrojů Trading 212 (účet Invest) obsahuje ISIN IE00BK5BQT80 bez vyloučení pro evropské entity (pole dealerExclusions neobsahuje T212CY ani T212DE). Stránka je za ochranou Cloudflare, data byla přečtena ve skutečném prohlížeči.",
+            "kotace": [
+              {
+                "burza": "Deutsche Börse Xetra",
+                "ticker": "VWCE",
+                "mena": "EUR"
+              },
+              {
+                "burza": "London Stock Exchange",
+                "ticker": "VWRA",
+                "mena": "USD"
+              },
+              {
+                "burza": "SIX Swiss Exchange",
+                "ticker": "VWRA",
+                "mena": "CHF"
+              },
+              {
+                "burza": "London Stock Exchange",
+                "ticker": "VWRP",
+                "mena": "GBP"
+              }
+            ]
+          },
+          "degiro": {
+            "hodnota": "ano",
+            "zdroj": "https://www.degiro.cz/poplatky/etf-core-selection",
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "ISIN IE00BK5BQT80 je v seznamu „Základní výběr ETF“ na degiro.cz."
+          },
+          "fio": {
+            "hodnota": null,
+            "zdroj": "https://www.fio.cz/akcie-investice/akcie/akcie-nemecko",
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "Neověřeno. Fio uvádí přístup na Xetru („Přes 1 000 akcií a 3 000 ETF/ETP nástrojů“), ale veřejný seznam konkrétních nástrojů nemá: „Seznam ETF“ na fio.cz obsahuje jen zastaralé americké fondy a jeho vyhledávání se automaticky použít nepodařilo. Ověřit v e-Brokeru nebo Smartbrokeru."
+          },
           "ostatni_brokeri": {
             "hodnota": null,
             "zdroj": null,
             "k_datu": null,
             "overeno": "2026-10-10",
-            "poznamka": "Neověřováno. Dostupnost u Fio, Trading 212, Degiro, IBKR, Portu apod. je TODO."
+            "poznamka": "Neověřováno: Interactive Brokers, Lynx, Portu, Revolut a další."
           }
         },
         "rozdil_oproti_originalu": "Jiný index: VT sleduje FTSE Global All Cap, UCITS fond FTSE All-World, který podle Vanguardu obsahuje velké a střední firmy (bez malých). Proto má UCITS fond méně titulů."
@@ -687,6 +829,13 @@
         "k_datu": null,
         "overeno": "2026-10-10",
         "poznamka": "Česká stránka XTB: „Investujte do CFD na VWO.US“ – derivát, ne vlastnictví fondu."
+      },
+      "original_u_trading212": {
+        "hodnota": "v seznamu bez vyloučení",
+        "zdroj": "https://www.trading212.com/cs/trading-instruments/invest",
+        "k_datu": null,
+        "overeno": "2026-10-10",
+        "poznamka": "VWO (US9220428588) je v seznamu Trading 212 bez vyloučení. Jestli ho jde jako retailový klient skutečně koupit, z veřejných dat nepoznáme – TODO."
       },
       "ucits_obdoba": {
         "nazev": {
@@ -812,12 +961,55 @@
             "overeno": "2026-10-10",
             "poznamka": "Česká stránka XTB obsahuje „Investujte do ETF VFEA.DE“."
           },
+          "trading212": {
+            "hodnota": "ano",
+            "zdroj": "https://www.trading212.com/cs/trading-instruments/invest",
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "Veřejný seznam nástrojů Trading 212 (účet Invest) obsahuje ISIN IE00BK5BR733 bez vyloučení pro evropské entity (pole dealerExclusions neobsahuje T212CY ani T212DE). Stránka je za ochranou Cloudflare, data byla přečtena ve skutečném prohlížeči.",
+            "kotace": [
+              {
+                "burza": "Deutsche Börse Xetra",
+                "ticker": "VFEA",
+                "mena": "EUR"
+              },
+              {
+                "burza": "London Stock Exchange",
+                "ticker": "VFEA",
+                "mena": "USD"
+              },
+              {
+                "burza": "SIX Swiss Exchange",
+                "ticker": "VFEA",
+                "mena": "CHF"
+              },
+              {
+                "burza": "London Stock Exchange",
+                "ticker": "VFEG",
+                "mena": "GBP"
+              }
+            ]
+          },
+          "degiro": {
+            "hodnota": null,
+            "zdroj": "https://www.degiro.cz/poplatky/etf-core-selection",
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "ISIN IE00BK5BR733 ve veřejném „Základním výběru ETF“ není. Mimo něj může Degiro fond nabízet, ale vyhledávání produktů vyžaduje přihlášení – neověřeno."
+          },
+          "fio": {
+            "hodnota": null,
+            "zdroj": "https://www.fio.cz/akcie-investice/akcie/akcie-nemecko",
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "Neověřeno. Fio uvádí přístup na Xetru („Přes 1 000 akcií a 3 000 ETF/ETP nástrojů“), ale veřejný seznam konkrétních nástrojů nemá: „Seznam ETF“ na fio.cz obsahuje jen zastaralé americké fondy a jeho vyhledávání se automaticky použít nepodařilo. Ověřit v e-Brokeru nebo Smartbrokeru."
+          },
           "ostatni_brokeri": {
             "hodnota": null,
             "zdroj": null,
             "k_datu": null,
             "overeno": "2026-10-10",
-            "poznamka": "Neověřováno. Dostupnost u Fio, Trading 212, Degiro, IBKR, Portu apod. je TODO."
+            "poznamka": "Neověřováno: Interactive Brokers, Lynx, Portu, Revolut a další."
           }
         },
         "rozdil_oproti_originalu": "Jiný index: VWO sleduje FTSE Emerging Markets All Cap China A Inclusion, UCITS fond FTSE Emerging, který podle Vanguardu obsahuje velké a střední firmy. UCITS fond má méně titulů."
@@ -887,6 +1079,13 @@
         "k_datu": null,
         "overeno": "2026-10-10",
         "poznamka": "Stránku XTB pro SDY.US se najít nepodařilo (adresa přesměruje na obecnou specifikaci)."
+      },
+      "original_u_trading212": {
+        "hodnota": "vyloučeno pro evropské entity",
+        "zdroj": "https://www.trading212.com/cs/trading-instruments/invest",
+        "k_datu": null,
+        "overeno": "2026-10-10",
+        "poznamka": "SDY (US78464A7634) má v seznamu Trading 212 dealerExclusions ['AVUS', 'AVUSUK', 'T212CY', 'T212DE'], tedy včetně T212CY a T212DE."
       },
       "ucits_obdoba": {
         "nazev": {
@@ -1012,12 +1211,55 @@
             "overeno": "2026-10-10",
             "poznamka": "Česká stránka XTB obsahuje „Investujte do ETF SPYD.DE“."
           },
+          "trading212": {
+            "hodnota": "ano",
+            "zdroj": "https://www.trading212.com/cs/trading-instruments/invest",
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "Veřejný seznam nástrojů Trading 212 (účet Invest) obsahuje ISIN IE00B6YX5D40 bez vyloučení pro evropské entity (pole dealerExclusions neobsahuje T212CY ani T212DE). Stránka je za ochranou Cloudflare, data byla přečtena ve skutečném prohlížeči.",
+            "kotace": [
+              {
+                "burza": "Deutsche Börse Xetra",
+                "ticker": "SPYD",
+                "mena": "EUR"
+              },
+              {
+                "burza": "London Stock Exchange",
+                "ticker": "UDVD",
+                "mena": "USD"
+              },
+              {
+                "burza": "London Stock Exchange",
+                "ticker": "USDV",
+                "mena": "GBP"
+              },
+              {
+                "burza": "SIX Swiss Exchange",
+                "ticker": "USDV",
+                "mena": "CHF"
+              }
+            ]
+          },
+          "degiro": {
+            "hodnota": null,
+            "zdroj": "https://www.degiro.cz/poplatky/etf-core-selection",
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "ISIN IE00B6YX5D40 ve veřejném „Základním výběru ETF“ není. Mimo něj může Degiro fond nabízet, ale vyhledávání produktů vyžaduje přihlášení – neověřeno."
+          },
+          "fio": {
+            "hodnota": null,
+            "zdroj": "https://www.fio.cz/akcie-investice/akcie/akcie-nemecko",
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "Neověřeno. Fio uvádí přístup na Xetru („Přes 1 000 akcií a 3 000 ETF/ETP nástrojů“), ale veřejný seznam konkrétních nástrojů nemá: „Seznam ETF“ na fio.cz obsahuje jen zastaralé americké fondy a jeho vyhledávání se automaticky použít nepodařilo. Ověřit v e-Brokeru nebo Smartbrokeru."
+          },
           "ostatni_brokeri": {
             "hodnota": null,
             "zdroj": null,
             "k_datu": null,
             "overeno": "2026-10-10",
-            "poznamka": "Neověřováno. Dostupnost u Fio, Trading 212, Degiro, IBKR, Portu apod. je TODO."
+            "poznamka": "Neověřováno: Interactive Brokers, Lynx, Portu, Revolut a další."
           }
         },
         "rozdil_oproti_originalu": "Stejný index (S&P High Yield Dividend Aristocrats) i stejný TER; oba fondy dividendy vyplácejí."
@@ -1088,6 +1330,13 @@
         "k_datu": null,
         "overeno": "2026-10-10",
         "poznamka": "Česká stránka XTB: „Investujte do CFD na VGT.US“ – derivát, ne vlastnictví fondu."
+      },
+      "original_u_trading212": {
+        "hodnota": "vyloučeno pro evropské entity",
+        "zdroj": "https://www.trading212.com/cs/trading-instruments/invest",
+        "k_datu": null,
+        "overeno": "2026-10-10",
+        "poznamka": "VGT (US92204A7028) má v seznamu Trading 212 dealerExclusions ['AVUS', 'AVUSUK', 'T212CY', 'T212DE'], tedy včetně T212CY a T212DE."
       },
       "ucits_obdoba": {
         "nazev": {
@@ -1225,12 +1474,50 @@
             "overeno": "2026-10-10",
             "poznamka": "Česká stránka XTB obsahuje „Investujte do ETF QDVE.DE“."
           },
+          "trading212": {
+            "hodnota": "ano",
+            "zdroj": "https://www.trading212.com/cs/trading-instruments/invest",
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "Veřejný seznam nástrojů Trading 212 (účet Invest) obsahuje ISIN IE00B3WJKG14 bez vyloučení pro evropské entity (pole dealerExclusions neobsahuje T212CY ani T212DE). Stránka je za ochranou Cloudflare, data byla přečtena ve skutečném prohlížeči.",
+            "kotace": [
+              {
+                "burza": "London Stock Exchange",
+                "ticker": "IITU",
+                "mena": "GBX"
+              },
+              {
+                "burza": "London Stock Exchange",
+                "ticker": "IUIT",
+                "mena": "USD"
+              },
+              {
+                "burza": "Deutsche Börse Xetra",
+                "ticker": "QDVE",
+                "mena": "EUR"
+              }
+            ]
+          },
+          "degiro": {
+            "hodnota": "ano",
+            "zdroj": "https://www.degiro.cz/poplatky/etf-core-selection",
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "ISIN IE00B3WJKG14 je v seznamu „Základní výběr ETF“ na degiro.cz."
+          },
+          "fio": {
+            "hodnota": null,
+            "zdroj": "https://www.fio.cz/akcie-investice/akcie/akcie-nemecko",
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "Neověřeno. Fio uvádí přístup na Xetru („Přes 1 000 akcií a 3 000 ETF/ETP nástrojů“), ale veřejný seznam konkrétních nástrojů nemá: „Seznam ETF“ na fio.cz obsahuje jen zastaralé americké fondy a jeho vyhledávání se automaticky použít nepodařilo. Ověřit v e-Brokeru nebo Smartbrokeru."
+          },
           "ostatni_brokeri": {
             "hodnota": null,
             "zdroj": null,
             "k_datu": null,
             "overeno": "2026-10-10",
-            "poznamka": "Neověřováno. Dostupnost u Fio, Trading 212, Degiro, IBKR, Portu apod. je TODO."
+            "poznamka": "Neověřováno: Interactive Brokers, Lynx, Portu, Revolut a další."
           }
         },
         "rozdil_oproti_originalu": "Jiný index: VGT sleduje MSCI US IMI Information Technology 25/50, UCITS fond technologický sektor S&P 500 (S&P 500 Capped 35/20 Information Technology). UCITS fond drží jen firmy z S&P 500, proto výrazně méně titulů."
@@ -1300,6 +1587,13 @@
         "k_datu": null,
         "overeno": "2026-10-10",
         "poznamka": "Česká stránka XTB: „Investujte do CFD na AGG.US“ – derivát, ne vlastnictví fondu."
+      },
+      "original_u_trading212": {
+        "hodnota": "vyloučeno pro evropské entity",
+        "zdroj": "https://www.trading212.com/cs/trading-instruments/invest",
+        "k_datu": null,
+        "overeno": "2026-10-10",
+        "poznamka": "AGG (US4642872265) má v seznamu Trading 212 dealerExclusions ['AVUS', 'AVUSUK', 'T212CY', 'T212DE'], tedy včetně T212CY a T212DE."
       },
       "ucits_obdoba": {
         "nazev": {
@@ -1419,12 +1713,45 @@
             "overeno": "2026-10-10",
             "poznamka": "Česká stránka XTB obsahuje „Investujte do ETF IUAA.UK“."
           },
+          "trading212": {
+            "hodnota": "ano",
+            "zdroj": "https://www.trading212.com/cs/trading-instruments/invest",
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "Veřejný seznam nástrojů Trading 212 (účet Invest) obsahuje ISIN IE00BYXYYM63 bez vyloučení pro evropské entity (pole dealerExclusions neobsahuje T212CY ani T212DE). Stránka je za ochranou Cloudflare, data byla přečtena ve skutečném prohlížeči.",
+            "kotace": [
+              {
+                "burza": "London Stock Exchange",
+                "ticker": "IUAA",
+                "mena": "USD"
+              },
+              {
+                "burza": "SIX Swiss Exchange",
+                "ticker": "IUAA",
+                "mena": "CHF"
+              }
+            ]
+          },
+          "degiro": {
+            "hodnota": null,
+            "zdroj": "https://www.degiro.cz/poplatky/etf-core-selection",
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "ISIN IE00BYXYYM63 ve veřejném „Základním výběru ETF“ není. Mimo něj může Degiro fond nabízet, ale vyhledávání produktů vyžaduje přihlášení – neověřeno."
+          },
+          "fio": {
+            "hodnota": null,
+            "zdroj": "https://www.fio.cz/akcie-investice/akcie/akcie-nemecko",
+            "k_datu": null,
+            "overeno": "2026-10-10",
+            "poznamka": "Neověřeno. Fio uvádí přístup na Xetru („Přes 1 000 akcií a 3 000 ETF/ETP nástrojů“), ale veřejný seznam konkrétních nástrojů nemá: „Seznam ETF“ na fio.cz obsahuje jen zastaralé americké fondy a jeho vyhledávání se automaticky použít nepodařilo. Ověřit v e-Brokeru nebo Smartbrokeru."
+          },
           "ostatni_brokeri": {
             "hodnota": null,
             "zdroj": null,
             "k_datu": null,
             "overeno": "2026-10-10",
-            "poznamka": "Neověřováno. Dostupnost u Fio, Trading 212, Degiro, IBKR, Portu apod. je TODO."
+            "poznamka": "Neověřováno: Interactive Brokers, Lynx, Portu, Revolut a další."
           }
         },
         "rozdil_oproti_originalu": "Stejný index (Bloomberg US Aggregate Bond). UCITS fond drží výběr dluhopisů z indexu (metoda Sampled), proto méně pozic; TER je vyšší. Na Xetře kotovaný není."

@@ -33,6 +33,34 @@
 
 Všech 7 UCITS fondů má na českém webu XTB stránku „Investujte do ETF …“ (skutečné ETF, ne CFD). SPYD má navíc u emitenta Česko v seznamu zemí registrace.
 
+## Dostupnost u brokerů (ověřeno 10. 10. 2026)
+
+| Dvojče | XTB | Trading 212 | Degiro | Fio |
+|---|---|---|---|---|
+| VUAA | ano | ano (Borsa Italiana EUR, LSE USD) | neověřeno | neověřeno |
+| SXR4 | ano | ano (Xetra EUR) | ano | neověřeno |
+| VWCE | ano | ano (Xetra EUR) | ano | neověřeno |
+| VFEA | ano | ano (Xetra EUR) | neověřeno | neověřeno |
+| SPYD | ano | ano (Xetra EUR) | neověřeno | neověřeno |
+| QDVE | ano | ano (Xetra EUR) | ano | neověřeno |
+| IUAA | ano | ano (LSE USD) | neověřeno | neověřeno |
+
+- **XTB:** česká produktová stránka „Investujte do ETF <ticker>“.
+- **Trading 212:**
+  - [veřejný seznam nástrojů](https://www.trading212.com/cs/trading-instruments/invest), účet Invest, je za ochranou Cloudflare, takže jsem ho četl ve skutečném prohlížeči (headless Chrome),
+  - u každého nástroje je pole `dealerExclusions`, tedy entity Trading 212, které ho nenabízejí; u všech 7 dvojčat je prázdné,
+  - patička webu uvádí evropské entity Trading 212 Markets Ltd. (Kypr) a Trading 212 EU GmbH (Německo); že jim odpovídají zkratky `T212CY` a `T212DE`, odvozuji z názvů.
+- **Degiro:**
+  - SXR4 a VWCE jsou v seznamu [Základní výběr ETF](https://www.degiro.cz/poplatky/etf-core-selection),
+  - QDVE je na téže stránce v přehledu nejobchodovanějších ETF Základního výběru „na naší české platformě“ za rok 2025,
+  - ostatní mimo Základní výběr nejde bez přihlášení ověřit.
+- **Fio:** uvádí přístup na Xetru („přes 1 000 akcií a 3 000 ETF/ETP“), ale veřejný seznam konkrétních nástrojů nemá. Seznam ETF na fio.cz obsahuje jen zastaralé americké fondy a jeho vyhledávání se automaticky použít nepodařilo. Ověřit v aplikaci.
+
+**Další doklad k PRIIPs:**
+
+- V seznamu Trading 212 je 1 151 ETF s americkým ISINem a 1 137 z nich je vyloučeno pro evropské entity. Mezi vyloučenými jsou VOO, VT, VGT, SDY a AGG. VTI a VWO vyloučené nejsou; jestli je jde jako retailový klient koupit, z veřejných dat nepoznáme.
+- Degiro v [nápovědě k PRIIPs](https://www.degiro.cz/helpdesk/trading-possibilities/impact-new-priips-regulation) píše, že fond musí být schválený k nabízení v zemi klienta a mít KID v jeho jazyce.
+
 **Proč ne jiné fondy:**
 
 - QQQ se obchoduje na Nasdaqu, takže podle zadání vypadl.
@@ -52,7 +80,7 @@ Všech 7 UCITS fondů má na českém webu XTB stránku „Investujte do ETF …
 
 ## Co se ověřit nepodařilo (TODO)
 
-- **Dostupnost u jiných brokerů než XTB** (Fio, Trading 212, Degiro, IBKR, Portu). V `etf.json` je `null`.
+- **Dostupnost u Fio** u všech 7 dvojčat a u Degira u VUAA, VFEA, SPYD a IUAA (viz tabulka výše). IBKR, Lynx a Portu se neověřovaly. V `etf.json` je `null`.
 - **VOO u XTB:** XTB má VOO.US jako stránku ETF (ne CFD) s ISIN fondu. Z veřejné stránky nejde zjistit, jestli nákup povolí retailovému klientovi. Je to v rozporu s ostatními americkými ETF, které XTB nabízí jen jako CFD.
 - **Fio:** jestli u Fio jde americké ETF jako retailový klient koupit. Seznam ETF na webu Fio je zastaralý (obsahuje dávno zrušené fondy) a nic nedokazuje.
 - **Přesná UCITS obdoba VTI** (celý americký trh včetně malých firem) se nenašla. iShares MSCI USA je nejbližší náhrada.
