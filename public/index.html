@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<title>Evropská dvojčata amerických ETF | ETF dvojčata</title>
+<meta name="description" content="VOO, VT a dalších 5 ETF z USA ti broker v Česku často nenabídne. Najdi jejich evropská dvojčata, která koupíš.">
+<meta property="og:title" content="Evropská dvojčata amerických ETF | ETF dvojčata">
+<meta property="og:description" content="VOO, VT a dalších 5 ETF z USA ti broker v Česku často nenabídne. Najdi jejich evropská dvojčata, která koupíš.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="cs_CZ">
+<meta name="theme-color" content="#FFFDF5">
+<meta name="color-scheme" content="light">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231E3FA8'/%3E%3Cpath d='M7 21h8M17 21h8' stroke='%23FFE45C' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M8 10h6M18 10h6' stroke='%23fff' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+:root{--paper:#FFFDF5;--grid:#EBEFF6;--card:#fff;--ink:#1A1A1A;--ink-2:#4A4A4A;--line:#D9DEE8;--pen:#1E3FA8;--pen-dark:#18338A;--pen-soft:#EEF2FC;--hl:#FFE45C;--red:#D7263D;--ease:cubic-bezier(.2,.8,.2,1)}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent;scroll-behavior:smooth;scroll-padding-top:12px}
+body{margin:0;color:var(--ink);font:400 1rem/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;font-variant-numeric:tabular-nums;background-color:var(--paper);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px}
+.wrap{max-width:40rem;margin:0 auto;padding:0 16px}
+h1,h2,h3{margin:0 0 .5em;font-weight:800;line-height:1.15;letter-spacing:-.015em}
+h1{font-size:clamp(1.75rem,7.4vw,2.5rem)}
+h2{font-size:clamp(1.375rem,5.6vw,1.75rem)}
+p{margin:0 0 1em}
+a{color:var(--pen);text-underline-offset:2px}
+:focus-visible{outline:3px solid var(--pen);outline-offset:2px}
+.hl{background:linear-gradient(transparent 58%,var(--hl) 58%);color:inherit;padding:0 2px}
+mark.hl{font-weight:700}
+.todo{background:#FFF2B3;outline:1px dashed #9A7400;padding:0 3px}
+.muted{color:var(--ink-2)}
+.small{font-size:.875rem;color:var(--ink-2)}
+/* hlavička a úvod */
+.top{padding-block:14px 6px}
+.logo{font-weight:800;font-size:1.0625rem;letter-spacing:-.01em;color:var(--ink);text-decoration:none}
+.hero{padding-block:10px 4px}
+.lead{font-size:1.125rem;color:var(--ink-2);margin-bottom:.5em}
+.note{font-size:.875rem;color:var(--ink-2);margin:0}
+.picker-label{font-weight:700;margin:20px 0 10px}
+.chips{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.chip{display:flex;flex-direction:column;justify-content:center;min-height:56px;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);text-decoration:none;line-height:1.25;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;transition:transform .1s var(--ease),border-color .15s,background-color .15s}
+.chip b{font-size:1.0625rem}
+.chip span{font-size:.875rem;color:var(--ink-2)}
+.chip:active{transform:scale(.97)}
+.chip[aria-pressed="true"]{border:2px solid var(--pen);padding:7px 11px;background:var(--pen-soft)}
+.stamp{margin:12px 0 0;font-size:.8125rem;color:var(--ink-2)}
+/* výsledek */
+.result{padding-top:16px}
+.twin{padding:20px 16px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.twin h2{font-size:1.25rem;margin-bottom:.25em}
+.twin h2:focus{outline:none}
+.swap{display:flex;align-items:center;gap:8px;margin:8px 0 4px;font-weight:800}
+.orig{font-size:1.5rem;color:var(--ink-2);text-decoration:line-through;text-decoration-color:var(--red);text-decoration-thickness:3px}
+.arrow{flex:none;width:44px;height:20px;color:var(--pen)}
+.tk{font-size:2.25rem;line-height:1.1}
+.fullname{font-size:.875rem;color:var(--ink-2);margin:0}
+.facts{display:grid;gap:12px;margin:16px 0 0}
+.facts div{display:grid;gap:2px;padding-top:12px;border-top:1px dashed var(--line)}
+.facts dt{font-size:.8125rem;font-weight:700;color:var(--pen)}
+.facts dd{margin:0}
+.badge{display:inline-block;margin-right:6px;padding:1px 8px;border:1.5px solid var(--pen);border-radius:999px;color:var(--pen);font-size:.8125rem;font-weight:700;white-space:nowrap}
+.badge.similar{border-style:dashed;border-color:#7A8396;color:#4A5468}
+.cta{margin-top:16px}
+.again{display:inline-block;margin-top:12px;font-size:.9375rem}
+/* tlačítka */
+.btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:52px;padding:12px 18px;border:0;border-radius:10px;background:var(--pen);color:#fff;font-family:inherit;font-size:1.0625rem;font-weight:700;line-height:1.2;text-align:center;text-decoration:none;cursor:pointer;touch-action:manipulation;-webkit-user-select:none;user-select:none;transition:transform .1s var(--ease),background-color .15s}
+.btn:active{transform:scale(.98)}
+.btn[disabled]{opacity:.7;cursor:progress}
+.btn-small{flex:none;width:auto;min-height:44px;padding:10px 16px;font-size:1rem}
+.btn-quiet{background:var(--card);color:var(--pen);border:1.5px solid var(--pen)}
+.cta .small{text-align:center;margin:8px 0 0}
+/* sekce */
+.section{padding-top:48px}
+.pairs{display:grid;gap:8px;margin:16px 0;padding:0;list-style:none}
+.pair{display:grid;grid-template-columns:1fr auto;gap:2px 12px;align-items:baseline;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--card);scroll-margin-top:16px}
+.pair:target{outline:2px solid var(--pen)}
+.pair-tk{margin:0;font-size:1.0625rem;font-weight:800}
+.pair-tk .o{color:var(--ink-2);font-weight:700}
+.pair-fee{margin:0;text-align:right;white-space:nowrap}
+.pair-meta{grid-column:1/-1;margin:0;font-size:.875rem;color:var(--ink-2)}
+.paper{padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.disclaimer{margin-top:16px;padding:12px 14px;border-left:4px solid var(--pen);border-radius:0 10px 10px 0;background:var(--card)}
+.disclaimer p:last-child{margin:0}
+details{margin-top:8px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+summary{position:relative;min-height:48px;padding:13px 44px 13px 14px;font-weight:700;list-style:none;cursor:pointer;-webkit-user-select:none;user-select:none}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";position:absolute;top:50%;right:16px;transform:translateY(-50%);color:var(--pen);font-size:1.5rem;font-weight:400;line-height:1}
+details[open]>summary::after{content:"–"}
+details>div{padding:0 14px 14px}
+details>div p:last-child{margin:0}
+.sources{margin:0;padding-left:1.1em;font-size:.875rem}
+.sources li{margin:6px 0}
+/* formulář */
+.form-card{margin-top:16px;padding:20px 16px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.bullets{margin:0 0 4px;padding-left:1.2em}
+.bullets li{margin:4px 0}
+.lead-form{display:grid;gap:14px;margin-top:16px}
+.field{display:grid;gap:6px;font-weight:700}
+.field input{width:100%;min-height:52px;padding:12px 14px;border:1.5px solid #8F98AB;border-radius:10px;background:#fff;color:var(--ink);font-family:inherit;font-size:16px;font-weight:400}
+.field input:focus{border-color:var(--pen);outline:none;box-shadow:0 0 0 3px var(--pen-soft)}
+.field input[aria-invalid="true"]{border-color:var(--red)}
+.consent{display:grid;grid-template-columns:24px 1fr;gap:10px;align-items:start;font-size:.875rem;color:var(--ink-2)}
+.consent input{width:22px;height:22px;margin:1px 0 0;accent-color:var(--pen)}
+.form-error{margin:0;color:var(--red);font-size:.9375rem;font-weight:700}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.lead-form .small{margin:0;text-align:center}
+.thanks h3{font-size:1.25rem}
+.thanks p:last-child{margin:0}
+/* lišta dole a panel */
+.bar{position:fixed;right:0;bottom:0;left:0;z-index:10;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);background:var(--card);box-shadow:0 -4px 16px rgb(26 26 26 / .06);animation:up .2s var(--ease)}
+.bar-in{display:flex;align-items:center;gap:12px;max-width:40rem;margin:0 auto}
+.bar p{flex:1;margin:0;font-size:.9375rem;font-weight:700;line-height:1.25}
+dialog.sheet{width:100%;max-width:40rem;max-height:92vh;max-height:92dvh;margin:auto auto 0;padding:0;border:0;border-radius:16px 16px 0 0;background:var(--card);color:var(--ink);overscroll-behavior:contain}
+dialog.sheet[open]{animation:up .22s var(--ease)}
+dialog.sheet::backdrop{background:rgb(26 26 26 / .45)}
+.sheet-in{position:relative;padding:20px 16px calc(20px + env(safe-area-inset-bottom,0px))}
+.sheet-in h2{font-size:1.25rem;padding-right:40px}
+.sheet-close{position:absolute;top:6px;right:6px;width:44px;height:44px;border:0;background:none;color:var(--ink-2);font-size:1.75rem;line-height:1;cursor:pointer;touch-action:manipulation}
+@keyframes up{from{transform:translateY(100%)}}
+/* patička */
+.foot{padding-block:48px 120px;font-size:.8125rem;color:var(--ink-2)}
+.foot p{margin:0 0 .5em}
+@media (hover:hover) and (pointer:fine){
+.btn:hover{background:var(--pen-dark)}
+.btn-quiet:hover{background:var(--pen-soft)}
+.chip:hover{border-color:var(--pen)}
+summary:hover{color:var(--pen)}
+}
+@media (min-width:640px){
+.chips{grid-template-columns:repeat(4,1fr)}
+.btn{width:auto}
+.cta .btn{width:100%}
+}
+@media (prefers-reduced-motion:reduce){
+html{scroll-behavior:auto}
+*,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="sipka" viewBox="0 0 44 20"><path d="M2 11c9-2 22-3 35-1" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="M30 4l8 6-8 6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
+
+<header class="top wrap">
+  <a class="logo" href="./">ETF <span class="hl">dvojčata</span></a>
+</header>
+
+<main>
+<section class="hero wrap" id="uvod">
+  <h1 id="uvod-h1">Najdi evropské dvojče k&nbsp;VOO, VT a&nbsp;dalším ETF z&nbsp;USA</h1>
+  <p class="lead" id="uvod-text">Americká ETF ti broker v&nbsp;Česku často nenabídne. Jejich evropská dvojčata koupíš normálně.</p>
+  <p class="note" id="uvod-pozn" hidden></p>
+  <script>
+  (function(){var v=new URLSearchParams(location.search).get('v');var t={
+    dvojce:['Broker ti nenabídl VOO? Není to chyba.','Americká ETF ti broker v Česku často nenabídne, evropská dvojčata ano. Tady je dvojče VOO a dalších 6 fondů z USA.',''],
+    zacatek:['Nevíš, kterým ETF začít?','Tady je 7 známých fondů z USA. Co v nich je, kolik stojí a jejich evropské verze, které si koupíš z Česka.','Nic ti nedoporučujeme, jen ukazujeme, co existuje.']
+  }[v];if(!t)return;document.getElementById('uvod-h1').textContent=t[0];document.getElementById('uvod-text').textContent=t[1];var n=document.getElementById('uvod-pozn');if(t[2]){n.textContent=t[2];n.hidden=false}})();
+  </script>
+
+  <div id="vyber">
+    <p class="picker-label">Které ETF tě zajímá?</p>
+    <div class="chips">
+      <a class="chip" href="#par-voo" data-etf="VOO"><b>VOO</b><span>S&amp;P&nbsp;500</span></a>
+      <a class="chip" href="#par-vti" data-etf="VTI"><b>VTI</b><span>celé USA</span></a>
+      <a class="chip" href="#par-vt" data-etf="VT"><b>VT</b><span>celý svět</span></a>
+      <a class="chip" href="#par-vwo" data-etf="VWO"><b>VWO</b><span>rozvíjející se trhy</span></a>
+      <a class="chip" href="#par-sdy" data-etf="SDY"><b>SDY</b><span>dividendy</span></a>
+      <a class="chip" href="#par-vgt" data-etf="VGT"><b>VGT</b><span>technologie</span></a>
+      <a class="chip" href="#par-agg" data-etf="AGG"><b>AGG</b><span>dluhopisy</span></a>
+    </div>
+    <p class="stamp">Data přímo od správců fondů, ověřeno 10.&nbsp;10.&nbsp;2026</p>
+  </div>
+</section>
+
+<section class="result wrap" id="vysledek" aria-live="polite" hidden>
+  <article class="twin" data-etf="VOO" hidden>
+    <h2 tabindex="-1">Evropské dvojče VOO je VUAA</h2>
+    <p class="swap" aria-hidden="true"><span class="orig">VOO</span><svg class="arrow"><use href="#sipka"/></svg><span class="tk hl">VUAA</span></p>
+    <p class="fullname">Vanguard S&amp;P&nbsp;500&nbsp;UCITS ETF (USD) Accumulating</p>
+    <dl class="facts">
+      <div><dt>Index</dt><dd><span class="badge">Stejný index</span>S&amp;P&nbsp;500.</dd></div>
+      <div><dt>Poplatek</dt><dd><mark class="hl">0,07&nbsp;%</mark> ročně, tedy 7&nbsp;Kč z&nbsp;každých 10&nbsp;000&nbsp;Kč. VOO má 0,03&nbsp;% (3&nbsp;Kč).</dd></div>
+      <div><dt>Dividendy</dt><dd>Nevyplácí, investuje je zpátky do fondu. VOO je vyplácí čtvrtletně.</dd></div>
+      <div><dt>Kde koupit</dt><dd>Hledej ticker VUAA, v&nbsp;eurech. Ověřili jsme ho u&nbsp;XTB a&nbsp;Trading 212.</dd></div>
+    </dl>
+  </article>
+  <article class="twin" data-etf="VTI" hidden>
+    <h2 tabindex="-1">Nejbližší evropská obdoba VTI je SXR4</h2>
+    <p class="swap" aria-hidden="true"><span class="orig">VTI</span><svg class="arrow"><use href="#sipka"/></svg><span class="tk hl">SXR4</span></p>
+    <p class="fullname">iShares MSCI USA UCITS ETF (Acc)</p>
+    <dl class="facts">
+      <div><dt>Index</dt><dd><span class="badge similar">Podobný, ne stejný</span>SXR4&nbsp;sleduje MSCI USA a&nbsp;drží 515&nbsp;titulů, VTI celý americký trh s&nbsp;3&nbsp;507&nbsp;akciemi. Přesné dvojče celého trhu jsme mezi evropskými fondy nenašli.</dd></div>
+      <div><dt>Poplatek</dt><dd><mark class="hl">0,03&nbsp;%</mark> ročně, tedy 3&nbsp;Kč z&nbsp;každých 10&nbsp;000&nbsp;Kč. Stejně jako u&nbsp;VTI.</dd></div>
+      <div><dt>Dividendy</dt><dd>Nevyplácí, investuje je zpátky do fondu. VTI je vyplácí čtvrtletně.</dd></div>
+      <div><dt>Kde koupit</dt><dd>Hledej ticker SXR4, v&nbsp;eurech. Ověřili jsme ho u&nbsp;XTB, Trading 212&nbsp;a&nbsp;Degira.</dd></div>
+    </dl>
+  </article>
+  <article class="twin" data-etf="VT" hidden>
+    <h2 tabindex="-1">Evropské dvojče VT je VWCE</h2>
+    <p class="swap" aria-hidden="true"><span class="orig">VT</span><svg class="arrow"><use href="#sipka"/></svg><span class="tk hl">VWCE</span></p>
+    <p class="fullname">Vanguard FTSE All-World UCITS ETF (USD) Accumulating</p>
+    <dl class="facts">
+      <div><dt>Index</dt><dd><span class="badge similar">Podobný, ne stejný</span>VWCE sleduje FTSE All-World, tedy velké a&nbsp;střední firmy z&nbsp;celého světa (3&nbsp;784&nbsp;akcií). VT sleduje širší FTSE Global All Cap (10&nbsp;088&nbsp;akcií).</dd></div>
+      <div><dt>Poplatek</dt><dd><mark class="hl">0,14&nbsp;%</mark> ročně, tedy 14&nbsp;Kč z&nbsp;každých 10&nbsp;000&nbsp;Kč. VT má 0,06&nbsp;% (6&nbsp;Kč).</dd></div>
+      <div><dt>Dividendy</dt><dd>Nevyplácí, investuje je zpátky do fondu. VT je vyplácí čtvrtletně.</dd></div>
+      <div><dt>Kde koupit</dt><dd>Hledej ticker VWCE, v&nbsp;eurech. Ověřili jsme ho u&nbsp;XTB, Trading 212&nbsp;a&nbsp;Degira.</dd></div>
+    </dl>
+  </article>
+  <article class="twin" data-etf="VWO" hidden>
+    <h2 tabindex="-1">Evropské dvojče VWO je VFEA</h2>
+    <p class="swap" aria-hidden="true"><span class="orig">VWO</span><svg class="arrow"><use href="#sipka"/></svg><span class="tk hl">VFEA</span></p>
+    <p class="fullname">Vanguard FTSE Emerging Markets UCITS ETF (USD) Accumulating</p>
+    <dl class="facts">
+      <div><dt>Index</dt><dd><span class="badge similar">Podobný, ne stejný</span>VFEA sleduje FTSE Emerging, tedy velké a&nbsp;střední firmy z&nbsp;rozvíjejících se trhů (2&nbsp;306&nbsp;akcií). VWO sleduje širší index (6&nbsp;348&nbsp;akcií).</dd></div>
+      <div><dt>Poplatek</dt><dd><mark class="hl">0,17&nbsp;%</mark> ročně, tedy 17&nbsp;Kč z&nbsp;každých 10&nbsp;000&nbsp;Kč. VWO má 0,06&nbsp;% (6&nbsp;Kč).</dd></div>
+      <div><dt>Dividendy</dt><dd>Nevyplácí, investuje je zpátky do fondu. VWO je vyplácí čtvrtletně.</dd></div>
+      <div><dt>Kde koupit</dt><dd>Hledej ticker VFEA, v&nbsp;eurech. Ověřili jsme ho u&nbsp;XTB a&nbsp;Trading 212.</dd></div>
+    </dl>
+  </article>
+  <article class="twin" data-etf="SDY" hidden>
+    <h2 tabindex="-1">Evropské dvojče SDY je SPYD</h2>
+    <p class="swap" aria-hidden="true"><span class="orig">SDY</span><svg class="arrow"><use href="#sipka"/></svg><span class="tk hl">SPYD</span></p>
+    <p class="fullname">State Street SPDR S&amp;P U.S. Dividend Aristocrats UCITS ETF (Dist)</p>
+    <dl class="facts">
+      <div><dt>Index</dt><dd><span class="badge">Stejný index</span>S&amp;P High Yield Dividend Aristocrats, tedy firmy, které dlouhodobě zvyšují dividendu.</dd></div>
+      <div><dt>Poplatek</dt><dd><mark class="hl">0,35&nbsp;%</mark> ročně, tedy 35&nbsp;Kč z&nbsp;každých 10&nbsp;000&nbsp;Kč. Stejně jako u&nbsp;SDY.</dd></div>
+      <div><dt>Dividendy</dt><dd>Vyplácí čtvrtletně, stejně jako SDY.</dd></div>
+      <div><dt>Kde koupit</dt><dd>Hledej ticker SPYD, v&nbsp;eurech. Ověřili jsme ho u&nbsp;XTB a&nbsp;Trading 212.</dd></div>
+    </dl>
+  </article>
+  <article class="twin" data-etf="VGT" hidden>
+    <h2 tabindex="-1">Evropské dvojče VGT je QDVE</h2>
+    <p class="swap" aria-hidden="true"><span class="orig">VGT</span><svg class="arrow"><use href="#sipka"/></svg><span class="tk hl">QDVE</span></p>
+    <p class="fullname">iShares S&amp;P&nbsp;500&nbsp;Information Technology Sector UCITS ETF (Acc)</p>
+    <dl class="facts">
+      <div><dt>Index</dt><dd><span class="badge similar">Podobný, ne stejný</span>QDVE drží jen technologické firmy z&nbsp;indexu S&amp;P&nbsp;500&nbsp;(75&nbsp;titulů), VGT širší výběr (318&nbsp;akcií).</dd></div>
+      <div><dt>Poplatek</dt><dd><mark class="hl">0,15&nbsp;%</mark> ročně, tedy 15&nbsp;Kč z&nbsp;každých 10&nbsp;000&nbsp;Kč. VGT má 0,09&nbsp;% (9&nbsp;Kč).</dd></div>
+      <div><dt>Dividendy</dt><dd>Nevyplácí, investuje je zpátky do fondu. VGT je vyplácí čtvrtletně.</dd></div>
+      <div><dt>Kde koupit</dt><dd>Hledej ticker QDVE, v&nbsp;eurech. Ověřili jsme ho u&nbsp;XTB, Trading 212&nbsp;a&nbsp;Degira.</dd></div>
+    </dl>
+  </article>
+  <article class="twin" data-etf="AGG" hidden>
+    <h2 tabindex="-1">Evropské dvojče AGG je IUAA</h2>
+    <p class="swap" aria-hidden="true"><span class="orig">AGG</span><svg class="arrow"><use href="#sipka"/></svg><span class="tk hl">IUAA</span></p>
+    <p class="fullname">iShares US Aggregate Bond UCITS ETF (Acc)</p>
+    <dl class="facts">
+      <div><dt>Index</dt><dd><span class="badge">Stejný index</span>Bloomberg US Aggregate Bond, tedy americké dluhopisy.</dd></div>
+      <div><dt>Poplatek</dt><dd><mark class="hl">0,25&nbsp;%</mark> ročně, tedy 25&nbsp;Kč z&nbsp;každých 10&nbsp;000&nbsp;Kč. AGG má 0,03&nbsp;% (3&nbsp;Kč).</dd></div>
+      <div><dt>Výnosy</dt><dd>Nevyplácí, investuje je zpátky do fondu. AGG je vyplácí měsíčně.</dd></div>
+      <div><dt>Kde koupit</dt><dd>Hledej ticker IUAA, v&nbsp;dolarech. Ověřili jsme ho u&nbsp;XTB a&nbsp;Trading 212.</dd></div>
+    </dl>
+  </article>
+
+  <div class="cta" id="vysledek-cta">
+    <button class="btn" type="button" data-otevri="vysledek">Chci tahák se všemi 7&nbsp;dvojčaty</button>
+    <p class="small">ISINy, poplatky a&nbsp;postup nákupu krok za krokem. PDF hned a&nbsp;zdarma.</p>
+    <div class="form-slot" data-slot="vysledek"></div>
+  </div>
+  <a class="again" href="#vyber">Vybrat jiné ETF</a>
+</section>
+
+<section class="section wrap" id="pary">
+  <h2>Všech 7&nbsp;párů na jednom místě</h2>
+  <p class="muted">Vlevo americký originál, vpravo evropské dvojče, které koupíš z&nbsp;Česka. Čísla jsou roční poplatek fondu.</p>
+  <ol class="pairs">
+    <li class="pair" id="par-voo"><p class="pair-tk"><span class="o">VOO</span>&nbsp;→ VUAA</p><p class="pair-fee">0,03&nbsp;%&nbsp;→ <mark class="hl">0,07&nbsp;%</mark></p><p class="pair-meta">S&amp;P&nbsp;500 · stejný index</p></li>
+    <li class="pair" id="par-vti"><p class="pair-tk"><span class="o">VTI</span>&nbsp;→ SXR4</p><p class="pair-fee">0,03&nbsp;%&nbsp;→ <mark class="hl">0,03&nbsp;%</mark></p><p class="pair-meta">celé USA · podobný index</p></li>
+    <li class="pair" id="par-vt"><p class="pair-tk"><span class="o">VT</span>&nbsp;→ VWCE</p><p class="pair-fee">0,06&nbsp;%&nbsp;→ <mark class="hl">0,14&nbsp;%</mark></p><p class="pair-meta">celý svět · podobný index</p></li>
+    <li class="pair" id="par-vwo"><p class="pair-tk"><span class="o">VWO</span>&nbsp;→ VFEA</p><p class="pair-fee">0,06&nbsp;%&nbsp;→ <mark class="hl">0,17&nbsp;%</mark></p><p class="pair-meta">rozvíjející se trhy · podobný index</p></li>
+    <li class="pair" id="par-sdy"><p class="pair-tk"><span class="o">SDY</span>&nbsp;→ SPYD</p><p class="pair-fee">0,35&nbsp;%&nbsp;→ <mark class="hl">0,35&nbsp;%</mark></p><p class="pair-meta">dividendy · stejný index</p></li>
+    <li class="pair" id="par-vgt"><p class="pair-tk"><span class="o">VGT</span>&nbsp;→ QDVE</p><p class="pair-fee">0,09&nbsp;%&nbsp;→ <mark class="hl">0,15&nbsp;%</mark></p><p class="pair-meta">technologie · podobný index</p></li>
+    <li class="pair" id="par-agg"><p class="pair-tk"><span class="o">AGG</span>&nbsp;→ IUAA</p><p class="pair-fee">0,03&nbsp;%&nbsp;→ <mark class="hl">0,25&nbsp;%</mark></p><p class="pair-meta">dluhopisy · stejný index</p></li>
+  </ol>
+  <a class="btn btn-quiet" href="#tahak" data-otevri="karty">Chci tahák s&nbsp;ISINy a&nbsp;postupem nákupu</a>
+</section>
+
+<section class="section wrap" id="proc">
+  <h2>Proč ti broker americká ETF často nenabídne</h2>
+  <div class="paper">
+    <p>Fondy, které se v&nbsp;EU prodávají drobným investorům, potřebují dokument s&nbsp;klíčovými informacemi (KID). Americké fondy jako VOO ho nevydávají, a&nbsp;tak je brokeři často nenabízejí, nebo jen jako CFD. To je derivát, se kterým fond samotný nevlastníš.</p>
+    <p style="margin:0">Evropská dvojčata KID mají, takže je koupíš normálně.</p>
+  </div>
+</section>
+
+<section class="section wrap" id="data">
+  <h2>Odkud máme data</h2>
+  <p>Všechno jsme vzali přímo z&nbsp;webů správců fondů (Vanguard, iShares, State Street). Kde koupit, jsme ověřili na webech brokerů (XTB, Trading 212, Degiro). Stav k&nbsp;10.&nbsp;10.&nbsp;2026.</p>
+  <p class="muted">Poplatky i&nbsp;velikost fondů se mění. Před nákupem si je zkontroluj v&nbsp;dokumentu KID u&nbsp;svého brokera.</p>
+  <details>
+    <summary>Zdroje ke každému údaji</summary>
+    <div>
+      <ul class="sources">
+        <li>VOO: <a href="https://investor.vanguard.com/investment-products/etfs/profile/voo" rel="noopener">Vanguard</a>&nbsp;→ VUAA: <a href="https://www.vanguard.co.uk/professional/product/etf/equity/9694/sp-500-ucits-etf-usd-accumulating" rel="noopener">Vanguard</a></li>
+        <li>VTI: <a href="https://investor.vanguard.com/investment-products/etfs/profile/vti" rel="noopener">Vanguard</a>&nbsp;→ SXR4: <a href="https://www.ishares.com/uk/individual/en/products/253740/ishares-msci-usa-b-ucits-etf" rel="noopener">iShares</a></li>
+        <li>VT: <a href="https://investor.vanguard.com/investment-products/etfs/profile/vt" rel="noopener">Vanguard</a>&nbsp;→ VWCE: <a href="https://www.vanguard.co.uk/professional/product/etf/equity/9679/ftse-all-world-ucits-etf-usd-accumulating" rel="noopener">Vanguard</a></li>
+        <li>VWO: <a href="https://investor.vanguard.com/investment-products/etfs/profile/vwo" rel="noopener">Vanguard</a>&nbsp;→ VFEA: <a href="https://www.vanguard.co.uk/professional/product/etf/equity/9678/ftse-emerging-markets-ucits-etf-usd-accumulating" rel="noopener">Vanguard</a></li>
+        <li>SDY: <a href="https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-sp-dividend-etf-sdy" rel="noopener">State Street</a>&nbsp;→ SPYD: <a href="https://www.ssga.com/uk/en_gb/intermediary/etfs/state-street-spdr-sp-us-dividend-aristocrats-ucits-etf-dist-spyd-gy" rel="noopener">State Street</a></li>
+        <li>VGT: <a href="https://investor.vanguard.com/investment-products/etfs/profile/vgt" rel="noopener">Vanguard</a>&nbsp;→ QDVE: <a href="https://www.ishares.com/uk/individual/en/products/280510/ishares-sp-500-information-technology-sector-ucits-etf" rel="noopener">iShares</a></li>
+        <li>AGG: <a href="https://www.ishares.com/us/products/239458/ishares-core-total-us-bond-market-etf" rel="noopener">iShares</a>&nbsp;→ IUAA: <a href="https://www.ishares.com/uk/individual/en/products/287339/ishares-us-aggregate-bond-ucits-etf" rel="noopener">iShares</a></li>
+        <li>Brokeři: <a href="https://www.xtb.com/cz/etf" rel="noopener">XTB</a>, <a href="https://www.trading212.com/cs/trading-instruments/invest" rel="noopener">Trading 212</a>, <a href="https://www.degiro.cz/poplatky/etf-core-selection" rel="noopener">Degiro</a></li>
+        <li>Pravidla pro KID: <a href="https://eur-lex.europa.eu/legal-content/CS/TXT/?uri=CELEX:32014R1286" rel="noopener">nařízení PRIIPs</a>, <a href="https://www.cnb.cz/cs/dohled-financni-trh/legislativni-zakladna/stanoviska-k-regulaci-financniho-trhu/RS2018-12" rel="noopener">ČNB</a></li>
+      </ul>
+    </div>
+  </details>
+  <div class="disclaimer">
+    <p><b>Nejde o&nbsp;investiční doporučení.</b> Ukazujeme, jaké fondy existují a&nbsp;kolik stojí, co koupíš, je tvoje rozhodnutí. Hodnota investice může klesnout a&nbsp;zpátky můžeš dostat méně, než vložíš.</p>
+    <p class="small">Stránku provozuje <span class="todo">[TODO správce: Clientelo]</span>.</p>
+  </div>
+</section>
+
+<section class="section wrap" id="tahak">
+  <h2>Tahák: 7&nbsp;ETF z&nbsp;NYSE a&nbsp;jejich dvojčata, která koupíš z&nbsp;Česka</h2>
+  <div class="form-card">
+    <ul class="bullets">
+      <li>ISIN a&nbsp;ticker všech 7&nbsp;dvojčat. Zkopíruješ je rovnou do aplikace brokera.</li>
+      <li>Poplatky originálů a&nbsp;dvojčat vedle sebe.</li>
+      <li>Postup nákupu krok za krokem.</li>
+    </ul>
+    <div class="form-slot" data-slot="sekce">
+      <form class="lead-form" action="/api/lead" method="post" novalidate>
+        <label class="field">Tvůj e-mail
+          <input type="email" name="email" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" enterkeyhint="send" placeholder="jmeno@email.cz" required>
+        </label>
+        <label class="consent">
+          <input type="checkbox" name="consent" value="ano" required>
+          <span>Souhlasím, že mi <span class="todo">[TODO správce: Clientelo]</span> bude posílat e-maily o&nbsp;investování do ETF. Odhlásit se můžu kdykoli. <a href="#TODO-zasady">Jak nakládáme s&nbsp;osobními údaji</a></span>
+        </label>
+        <div class="hp" aria-hidden="true"><label>Toto pole nech prázdné <input type="text" name="web" tabindex="-1" autocomplete="off"></label></div>
+        <p class="form-error" role="alert" hidden></p>
+        <button class="btn" type="submit">Stáhnout tahák</button>
+        <p class="small">PDF se stáhne hned. Na e-mail čekat nemusíš.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section class="section wrap" id="faq">
+  <h2>Časté otázky</h2>
+  <details><summary>Je to zdarma?</summary><div><p>Ano. Srovnání i&nbsp;tahák jsou zdarma. Chceme jen tvůj e-mail.</p></div></details>
+  <details><summary>Co uděláte s&nbsp;mým e-mailem?</summary><div><p>Uloží ho <span class="todo">[TODO správce: Clientelo]</span> a&nbsp;bude ti posílat <span class="todo">[TODO: co a&nbsp;jak často]</span>. Odhlásit se můžeš jedním klikem v&nbsp;každém e-mailu. Podrobnosti najdeš v <a href="#TODO-zasady">zásadách ochrany osobních údajů</a>.</p></div></details>
+  <details><summary>Je dvojče úplně stejné jako originál?</summary><div><p>U&nbsp;VOO, SDY a&nbsp;AGG sleduje dvojče stejný index. U&nbsp;VTI, VT, VWO a&nbsp;VGT je index podobný, ne stejný. Rozdíl vždycky píšeme u&nbsp;výsledku.</p></div></details>
+  <details><summary>Dá se VOO někde koupit?</summary><div><p>Někdy ano. Když tě broker vede jako profesionálního klienta, KID nepotřebuje. A&nbsp;ČNB připouští, že broker, který jen provádí tvoje pokyny a&nbsp;nic ti nenabízí ani nedoporučuje, KID dávat nemusí. Běžný broker ti ale americké ETF často nenabídne.</p></div></details>
+  <details><summary>Radíte mi, co koupit?</summary><div><p>Ne. Ukazujeme, co existuje a&nbsp;kolik to stojí. Rozhodnutí je na tobě.</p></div></details>
+</section>
+</main>
+
+<footer class="foot wrap">
+  <p>Data: weby správců fondů a&nbsp;brokerů, ověřeno 10.&nbsp;10.&nbsp;2026.</p>
+  <p>Nejde o&nbsp;investiční doporučení ani nabídku investičního nástroje. Investování nese riziko.</p>
+  <p>Provozovatel: <span class="todo">[TODO správce: Clientelo]</span> · <a href="#TODO-zasady">Zásady ochrany osobních údajů</a> · <span class="todo">[TODO kontakt]</span></p>
+</footer>
+
+<div class="bar" id="lista" hidden>
+  <div class="bar-in">
+    <p>Tahák zdarma: všech 7&nbsp;dvojčat</p>
+    <button class="btn btn-small" type="button" data-otevri="lista">Chci tahák</button>
+  </div>
+</div>
+
+<dialog class="sheet" id="panel" aria-labelledby="panel-nadpis">
+  <div class="sheet-in">
+    <button class="sheet-close" type="button" aria-label="Zavřít" data-zavri>×</button>
+    <h2 id="panel-nadpis">Tahák: 7&nbsp;ETF z&nbsp;NYSE a&nbsp;jejich dvojčata, která koupíš z&nbsp;Česka</h2>
+    <p class="small">ISINy, poplatky a&nbsp;postup nákupu krok za krokem. PDF hned a&nbsp;zdarma.</p>
+    <div class="form-slot" data-slot="lista"></div>
+  </div>
+</dialog>
+
+<template id="dekujeme">
+  <div class="thanks" tabindex="-1">
+    <h3>Hotovo, tahák se ti stahuje.</h3>
+    <p>Nestahuje se? <a href="/tahak.pdf" download="tahak-etf-dvojcata.pdf">Stáhni ho tady.</a></p>
+    <p>Co dál: otevři tahák a&nbsp;začni krokem 1.</p>
+    <div class="share" hidden>
+      <p class="small">Znáš někoho, kdo taky marně hledá VOO? Pošli odkaz dál.</p>
+      <button class="btn btn-quiet" type="button" data-sdilej>Sdílet odkaz</button>
+    </div>
+  </div>
+</template>
+</body>
+</html>
