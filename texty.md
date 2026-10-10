@@ -91,7 +91,7 @@ U řádku „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnos
 - Stejný index: S&P 500. `[d: VOO › index]` `[d: VOO › ucits_obdoba.index]` `[d: VOO › ucits_obdoba.rozdil_oproti_originalu]`
 - Poplatek 0,07 % ročně, tedy 7 Kč z každých 10 000 Kč. VOO má 0,03 % (3 Kč). `[d: VOO › ucits_obdoba.ter]` `[d: VOO › ter]`
 - Dividendy nevyplácí, investuje je zpátky do fondu. VOO je vyplácí čtvrtletně. `[d: VOO › ucits_obdoba.dividendova_politika]` `[d: VOO › dividendova_politika]`
-- Koupíš na burze Deutsche Börse pod tickerem VUAA, v eurech. Nabízí ho třeba XTB. `[d: VOO › ucits_obdoba.burza]` `[d: VOO › ucits_obdoba.kde_koupit.xtb_cz]`
+- Hledej ticker VUAA, v eurech. Ověřili jsme ho u XTB a Trading 212. `[d: VOO › ucits_obdoba.burza]` `[d: VOO › ucits_obdoba.kde_koupit.xtb_cz]` `[d: VOO › ucits_obdoba.kde_koupit.trading212]`
 
 ### VTI → SXR4
 
@@ -101,7 +101,7 @@ U řádku „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnos
 - Podobný, ne stejný index. SXR4 sleduje MSCI USA a drží 515 titulů, VTI celý americký trh s 3 507 akciemi. Přesné dvojče celého trhu jsme mezi evropskými fondy nenašli. `[d: VTI › ucits_obdoba.index]` `[d: VTI › ucits_obdoba.pocet_titulu]` `[d: VTI › index]` `[d: VTI › pocet_titulu]` `[d: VTI › ucits_obdoba.rozdil_oproti_originalu]`
 - Poplatek 0,03 % ročně, tedy 3 Kč z každých 10 000 Kč. Stejně jako u VTI. `[d: VTI › ucits_obdoba.ter]` `[d: VTI › ter]`
 - Dividendy nevyplácí, investuje je zpátky do fondu. VTI je vyplácí čtvrtletně. `[d: VTI › ucits_obdoba.dividendova_politika]` `[d: VTI › dividendova_politika]`
-- Koupíš na burze Deutsche Börse (Xetra) pod tickerem SXR4, v eurech. Nabízí ho třeba XTB. `[d: VTI › ucits_obdoba.burza]` `[d: VTI › ucits_obdoba.kde_koupit.xtb_cz]`
+- Hledej ticker SXR4, v eurech. Ověřili jsme ho u XTB, Trading 212 a Degira. `[d: VTI › ucits_obdoba.burza]` `[d: VTI › ucits_obdoba.kde_koupit.xtb_cz]` `[d: VTI › ucits_obdoba.kde_koupit.trading212]` `[d: VTI › ucits_obdoba.kde_koupit.degiro]`
 
 ### VT → VWCE
 
@@ -110,7 +110,7 @@ U řádku „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnos
 - Podobný, ne stejný index. VWCE sleduje FTSE All-World, tedy velké a střední firmy z celého světa (3 784 akcií). VT sleduje širší FTSE Global All Cap (10 088 akcií). `[d: VT › ucits_obdoba.index]` `[d: VT › ucits_obdoba.pocet_titulu]` `[d: VT › index]` `[d: VT › pocet_titulu]` `[d: VT › ucits_obdoba.rozdil_oproti_originalu]` (popis „velké a střední firmy“ je z cíle fondu na stránce Vanguardu)
 - Poplatek 0,14 % ročně, tedy 14 Kč z každých 10 000 Kč. VT má 0,06 % (6 Kč). `[d: VT › ucits_obdoba.ter]` `[d: VT › ter]`
 - Dividendy nevyplácí, investuje je zpátky do fondu. VT je vyplácí čtvrtletně. `[d: VT › ucits_obdoba.dividendova_politika]` `[d: VT › dividendova_politika]`
-- Koupíš na burze Deutsche Börse pod tickerem VWCE, v eurech. Nabízí ho třeba XTB. `[d: VT › ucits_obdoba.burza]` `[d: VT › ucits_obdoba.kde_koupit.xtb_cz]`
+- Hledej ticker VWCE, v eurech. Ověřili jsme ho u XTB, Trading 212 a Degira. `[d: VT › ucits_obdoba.burza]` `[d: VT › ucits_obdoba.kde_koupit.xtb_cz]` `[d: VT › ucits_obdoba.kde_koupit.trading212]` `[d: VT › ucits_obdoba.kde_koupit.degiro]`
 
 ### VWO → VFEA
 
@@ -119,7 +119,7 @@ U řádku „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnos
 - Podobný, ne stejný index. VFEA sleduje FTSE Emerging, tedy velké a střední firmy z rozvíjejících se trhů (2 306 akcií). VWO sleduje širší index (6 348 akcií). `[d: VWO › ucits_obdoba.index]` `[d: VWO › ucits_obdoba.pocet_titulu]` `[d: VWO › pocet_titulu]` `[d: VWO › ucits_obdoba.rozdil_oproti_originalu]`
 - Poplatek 0,17 % ročně, tedy 17 Kč z každých 10 000 Kč. VWO má 0,06 % (6 Kč). `[d: VWO › ucits_obdoba.ter]` `[d: VWO › ter]`
 - Dividendy nevyplácí, investuje je zpátky do fondu. VWO je vyplácí čtvrtletně. `[d: VWO › ucits_obdoba.dividendova_politika]` `[d: VWO › dividendova_politika]`
-- Koupíš na burze Deutsche Börse pod tickerem VFEA, v eurech. Nabízí ho třeba XTB. `[d: VWO › ucits_obdoba.burza]` `[d: VWO › ucits_obdoba.kde_koupit.xtb_cz]`
+- Hledej ticker VFEA, v eurech. Ověřili jsme ho u XTB a Trading 212. `[d: VWO › ucits_obdoba.burza]` `[d: VWO › ucits_obdoba.kde_koupit.xtb_cz]` `[d: VWO › ucits_obdoba.kde_koupit.trading212]`
 
 ### SDY → SPYD
 
@@ -128,7 +128,7 @@ U řádku „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnos
 - Stejný index: S&P High Yield Dividend Aristocrats, tedy firmy, které dlouhodobě zvyšují dividendu. `[d: SDY › index]` `[d: SDY › ucits_obdoba.index]` `[d: SDY › typ]` (popis indexu je ze stránky SDY u State Street)
 - Poplatek 0,35 % ročně, tedy 35 Kč z každých 10 000 Kč. Stejně jako u SDY. `[d: SDY › ucits_obdoba.ter]` `[d: SDY › ter]`
 - Dividendy vyplácí čtvrtletně, stejně jako SDY. `[d: SDY › ucits_obdoba.dividendova_politika]` `[d: SDY › dividendova_politika]`
-- Koupíš na burze Deutsche Börse pod tickerem SPYD, v eurech. Nabízí ho třeba XTB. `[d: SDY › ucits_obdoba.burza]` `[d: SDY › ucits_obdoba.kde_koupit.xtb_cz]`
+- Hledej ticker SPYD, v eurech. Ověřili jsme ho u XTB a Trading 212. `[d: SDY › ucits_obdoba.burza]` `[d: SDY › ucits_obdoba.kde_koupit.xtb_cz]` `[d: SDY › ucits_obdoba.kde_koupit.trading212]`
 
 ### VGT → QDVE
 
@@ -137,7 +137,7 @@ U řádku „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnos
 - Podobný, ne stejný index. QDVE drží jen technologické firmy z indexu S&P 500 (75 titulů), VGT širší výběr (318 akcií). `[d: VGT › ucits_obdoba.index]` `[d: VGT › ucits_obdoba.pocet_titulu]` `[d: VGT › pocet_titulu]` `[d: VGT › ucits_obdoba.rozdil_oproti_originalu]`
 - Poplatek 0,15 % ročně, tedy 15 Kč z každých 10 000 Kč. VGT má 0,09 % (9 Kč). `[d: VGT › ucits_obdoba.ter]` `[d: VGT › ter]`
 - Dividendy nevyplácí, investuje je zpátky do fondu. VGT je vyplácí čtvrtletně. `[d: VGT › ucits_obdoba.dividendova_politika]` `[d: VGT › dividendova_politika]`
-- Koupíš na burze Deutsche Börse (Xetra) pod tickerem QDVE, v eurech. Nabízí ho třeba XTB. `[d: VGT › ucits_obdoba.burza]` `[d: VGT › ucits_obdoba.kde_koupit.xtb_cz]`
+- Hledej ticker QDVE, v eurech. Ověřili jsme ho u XTB, Trading 212 a Degira. `[d: VGT › ucits_obdoba.burza]` `[d: VGT › ucits_obdoba.kde_koupit.xtb_cz]` `[d: VGT › ucits_obdoba.kde_koupit.trading212]` `[d: VGT › ucits_obdoba.kde_koupit.degiro]`
 
 ### AGG → IUAA
 
@@ -146,7 +146,7 @@ U řádku „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnos
 - Stejný index: Bloomberg US Aggregate Bond, tedy americké dluhopisy. `[d: AGG › index]` `[d: AGG › ucits_obdoba.index]` `[d: AGG › typ]`
 - Poplatek 0,25 % ročně, tedy 25 Kč z každých 10 000 Kč. AGG má 0,03 % (3 Kč). `[d: AGG › ucits_obdoba.ter]` `[d: AGG › ter]`
 - Výnosy nevyplácí, investuje je zpátky do fondu. AGG je vyplácí měsíčně. `[d: AGG › ucits_obdoba.dividendova_politika]` `[d: AGG › dividendova_politika]`
-- Koupíš na londýnské burze pod tickerem IUAA, v dolarech. Nabízí ho třeba XTB. `[d: AGG › ucits_obdoba.burza]` `[d: AGG › ucits_obdoba.kde_koupit.xtb_cz]`
+- Hledej ticker IUAA, v dolarech. Ověřili jsme ho u XTB a Trading 212. `[d: AGG › ucits_obdoba.burza]` `[d: AGG › ucits_obdoba.kde_koupit.xtb_cz]` `[d: AGG › ucits_obdoba.kde_koupit.trading212]`
 
 ---
 
@@ -182,8 +182,8 @@ U řádku „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnos
 ## 5. Odkud máme data
 
 - **H2:** Odkud máme data
-- **Text:** Všechno jsme vzali přímo z webů správců fondů (Vanguard, iShares, State Street). Kde koupit, jsme ověřili na webu XTB. Stav k 10. 10. 2026.
-  `[d: meta.overeno_dne]` `[d: * › *.zdroj]`
+- **Text:** Všechno jsme vzali přímo z webů správců fondů (Vanguard, iShares, State Street). Kde koupit, jsme ověřili na webech brokerů (XTB, Trading 212, Degiro). Stav k 10. 10. 2026.
+  `[d: meta.overeno_dne]` `[d: meta.brokeri_overeno_dne]` `[d: * › *.zdroj]`
 - **Text:** Poplatky i velikost fondů se mění. Před nákupem si je zkontroluj v dokumentu KID u svého brokera.
 - **Rozbalovací odkaz:** Zdroje ke každému údaji
   Seznam: u každého páru odkaz na stránku originálu a dvojčete u správce. `[d: * › nazev.zdroj]` `[d: * › ucits_obdoba.nazev.zdroj]`
@@ -263,7 +263,7 @@ U řádku „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnos
 
 ## Patička
 
-- Data: weby správců fondů a XTB, ověřeno 10. 10. 2026. `[d: meta.overeno_dne]`
+- Data: weby správců fondů a brokerů, ověřeno 10. 10. 2026. `[d: meta.overeno_dne]`
 - Nejde o investiční doporučení ani nabídku investičního nástroje. Investování nese riziko.
 - Provozovatel: [TODO správce: Clientelo] · Zásady ochrany osobních údajů `[TODO stránka]` · Kontakt `[TODO]`
 
