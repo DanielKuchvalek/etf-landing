@@ -26,3 +26,6 @@ Thumbs.db
 .idea/
 .vscode/
 *.swp
+
+# Výstupy testovacích skriptů (Lighthouse JSON apod.)
+scripts/out/
