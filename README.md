@@ -132,7 +132,7 @@ Zjednodušení: formulář jde otevřít i bez otočení lístku (spodní lišta
 **Orientační cena za kontakt.** Cena za kontakt = cena za klik ÷ (podíl kliků, ze kterých je načtená stránka × konverze návštěva → kontakt). Předpoklady:
 
 - **Cena za klik z Meta v Česku: předpoklad 5–20 Kč, středně 10 Kč.** Ověřený zdroj pro český trh nemám. Pro představu: [LocaliQ (WordStream)](https://localiq.com/blog/facebook-advertising-benchmarks/) uvádí u kampaní Facebooku na návštěvnost průměrnou cenu za klik 0,60 USD napříč obory a 0,86 USD pro finance a pojištění. Jsou to data z kampaní jejich klientů, český trh v nich zvlášť není a na koruny je nepřepočítávám.
-- **Z kliku je načtená stránka: předpoklad 85 %.** Část lidí stránku zavře dřív, než se načte. Stránka je rychlá (LCP 1,0–1,1 s v Lighthouse na živé adrese), ztráta by tedy neměla být velká, ale změřená není.
+- **Z kliku je načtená stránka: předpoklad 85 %.** Část lidí stránku zavře dřív, než se načte. Stránka je rychlá (LCP 0,9–1,1 s v Lighthouse na živé adrese), ztráta by tedy neměla být velká, ale změřená není.
 - **Konverze: 2 %, 6 % a 13,2 %** z [odhadu výše](#očekávaná-konverze).
 
 Výpočet střední varianty: 10 Kč ÷ (0,85 × 0,06) = 10 Kč ÷ 0,051 ≈ **196 Kč za kontakt**. Jinak řečeno: 1 000 kliků za 10 000 Kč → 850 návštěv → 51 kontaktů.
@@ -282,12 +282,12 @@ Vlastní události místo GA4, bez cookies a bez cookie lišty. Stránka je pos�
 **Stack:** čisté HTML, CSS a JavaScript bez frameworku a bez build kroku, Vercel (statika a serverless funkce) a Supabase (Postgres v EU). Proč: stránka pro návštěvníka z mobilní reklamy musí být hlavně rychlá a malá a tohle je nejkratší cesta k webu, funkcím a databázi zdarma, v EU a bez závislostí, které by se musely instalovat a aktualizovat.
 
 - **Celá stránka je jeden soubor `public/index.html`** s inline CSS a JS a systémovým písmem. Bez externích skriptů a písem: 62,0 kB, po gzipu 18,1 kB, z toho JS 19,7 kB (oba vložené skripty, po gzipu 7,2 kB, limit 20 kB hlídá test). Jediný obrázek je náhled taháku (WebP, 24 kB), který se načte až u formuláře.
-- **Lighthouse na živé adrese** (mobil, 11. 10. 2026 po posledním nasazení, Lighthouse 13.5, [scripts/lighthouse.mjs](scripts/lighthouse.mjs) s blokovanými požadavky na `/api/`, aby měření nezapsalo do databáze příchody):
+- **Lighthouse na živé adrese** (mobil, 12. 10. 2026 po posledním nasazení, Lighthouse 13.5, [scripts/lighthouse.mjs](scripts/lighthouse.mjs) s blokovanými požadavky na `/api/`, aby měření nezapsalo do databáze příchody):
 
   | Verze úvodu | Výkon | Přístupnost | Osvědčené postupy | SEO | LCP | CLS | TBT | Přeneseno |
   |---|---|---|---|---|---|---|---|---|
   | výchozí | 100 | 100 | 100 | 66 | 1,0 s | 0 | 0 ms | 45 KiB |
-  | `?v=dvojce` | 100 | 100 | 100 | 66 | 1,0 s | 0 | 0 ms | 45 KiB |
+  | `?v=dvojce` | 100 | 100 | 100 | 66 | 0,9 s | 0 | 0 ms | 45 KiB |
   | `?v=zacatek` | 100 | 100 | 100 | 66 | 1,1 s | 0 | 0 ms | 45 KiB |
 
   SEO 66 jen proto, že stránka má záměrně `noindex` (jediný neúspěšný audit je „stránka je blokovaná pro indexování“). V konzoli žádné chyby. Lokálně bez komprese (stejný den, po posledních úpravách) vychází totéž, jen 88 KiB a LCP 1,2 s.

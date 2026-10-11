@@ -208,3 +208,16 @@ Doplňuje exporty konverzací (`/export`), které nezachytí celý průběh prá
   - **Po změnách textu u brokerů selhal Chrome test**, protože na portu běžel starý lokální server se starými hlavičkami (CSP). Nový se kvůli obsazenému portu nespustil. Nebyla to chyba stránky; před spuštěním testů se teď vždy ukončí starý server.
   - **Delší nabídka a text na lístku v reklamách nejdřív vytekly z bezpečné zóny.** Zachytila to kontrola ve skriptu, ne oko.
   - **Navržené „7 nejznámějších“ v reklamě B AI nepoužila:** nejvyšší stupeň neumíme doložit (už dříve zapsáno v `b-zacatek.md`).
+
+### 2026-10-12 – kontakt správce a ověření VOO u XTB
+
+- **Zadání pro AI:** nahradit placeholder `kontakt@test.cz` skutečnou adresou správce; zapsat ruční ověření VOO v aplikaci XTB jako ověřený fakt; testy, kontrola živé stránky, Lighthouse.
+- **Kontrola výstupu:**
+  - nová adresa nalezená v textu přegenerovaného PDF i na živé stránce,
+  - data 183 údajů bez chyb, API 132, databáze 80, Chrome 132, WebKit 81, `check-live.mjs` 22,
+  - Lighthouse na živé adrese 100/100/100, LCP 0,9–1,1 s.
+- **Kde se AI spletla a jak se na to přišlo:**
+  - **`kontakt@test.cz` jako kontakt správce** byl placeholder na cizí doméně. AI ho dala na živou stránku i do zásad, dokud si toho nevšiml člověk.
+  - **Zdůvodnění „nic absolutního“ stálo na tom, že „XTB má VOO.US jako ETF“** (v CLAUDE.md, `texty.md`, `a-dvojce.md`). AI to opřela o veřejnou stránku XTB, která je generovaná automaticky. Člověk v aplikaci ověřil, že český klient VOO nenajde. Zdůvodnění teď stojí na výkladu ČNB a profesionálních klientech.
+  - **Lighthouse na živé adrese napoprvé spadl** u jedné verze a u jiné ukázal horší FCP. Druhé spuštění prošlo, šlo o rozptyl měření a spouštění Chromu, ne o změnu stránky.
+  - **Screenshoty z aplikace XTB (`docs/screenshots/xtb-voo-us.png`, `xtb-voo.png`) v repozitáři zatím nejsou.** Odkazy na ně jsou připravené, soubory doplní člověk.
