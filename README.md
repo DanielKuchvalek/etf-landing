@@ -479,8 +479,8 @@ Stránka je nasazená a funguje. Zbývá to, co musí doplnit nebo rozhodnout n�
 - [x] `curl -s -o /dev/null -w "%{http_code}\n" https://etf-dvojcata-demo.vercel.app/api/keepalive` vrátí 401 (bez tajemství cron nikoho nepustí).
 - [x] Na telefonu otevři `?v=dvojce`, otoč lístek a odešli svůj e-mail. Musí přijít poděkování a otevřít se tahák.
 - [x] V Supabase → **Table Editor**: v `leads` je řádek s e-mailem a verzí `dvojce`. `select * from analytika.trychtyr;` ukáže u `dvojce` příchod, otočení, formulář a odeslání.
-- [ ] V `events` je `odeslano` bez ID návštěvy (na živé databázi nekontrolováno, lokálně to hlídají testy).
-- [ ] Ochrana formuláře: `x@mailinator.com` ukáže hlášku o jednorázové adrese, `test@neexistuje.invalid` hlášku, že na adresu nejde poslat e-mail. Na živé stránce zatím nezkoušeno, aby v měření nebyla testovací data; lokálně to hlídají testy.
+- [x] V `events` jsou `odeslano`, `odeslani_pokus` i `odeslani_chyba` bez ID návštěvy (ověřeno ručně na živé databázi).
+- [x] Ochrana formuláře: `x@mailinator.com` ukáže hlášku o jednorázových adresách a nic se neuloží (ověřeno ručně na živé stránce). Hlášku pro `test@neexistuje.invalid` hlídají lokální testy.
 - [ ] Publishable klíč nic nepřečte: `curl -s "<SUPABASE_URL>/rest/v1/leads?select=email" -H "apikey: <publishable klíč>"` vrátí chybu oprávnění, ne data.
 - [x] Vercel → **Settings → Cron Jobs**: `/api/keepalive` jednou denně. Tlačítkem **Run** ho pusť hned, v **Logs** musí být odpověď 200.
 - [x] Vercel → **Settings → Functions**: region `fra1` (hlavička `x-vercel-id` u `/api/*` začíná `fra1::fra1`).
