@@ -72,8 +72,64 @@ async function drawKeyboard(page) {
   });
 }
 
+// Průběh otočení lístku: animaci zastaví a posune na daný čas, změří úhel, šířku a viditelnou stranu
+// a z výřezů složí jeden snímek docs/screenshots/webkit-otoceni-listku.png.
+async function flipFrames(browser) {
+  const ctx = await browser.newContext({ ...devices['iPhone 13'] });
+  const page = await ctx.newPage();
+  await page.goto(BASE, { waitUntil: 'load' });
+  await page.evaluate(() => document.querySelector('.listky').classList.remove('peek'));
+  const sel = '.listek[data-etf="VTI"]';
+  const box = await page.$eval(sel, (el) => { el.scrollIntoView({ block: 'center' }); const b = el.getBoundingClientRect(); return { x: b.x - 4, y: b.y - 10, width: b.width + 8, height: b.height + 20 }; });
+  await page.tap(sel);
+  const frames = [];
+  const measure = (t) => page.evaluate(([sel, t]) => {
+    const card = document.querySelector(sel);
+    const inner = card.querySelector('.listek-in');
+    const anim = inner.getAnimations()[0];
+    if (anim) { anim.pause(); anim.currentTime = t; }
+    const m = new DOMMatrix(getComputedStyle(inner).transform === 'none' ? undefined : getComputedStyle(inner).transform);
+    return {
+      cos: m.m11, sirka: inner.getBoundingClientRect().width,
+      lic: getComputedStyle(card.querySelector('.lice')).visibility === 'visible',
+      rub: getComputedStyle(card.querySelector('.rub')).visibility === 'visible',
+    };
+  }, [sel, t]);
+  const half = 225;
+  for (const [t, phase] of [[0, 1], [100, 1], [200, 1], [224, 1], [25, 2], [125, 2], [225, 2]]) {
+    if (phase === 2 && frames.length === 4) {
+      // konec první půlky: dokončit ji, výměna stran proběhne v onfinish a začne druhá půlka
+      await page.evaluate((sel) => document.querySelector(sel).querySelector('.listek-in').getAnimations()[0].finish(), sel);
+      await page.waitForFunction((sel) => document.querySelector(sel).getAttribute('data-strana') === 'rub' && document.querySelector(sel).querySelector('.listek-in').getAnimations().length === 1, sel);
+    }
+    const f = await measure(t);
+    f.ms = phase === 1 ? t : half + t;
+    f.png = (await page.screenshot({ clip: box })).toString('base64');
+    frames.push(f);
+  }
+  const full = frames[0].sirka;
+  const first = frames.slice(0, 4);
+  const second = frames.slice(4);
+  check('otočení: v první půlce je vidět líc, lístek se zužuje', first.every((f) => f.lic && !f.rub) && first.every((f, i) => i === 0 || f.sirka < first[i - 1].sirka), first.map((f) => Math.round(f.sirka)).join(' → '));
+  check('otočení: v půlce je lístek z boku (šířka pod 15 %)', first[3].sirka < full * 0.15, `${Math.round(first[3].sirka)} z ${Math.round(full)} px`);
+  check('otočení: ve druhé půlce je vidět rub s dvojčetem, lístek se rozšiřuje', second.every((f) => f.rub && !f.lic) && second.every((f, i) => i === 0 || f.sirka > second[i - 1].sirka), second.map((f) => Math.round(f.sirka)).join(' → '));
+  check('otočení: nikdy obě strany schované ani obě vidět', frames.every((f) => f.lic !== f.rub));
+  check('otočení: nikdy zrcadlově (úhel nejvýš 90°, nic nezávisí na backface-visibility)', frames.every((f) => f.cos >= -0.001), frames.map((f) => f.cos.toFixed(2)).join(' '));
+  check('otočení: na konci rub v plné šířce', second[2].sirka > full * 0.97);
+  // jeden snímek ze všech výřezů s časy
+  const sheet = await ctx.newPage();
+  await sheet.setViewportSize({ width: 1200, height: 400 });
+  await sheet.setContent(`<!doctype html><body style="margin:0;padding:12px;background:#FFFDF5;font:600 14px -apple-system,sans-serif;display:flex;gap:10px;width:max-content">${frames.map((f) => `<figure style="margin:0;text-align:center"><img src="data:image/png;base64,${f.png}" style="display:block;width:${Math.round(box.width)}px"><figcaption style="margin-top:6px">${f.ms} ms</figcaption></figure>`).join('')}</body>`);
+  await sheet.waitForFunction(() => [...document.images].every((i) => i.complete));
+  const size = await sheet.evaluate(() => ({ width: document.body.scrollWidth, height: document.body.scrollHeight }));
+  await sheet.setViewportSize(size);
+  await sheet.screenshot({ path: new URL('../docs/screenshots/webkit-otoceni-listku.png', import.meta.url).pathname });
+  await ctx.close();
+}
+
 const browser = await webkit.launch();
 try {
+  await flipFrames(browser);
   for (const phone of PHONES) {
     const dev = devices[phone.name];
     const H = dev.viewport.height;
@@ -182,6 +238,12 @@ try {
       const ctx = await browser.newContext({ ...dev });
       const page = await ctx.newPage();
       await page.goto(BASE, { waitUntil: 'load' });
+      // rychlé klepání během animace: strany musí na konci odpovídat stavu
+      await page.evaluate(() => document.querySelector('.listky').classList.remove('peek'));
+      for (const [etf, ms] of [['VOO', 80], ['VTI', 60], ['VTI', 120], ['VOO', 30]]) { await page.tap(`.listek[data-etf="${etf}"]`); await sleep(ms); }
+      await sleep(600);
+      const states = await page.$$eval('.listek', (ls) => ls.map((l) => `${l.dataset.etf}:${l.getAttribute('aria-pressed')}:${l.dataset.strana}`));
+      check(`${tag}: rychlé klepání – strany odpovídají stavu`, states.every((s) => (s.endsWith('true:rub') || s.endsWith('false:lic'))) && states.filter((s) => s.includes('true')).join() === 'VOO:true:rub', states.join(' '));
       await page.tap('.listek[data-etf="VWO"]');
       await sleep(550);
       // rub neotočených lístků nesmí prosvítat (headless WebKit nerespektuje backface-visibility)

@@ -73,7 +73,7 @@ U peněz to nesmí působit dětsky. Hravé jsou jen ozdoby, čísla, zdroje a u
   - nikdy přes poplatek, aby oko jako první nevidělo „dvojče je dražší“.
 - **Lístky z taháku** místo tlačítek výběru:
   - pootočené nejvýš o 1,5°, páska jen u každého druhého,
-  - klepnutí lístek otočí (CSS 3D, 0,45 s),
+  - klepnutí lístek otočí (0,45 s: jedna rovina s perspektivou do 90°, výměna stran, dotočení; bez 3D kontextu, aby to fungovalo ve WebKitu na iPhonu),
   - vzadu je dvojče v ručně kresleném kroužku, zelená „✓ kde koupit“, poplatek v Kč a štítek stejný/podobný index,
   - při `prefers-reduced-motion` se lístek neotáčí, jen se vymění obsah.
 - **Ručně kreslené prvky:** šipka, kroužek, fajfka. Všechno malá inline SVG, žádné písmo navíc.

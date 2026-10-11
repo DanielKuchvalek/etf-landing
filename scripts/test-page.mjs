@@ -81,10 +81,10 @@ try {
       await sleep(550);
       const pressed = await page.$$eval('.listek[aria-pressed="true"]', (cs) => cs.map((c) => c.getAttribute('data-etf')));
       const back = await page.$eval(`.listek[data-etf="${us}"] .rub`, (r) => r.textContent.replace(/\u00a0/g, ' '));
-      const flipped = await page.$eval(`.listek[data-etf="${us}"] .listek-in`, (el) => getComputedStyle(el).transform);
+      const side = await page.$eval(`.listek[data-etf="${us}"]`, (el) => `${el.dataset.strana}|${getComputedStyle(el.querySelector('.rub')).visibility}|${getComputedStyle(el.querySelector('.lice')).visibility}`);
       const shown = await page.$$eval('.twin', (ts) => ts.filter((t) => !t.hidden).map((t) => t.getAttribute('data-etf')));
       const h2 = await page.$eval(`.twin[data-etf="${us}"] h2`, (h) => h.textContent);
-      check(`lístek ${us} → ${tw}: otočený, vzadu dvojče, podrobnosti`, pressed.join() === us && back.includes(tw) && back.includes('Kč ročně') && flipped !== 'none' && shown.join() === us && h2.includes(tw), `${pressed} | ${back} | ${shown}`);
+      check(`lístek ${us} → ${tw}: otočený, vzadu dvojče, podrobnosti`, pressed.join() === us && back.includes(tw) && back.includes('Kč ročně') && side === 'rub|visible|hidden' && shown.join() === us && h2.includes(tw), `${pressed} | ${back} | ${shown}`);
     }
     check('výzva k taháku se ukázala po prvním otočení', await visible(page, '#vyber-cta'));
     await page.tap('.listek[data-etf="AGG"]');
@@ -205,11 +205,11 @@ try {
     const page = await mobilePage(browser);
     await page.emulateMediaFeatures([{ name: 'prefers-reduced-motion', value: 'reduce' }]);
     await page.goto(BASE, { waitUntil: 'networkidle0' });
-    const t = await page.$eval('.listek-in', (el) => `${getComputedStyle(el).transitionDuration} / ${getComputedStyle(el).animationName}`);
-    check('reduced motion: bez animace otočení i „nakouknutí“', t.startsWith('0s') && t.endsWith('none'), t);
+    const t = await page.$eval('.listek-in', (el) => getComputedStyle(el).animationName);
+    check('reduced motion: bez „nakouknutí“', t === 'none', t);
     await page.tap('.listek[data-etf="VOO"]');
-    await sleep(100);
-    check('reduced motion: lístek přesto ukáže dvojče', (await page.$$('.listek[aria-pressed="true"]')).length === 1);
+    const now = await page.$eval('.listek[data-etf="VOO"]', (el) => `${el.querySelector('.listek-in').getAnimations().length}|${el.dataset.strana}`);
+    check('reduced motion: bez animace otočení, rub se ukáže hned', now === '0|rub', now);
     await page.close();
   }
 
