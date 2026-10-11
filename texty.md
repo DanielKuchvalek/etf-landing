@@ -78,7 +78,7 @@ Nadpis a podnadpis se mění podle parametru v URL (viz `reklamy/README.md`). Zb
 - **Po prvním otočení se pod lístky objeví výzva:**
   - tlačítko: Chci tahák se všemi 7 dvojčaty. Formulář se rozbalí na místě.
   - pod ním: ISINy, poplatky a postup nákupu krok za krokem. PDF hned a zdarma.
-- **Pod výběrem:** Data přímo od správců fondů, ověřeno 10. 10. 2026
+- **Pod výběrem (u lístků, ne až v patičce):** Data od správců fondů a brokerů, ověřeno 10. 10. 2026 (zdroje). Není to investiční doporučení. „zdroje“ vede na sekci se zdroji.
   `[d: meta.overeno_dne]`
 
 ---

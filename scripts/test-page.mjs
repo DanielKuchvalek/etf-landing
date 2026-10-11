@@ -84,6 +84,8 @@ try {
     const { page, logs } = await open();
     check('lišta dole je na začátku schovaná', !(await visible(page, '#lista')));
     check('výzva k taháku je před otočením schovaná', !(await visible(page, '#vyber-cta')));
+    const stamp = await page.$eval('#vyber .stamp', (p) => `${p.textContent.replace(/ /g, ' ')}|${p.querySelector('a[href="#data"]') ? 'odkaz' : ''}`).catch(() => '');
+    check('u lístků (ne až v patičce): zdroj dat, datum, odkaz na zdroje a „Není to investiční doporučení“', /správců fondů a brokerů, ověřeno \d{1,2}\. \d{1,2}\. \d{4}/.test(stamp) && stamp.includes('Není to investiční doporučení.') && stamp.endsWith('|odkaz') && await visible(page, '#vyber .stamp'), stamp);
     const rot = await page.$$eval('.listek', (ls) => ls.map((l) => {
       const m = getComputedStyle(l).transform;
       if (m === 'none') return 0;
