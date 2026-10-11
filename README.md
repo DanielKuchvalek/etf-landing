@@ -166,12 +166,13 @@ Skripty a návod jsou ve [scripts/](scripts/README.md). Všechny vracejí nenulo
   - po zavření se stránka vrátí na stejné místo a fokus na tlačítko, které panel otevřelo,
   - nic nepřetéká do šířky.
 
-  Viditelnou výšku nad klávesnicí (328 px na iPhonu 13, 343 px na SE, 244 px na 320 px) jsme odhadli pesimisticky, nenaměřili.
+  Viditelnou výšku nad klávesnicí (328 px na iPhonu 13, 343 px na SE, 244 px na 320 px) jsme odhadli pesimisticky, nenaměřili. Nad klávesnicí navíc počítá s 50px lištou s návrhy e-mailů, kterou iOS do `visualViewport` nemusí započítat: pole a tlačítko musí být celé nad ní.
+- **WebKit, průběh otočení lístku:** animaci zastaví po 100 ms a kontroluje úhel, šířku a viditelnou stranu (nikdy zrcadlově, nikdy prázdný lístek), z výřezů skládá [snímek](docs/screenshots/webkit-otoceni-listku.png).
 - **Lighthouse (mobil), data proti zdrojům, čísla na stránce proti datům, text PDF proti datům.**
 
 **Jen na skutečném telefonu:**
 
-- skutečná klávesnice iOS: její výška, lišta nad ní (šipky, Hotovo, automatické doplnění e-mailu) a to, jak Safari sám posouvá stránku k poli,
+- skutečná klávesnice iOS: její výška, lišta nad ní (šipky, Hotovo, automatické doplnění e-mailu) a to, jak Safari sám posouvá stránku k poli. **Lištu s návrhy e-mailů první simulace nezachytila, našel ji až test na reálném telefonu** (tlačítko „Získat tahák“ skončilo pod klávesnicí). Formulář má proto tlačítko hned pod polem, souhlas pod ním a rezervu 50 px,
 - plynulost otočení lístků na skutečném displeji. Průběh (úhel, šířka a viditelná strana po 100 ms) test ve WebKitu kontroluje a skládá do [snímku](docs/screenshots/webkit-otoceni-listku.png),
 - otevření a uložení PDF v Safari,
 - nativní sdílení a kopírování odkazu,

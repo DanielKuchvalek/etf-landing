@@ -414,14 +414,14 @@ html{scroll-behavior:auto}
         <label class="field"><span class="field-label">Tvůj e-mail</span>
           <input type="email" name="email" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" enterkeyhint="send" placeholder="jmeno@email.cz" required>
         </label>
+        <button class="btn" type="submit">Získat tahák</button>
+        <p class="form-error" role="alert" hidden></p>
         <label class="consent">
           <input type="checkbox" name="consent" value="ano" required>
           <span>Souhlasím, že mi Clientelo Czech&nbsp;s.r.o. bude posílat e-maily o&nbsp;investování do ETF. Odhlásit se můžu kdykoli. <a href="ochrana-osobnich-udaju.html">Jak nakládáme s&nbsp;osobními údaji</a></span>
         </label>
-        <div class="hp" aria-hidden="true"><label>Toto pole nech prázdné <input type="text" name="web" tabindex="-1" autocomplete="off"></label></div>
-        <p class="form-error" role="alert" hidden></p>
-        <button class="btn" type="submit">Získat tahák</button>
         <p class="small">Tahák otevřeš hned po odeslání, na e-mail čekat nemusíš.</p>
+        <div class="hp" aria-hidden="true"><label>Toto pole nech prázdné <input type="text" name="web" tabindex="-1" autocomplete="off"></label></div>
       </form>
     </div>
   </div>
@@ -731,17 +731,20 @@ html{scroll-behavior:auto}
     s.marginBottom = Math.max(0, window.innerHeight - vv.height - vv.offsetTop) + 'px';
     s.maxHeight = Math.round(kb ? vv.height - 8 : vv.height * 0.92) + 'px';
   }
-  /* Pole s fokusem a tlačítko odeslat mají být nad klávesnicí; když se nevejdou obě, má přednost pole. */
+  /* Nad klávesnicí musí být vidět pole a tlačítko (je hned pod polem), a to s rezervou na lištu s návrhy
+     e-mailů: iOS ji do visualViewport nemusí započítat. Souhlas může být těsně pod nimi. Když se nevejde
+     ani pole s tlačítkem, má přednost pole. */
+  var SUGGEST_BAR = 50;
   function keepFormVisible() {
     var a = doc.activeElement;
     var form = a && a.closest && a.closest('.lead-form');
     if (!form || !keyboardOpen()) return;
-    var field = (a.closest('.field, .consent') || a).getBoundingClientRect();
+    var field = form.querySelector('.field').getBoundingClientRect();
     var btn = form.querySelector('[type=submit]').getBoundingClientRect();
     var inSheet = dialog.contains(form);
     var viewTop = inSheet ? dialog.getBoundingClientRect().top : vv.offsetTop;
     var viewH = inSheet ? dialog.clientHeight : vv.height;
-    var need = btn.bottom + 12 - (viewTop + viewH);
+    var need = btn.bottom + 12 + SUGGEST_BAR - (viewTop + viewH);
     var room = field.top - 8 - viewTop;
     var dy = need > 0 ? Math.min(need, room) : Math.min(0, room);
     if (Math.abs(dy) < 1) return;

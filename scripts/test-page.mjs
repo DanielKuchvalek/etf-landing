@@ -338,6 +338,28 @@ try {
     await page.close();
   }
 
+  // 13) Odeslání modrou klávesou na klávesnici (enterkeyhint="send", Enter): stejná kontrola souhlasu
+  {
+    const { page } = await open();
+    const F = '[data-slot="sekce"] .lead-form';
+    const order = await page.$eval(F, (f) => [...f.children].map((c) => c.matches('.field') ? 'pole' : c.matches('[type=submit]') ? 'tlacitko' : c.matches('.consent') ? 'souhlas' : null).filter(Boolean).join(','));
+    check('formulář: tlačítko hned pod polem, souhlas pod tlačítkem', order === 'pole,tlacitko,souhlas', order);
+    check('pole e-mail má enterkeyhint="send"', (await page.$eval(`${F} input[name=email]`, (i) => i.getAttribute('enterkeyhint'))) === 'send');
+    await page.type(`${F} input[name=email]`, 'enter@example.com');
+    await page.keyboard.press('Enter');
+    await sleep(150);
+    const err = ((await text(page, `${F} .form-error`)) || '');
+    const focus = await page.evaluate(() => document.activeElement.name);
+    check('Enter bez souhlasu: hláška o souhlasu a fokus na zaškrtávátku', err === 'Zaškrtni prosím souhlas.' && focus === 'consent', `${err} | ${focus}`);
+    await sleep(700); // fokus na zaškrtávátko stránku plynule posune, klepnout až potom
+    await page.tap(`${F} input[name=consent]`);
+    await page.focus(`${F} input[name=email]`);
+    await page.keyboard.press('Enter');
+    await sleep(700);
+    check('Enter se souhlasem: odesláno, poděkování', ((await text(page, '#tahak .thanks h3')) || '') === 'Hotovo, tahák je tvůj.');
+    await page.close();
+  }
+
   // 12) Nedostupná databáze: hláška, tlačítko zase funguje, po obnovení druhý pokus projde
   {
     const { page, logs } = await open();

@@ -13,6 +13,7 @@ process.env.PLAYWRIGHT_BROWSERS_PATH ??= '0';
 const { webkit, devices } = await import('playwright');
 
 const BASE = process.argv[2] || BASE_URL;
+const LISTA = 50; // rezerva na lištu s návrhy e-mailů nad klávesnicí
 // Viditelná výška nad klávesnicí (včetně lišty nad ní). Pesimistický odhad, ne naměřená hodnota.
 const PHONES = [
   { name: 'iPhone 13', visible: 328, all: true },
@@ -42,7 +43,7 @@ async function keyboard(page, visible, offsetTop = 0, type = 'resize') {
 
 // Které části formuláře leží celé ve viditelné oblasti (nad klávesnicí, pod horním okrajem).
 function inView(page, root) {
-  return page.evaluate((root) => {
+  return page.evaluate(([root, LISTA]) => {
     const r = document.querySelector(root);
     const top = window.visualViewport.offsetTop;
     const bottom = top + window.visualViewport.height;
@@ -55,8 +56,12 @@ function inView(page, root) {
     };
     const vis = {};
     for (const [k, v] of Object.entries(parts)) if (v) vis[k] = v.t >= top - 0.5 && v.b <= bottom + 0.5;
-    return { vis, parts, top, bottom };
-  }, root);
+    // lišta s návrhy e-mailů nad klávesnicí: iOS ji do visualViewport nemusí započítat, proto zakrývá spodních 50 px
+    const nadListou = {};
+    for (const [k, v] of Object.entries(parts)) if (v) nadListou[k] = v.t >= top - 0.5 && v.b <= bottom - LISTA + 0.5;
+    const souhlasZacina = !!parts.souhlas && parts.souhlas.t < bottom;
+    return { vis, nadListou, souhlasZacina, parts, top, bottom };
+  }, [root, LISTA]);
 }
 
 // Fiktivní klávesnice do snímku: popover je v top layer nad panelem.
@@ -65,8 +70,12 @@ async function drawKeyboard(page) {
     const k = document.createElement('div');
     k.popover = 'manual';
     const top = window.visualViewport.offsetTop + window.visualViewport.height;
-    k.style.cssText = `position:fixed;inset:${top}px 0 0 0;margin:0;width:100%;height:auto;border:0;padding:14px;background:#D1D4DA;color:#3A3A3C;font:600 15px -apple-system,sans-serif;text-align:center`;
+    k.style.cssText = `position:fixed;inset:${top}px 0 0 0;margin:0;width:100%;height:auto;overflow:visible;border:0;padding:14px;background:#D1D4DA;color:#3A3A3C;font:600 15px -apple-system,sans-serif;text-align:center`;
     k.textContent = 'klávesnice (simulace)';
+    const l = document.createElement('div');
+    l.style.cssText = `position:absolute;left:0;right:0;top:-50px;height:50px;background:repeating-linear-gradient(45deg,#969BA5 0 8px,#AFB4BE 8px 16px);color:#1C1C1E;font:600 13px/50px -apple-system,sans-serif`;
+    l.textContent = 'lišta s návrhy e-mailů (simulace, 50 px)';
+    k.appendChild(l);
     document.body.appendChild(k);
     k.showPopover();
   });
@@ -165,8 +174,9 @@ try {
       check(`${tag}: spodek panelu sedí na klávesnici`, Math.abs(sheet.b - phone.visible) <= 1, `spodek ${sheet.b}, klávesnice od ${phone.visible}`);
       check(`${tag}: panel nepřesahuje nahoru`, sheet.t >= 0, `horní okraj ${sheet.t}`);
       let v = await inView(page, '#panel');
-      const must = phone.all ? ['nadpis', 'pole', 'souhlas', 'tlacitko'] : ['pole', 'souhlas', 'tlacitko'];
-      check(`${tag}: s klávesnicí vidět ${must.join(', ')}`, must.every((k) => v.vis[k]), JSON.stringify(v.vis));
+      const ok = (v) => v.nadListou.pole && v.nadListou.tlacitko && (!phone.all || v.vis.nadpis) && v.souhlasZacina;
+      const popis = phone.all ? 'nadpis, pole a tlačítko nad lištou návrhů, souhlas začíná pod nimi' : 'pole a tlačítko nad lištou návrhů, souhlas začíná pod nimi';
+      check(`${tag}: s klávesnicí ${popis}`, ok(v), JSON.stringify(v.nadListou));
       await page.keyboard.type('jana@example.com');
       check(`${tag}: v poli je vidět, co píšu`, (await page.inputValue('#panel input[name=email]')) === 'jana@example.com' && v.vis.pole);
       await drawKeyboard(page);
@@ -176,7 +186,7 @@ try {
       // iOS posune viditelnou oblast k poli: panel jde s ní
       await keyboard(page, phone.visible, 90, 'scroll');
       v = await inView(page, '#panel');
-      check(`${tag}: po posunu viditelné oblasti (iOS) je panel pořád nad klávesnicí`, must.every((k) => v.vis[k]), JSON.stringify(v.vis));
+      check(`${tag}: po posunu viditelné oblasti (iOS) je panel pořád nad klávesnicí`, ok(v), JSON.stringify(v.nadListou));
       check(`${tag}: pozadí se ani s klávesnicí neposunulo`, (await paryTop()) === p0);
 
       // zavření: klávesnice dolů, Esc, stránka zpátky na místě, fokus na tlačítku, které panel otevřelo
@@ -205,8 +215,7 @@ try {
       await page.setViewportSize({ width: dev.viewport.width, height: phone.visible });
       await sleep(300);
       const v = await inView(page, '#panel');
-      const must = phone.all ? ['nadpis', 'pole', 'souhlas', 'tlacitko'] : ['pole', 'souhlas', 'tlacitko'];
-      check(`${tag}: zmenšené okno (Android) – vidět ${must.join(', ')}`, must.every((k) => v.vis[k]), JSON.stringify(v.vis));
+      check(`${tag}: zmenšené okno (Android) – pole a tlačítko nad lištou návrhů${phone.all ? ', nadpis vidět' : ''}`, v.nadListou.pole && v.nadListou.tlacitko && (!phone.all || v.vis.nadpis), JSON.stringify(v.nadListou));
       await ctx.close();
     }
 
@@ -224,7 +233,7 @@ try {
       await keyboard(page, phone.visible);
       await sleep(100);
       const v = await inView(page, root);
-      check(`${tag}: formulář ${where} – s klávesnicí vidět pole, souhlas a tlačítko`, v.vis.pole && v.vis.souhlas && v.vis.tlacitko, JSON.stringify(v.vis));
+      check(`${tag}: formulář ${where} – pole a tlačítko nad lištou návrhů, souhlas začíná pod nimi`, v.nadListou.pole && v.nadListou.tlacitko && v.souhlasZacina, JSON.stringify(v.nadListou));
       check(`${tag}: formulář ${where} – lišta dole schovaná`, !(await page.isVisible('#lista')));
       if (where === 'pod lístky') {
         await drawKeyboard(page);

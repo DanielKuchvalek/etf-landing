@@ -222,6 +222,7 @@ U „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnost ověř
 - **Souhlas (zaškrtávací pole):** Souhlasím, že mi Clientelo Czech s.r.o. bude posílat e-maily o investování do ETF. Odhlásit se můžu kdykoli.
   - odkaz: Jak nakládáme s osobními údaji → `public/ochrana-osobnich-udaju.html` (návrh, musí schválit právník)
   - `[ROZHODNOUT + právník: smí být stažení taháku podmíněné souhlasem s marketingovými e-maily? Pokud ne, souhlas bude dobrovolný a tahák dostane každý, kdo vyplní e-mail.]`
+- **Pořadí:** pole, hned pod ním tlačítko, pak souhlas a text pod ním. Tlačítko je co nejvýš, aby ho na mobilu nezakryla klávesnice s lištou návrhů e-mailů. Odeslat jde i modrou klávesou „Odeslat“ na klávesnici (`enterkeyhint="send"`), se stejnou kontrolou souhlasu.
 - **Tlačítko:** Získat tahák
 - **Tlačítko při odesílání:** Odesílám…
 - **Pod tlačítkem:** Tahák otevřeš hned po odeslání, na e-mail čekat nemusíš.
