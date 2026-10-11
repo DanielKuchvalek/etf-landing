@@ -244,6 +244,19 @@ try {
     await page.close();
   }
 
+  // 9) Návrh zásad ochrany osobních údajů: označený návrh, bez TODO, údaje správce z ARES
+  {
+    const { page, logs } = await open('ochrana-osobnich-udaju.html');
+    const t = await page.evaluate(() => document.body.innerText);
+    const robots = await page.$eval('meta[name=robots]', (m) => m.content).catch(() => null);
+    check('zásady: označené jako návrh a noindex', t.includes('Návrh.') && robots === 'noindex', String(robots));
+    check('zásady: bez TODO a žlutých bloků', !/TODO/.test(t) && !(await page.$('.todo')));
+    check('zásady: IČO, sídlo a region databáze', ['22193456', 'Platnéřská 90/13', 'eu-central-1'].every((x) => t.includes(x)));
+    check('zásady: otevřená místa jako „doplní správce“', (await page.$$('.doplni')).length >= 5);
+    check('zásady: bez chyb v konzoli', !realErrors(logs).length, realErrors(logs).map((l) => l.text).join(' | '));
+    await page.close();
+  }
+
   // 5) Skryté pole proti botům
   {
     const { page, logs } = await open();
