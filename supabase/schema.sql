@@ -38,10 +38,13 @@ create table if not exists public.events (
               'prichod', 'scroll', 'otoceni_listku', 'vyzva_zobrazena', 'cta', 'formular_otevren',
               'formular_zacatek', 'odeslani_pokus', 'odeslani_chyba', 'odeslano', 'tahak_otevren', 'sdileni')),
   varianta  text        not null check (varianta in ('vychozi', 'dvojce', 'zacatek')),
-  detail    text        check (detail ~ '^[A-Za-z0-9_:.-]{1,40}$'),
+  detail    text        check (detail ~ '^[A-Za-z0-9_:.-]{1,80}$'),
   cas       timestamptz not null default date_trunc('minute', now()),
   check ((navsteva is null) = (udalost in ('odeslani_pokus', 'odeslani_chyba', 'odeslano', 'tahak_otevren', 'sdileni')))
 );
+-- Detail až 80 znaků (příchod: utm_source:utm_campaign:utm_content). Na starší databázi s limitem 40 tohle omezení vymění.
+alter table public.events drop constraint if exists events_detail_check;
+alter table public.events add constraint events_detail_check check (detail ~ '^[A-Za-z0-9_:.-]{1,80}$');
 create index if not exists events_udalost_varianta on public.events (udalost, varianta);
 create index if not exists events_navsteva on public.events (navsteva);
 

@@ -68,14 +68,14 @@ try {
     '?v=neznama': 'Najdi evropské dvojče k VOO, VT a dalším ETF z USA',
   };
   for (const [q, exp] of Object.entries(H1)) {
-    const { page, logs } = await open(q + (q ? '&' : '?') + 'utm_source=meta&utm_content=test');
+    const { page, logs } = await open(q + (q ? '&' : '?') + 'utm_source=meta&utm_campaign=etf-dvojcata&utm_content=A-Dvojce');
     const h1 = (await text(page, '#uvod-h1')).replace(/ /g, ' ');
     check(`varianta ${q || '(výchozí)'}: nadpis`, h1 === exp, h1);
     const tahakRadek = await page.$eval('#uvod-tahak', (p) => { const r = p.getBoundingClientRect(); return { t: p.textContent.replace(/\u00a0/g, ' '), vidět: r.bottom <= innerHeight && r.height > 0 }; }).catch(() => null);
     check(`varianta ${q || '(výchozí)'}: řádek o taháku na první obrazovce bez otočení lístku`, !!tahakRadek && tahakRadek.vidět && tahakRadek.t === 'Tahák zdarma v PDF: ISINy a postup nákupu krok za krokem.', JSON.stringify(tahakRadek));
     const ev = events(logs).find((e) => e.udalost === 'prichod');
     const expVar = q === '?v=dvojce' ? 'dvojce' : q === '?v=zacatek' ? 'zacatek' : 'vychozi';
-    check(`varianta ${q || '(výchozí)'}: událost prichod s variantou a zdrojem z UTM`, ev && ev.varianta === expVar && ev.detail === 'meta', JSON.stringify(ev));
+    check(`varianta ${q || '(výchozí)'}: událost prichod s variantou a utm_source:utm_campaign:utm_content`, ev && ev.varianta === expVar && ev.detail === 'meta:etf-dvojcata:a-dvojce', JSON.stringify(ev));
     if (q === '?v=zacatek') check('varianta zacatek: poznámka viditelná', await visible(page, '#uvod-pozn'));
     check(`varianta ${q || '(výchozí)'}: bez chyb v konzoli`, !realErrors(logs).length);
     await page.close();

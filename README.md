@@ -93,7 +93,7 @@ Obě pro Meta (Facebook a Instagram) na mobilu: statický obrázek 4 : 5 do feed
 | Kam vede | [etf-dvojcata-demo.vercel.app/?v=dvojce](https://etf-dvojcata-demo.vercel.app/?v=dvojce) | [etf-dvojcata-demo.vercel.app/?v=zacatek](https://etf-dvojcata-demo.vercel.app/?v=zacatek) |
 | Co od ní čekáme | Lidé přijdou s konkrétním problémem a hned otočí VOO. Čekám vyšší podíl otočení i odeslání než u B, protože slib reklamy vyřeší první lístek. | Lidé si spíš projdou víc lístků, než se rozhodnou. Čekám nižší konverzi než u A (nehledají konkrétní fond), ale možná víc otočených lístků na návštěvu. |
 
-**Jak navazuje první obrazovka:** nadpis a podnadpis se mění podle `?v=` (malý inline skript hned za nadpisem, layout se neposune), zbytek stránky je pro obě verze stejný. Rozdíl v konverzi tak jde připsat reklamě a úvodu. Verze se ukládá k událostem i ke kontaktu, takže trychtýř je zvlášť pro každou. Obě reklamy mají běžet ve stejné kampani se stejným publikem a rozpočtem. Očekávání v tabulce jsou moje hypotézy, ne čísla ze zdroje. Rozhodne trychtýř podle verze úvodu (`analytika.trychtyr`): která verze přivede víc odeslaných formulářů na návštěvu a jak se liší otočení lístků. Odkazy v reklamách mají i `utm_source=meta&utm_medium=paid_social&utm_campaign=etf-dvojcata&utm_content=a-dvojce` (nebo `b-zacatek`), aby se kampaň dala porovnat i v Ads Manageru.
+**Jak navazuje první obrazovka:** nadpis a podnadpis se mění podle `?v=` (malý inline skript hned za nadpisem, layout se neposune), zbytek stránky je pro obě verze stejný. Rozdíl v konverzi tak jde připsat reklamě a úvodu. Verze se ukládá k událostem i ke kontaktu, takže trychtýř je zvlášť pro každou. Obě reklamy mají běžet ve stejné kampani se stejným publikem a rozpočtem. Očekávání v tabulce jsou moje hypotézy, ne čísla ze zdroje. Rozhodne trychtýř podle verze úvodu (`analytika.trychtyr`): která verze přivede víc odeslaných formulářů na návštěvu a jak se liší otočení lístků. Odkazy v reklamách mají i `utm_source=meta&utm_medium=paid_social&utm_campaign=etf-dvojcata&utm_content=a-dvojce` (nebo `b-zacatek`). Zdroj, kampaň a obsah se ukládají k příchodu, takže jdou porovnat i reklamy uvnitř jedné verze úvodu.
 
 ## Očekávaná konverze
 
@@ -244,7 +244,7 @@ Vlastní události místo GA4, bez cookies a bez cookie lišty. Stránka je pos�
 
 | Událost | Kdy | Detail | ID návštěvy |
 |---|---|---|---|
-| `prichod` | načtení stránky | `sdileni` u odkazu od kamaráda, jinak `utm_source` | ano |
+| `prichod` | načtení stránky | `sdileni` u odkazu od kamaráda, jinak `utm_source:utm_campaign:utm_content` (každá část nejvýš 24 znaků) | ano |
 | `scroll` | 25, 50, 75 a 100 % stránky, každá jednou | hloubka | ano |
 | `otoceni_listku` | klepnutí na lístek | např. `VOO:dvojce`, `VOO:original` | ano |
 | `vyzva_zobrazena` | výzva k taháku pod lístky po prvním otočení | `listky` | ano |
@@ -257,6 +257,8 @@ Vlastní události místo GA4, bez cookies a bez cookie lišty. Stránka je pos�
 
 - **ID návštěvy** je náhodné UUID jen v paměti jednoho načtení stránky, do prohlížeče se nic neukládá. Události od odeslání dál ho nemají (poslední sloupec), jdou jen s verzí úvodu z `?v=` a detailem.
 - **Trychtýř podle verzí úvodu** počítá pohled `analytika.trychtyr` ze [supabase/funnel.sql](supabase/funnel.sql): příchod → otočení lístku → otevření formuláře → odeslání. Kroky 1–3 se počítají z událostí podle ID návštěvy: kolik návštěv krok udělalo, kolik i všechny předchozí a podíl z příchodů. Odeslání se počítá z tabulky kontaktů podle verze úvodu, kterou ukládáme ke kontaktu. U odeslání proto nejde říct, které předchozí kroky ta návštěva udělala, a opakovaný e-mail se nepočítá dvakrát.
+- **Od data spuštění kampaně:** `select * from analytika.trychtyr_od('2026-10-16 00:00+02');` počítá jen události a kontakty od zadaného okamžiku, pohled `analytika.trychtyr` je za celou dobu.
+- **Co z trychtýře jde a nejde vyčíst:** je agregovaný. Kroky 1–3 se počítají podle návštěv, odeslání podle kontaktů. Jde z něj vyčíst, kolik návštěv kterým krokem prošlo a jaký podíl odeslal formulář, zvlášť pro každou verzi úvodu a od zvoleného data. Nejde z něj vyčíst, jestli konkrétní odesílající návštěva předtím otočila lístek nebo přišla z určité kampaně: odeslání záměrně nemá ID návštěvy. Porovnání kampaní (`utm_campaign`, `utm_content`) jde proto jen u příchodů a kroků 1–3, u odeslání podle verze úvodu.
 - **Kontakt a návštěva se nespojují.** Co pro to děláme:
   - e-mail jde jinou funkcí ([`/api/lead`](api/lead.js)) do jiné tabulky a nikdy s ID návštěvy (funkce kontakt s ID odmítne),
   - události od odeslání dál nemají ID návštěvy, takže z měření nejde vyčíst, která návštěva formulář odeslala. Hlídá to funkce i kontrola na tabulce v databázi,
@@ -344,6 +346,14 @@ Celý návrh zásad s místy k doplnění (kontakt, doba uložení, e-mailová s
 - zkontrolovat obrázky reklam v náhledu Ads Manageru (bezpečné zóny Stories a Reels jsem ověřil jen z návodů třetích stran),
 - ověřit u Meta, jestli kampaň nespadá do speciální kategorie „Finanční produkty a služby“ (ta může omezit cílení podle věku) a jestli pravidla pro finanční služby nevyžadují ověření inzerenta nebo upozornění přímo v reklamě,
 - ověřit limity textů v Ads Manageru.
+
+**Meta Conversions API (popis, v demu není):** po spuštění kampaně by se hodilo posílat Metě událost `Lead` ze serveru, aby reklamní systém věděl, která reklama přivádí kontakty, a mohl na ně optimalizovat. Návrh:
+- posílá ji `api/lead.js` až po úspěšném uložení nového kontaktu (ne u duplicity, bota ani chyby), přímo na Conversions API, bez pixelu a bez cookies v prohlížeči,
+- s `event_id`, `event_time`, verzí reklamy a `fbclid` z odkazu (kdyby se předával), přístupový token jen v proměnné prostředí,
+- hashovaný e-mail (SHA-256) zlepší párování, ale je to předání osobního údaje Metě: jen po právní kontrole, s doplněním do zásad a souhlasu,
+- Meta jako další příjemce a předání mimo EU musí být v zásadách ([návrh](docs/navrh-pro-clientelo.md)).
+
+V demu není, protože demo nemá reklamní účet, správcem je autor a předávat e-maily Metě by bez právní kontroly a změny souhlasu nebylo v pořádku.
 
 **Vývojář:**
 

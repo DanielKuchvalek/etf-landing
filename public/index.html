@@ -504,7 +504,7 @@ html{scroll-behavior:auto}
   function track(name, detail) {
     var e = { udalost: name, varianta: variant };
     if (!/^(odeslan|tahak|sdileni)/.test(name)) e.navsteva = visitId;
-    detail = String(detail == null ? '' : detail).replace(/[^A-Za-z0-9_:.-]/g, '').slice(0, 40);
+    detail = String(detail == null ? '' : detail).replace(/[^A-Za-z0-9_:.-]/g, '').slice(0, 80);
     if (detail) e.detail = detail;
     var body = JSON.stringify(e);
     try { if (navigator.sendBeacon && navigator.sendBeacon('/api/event', body)) return; } catch (err) { /* fetch níž */ }
@@ -559,7 +559,9 @@ html{scroll-behavior:auto}
       });
   }
 
-  track('prichod', qs.get('ref') === 'sdileni' ? 'sdileni' : qs.get('utm_source'));
+  // příchod: odkaz od kamaráda, jinak utm_source:utm_campaign:utm_content (každý nejvýš 24 znaků)
+  var utm = ['utm_source', 'utm_campaign', 'utm_content'].map(function (k) { return (qs.get(k) || '').toLowerCase().replace(/[^a-z0-9_.-]/g, '').slice(0, 24); });
+  track('prichod', qs.get('ref') === 'sdileni' ? 'sdileni' : utm.join(':').replace(/:+$/, ''));
 
   var marks = [25, 50, 75, 100];
   var ticking = false;

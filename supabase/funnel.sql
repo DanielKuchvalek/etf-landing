@@ -1,8 +1,14 @@
 -- Trychtýř po krocích zvlášť pro každou verzi úvodu (?v=): příchod → otočení lístku → otevření formuláře → odeslání.
--- Spusť v Supabase: SQL Editor → vlož celý soubor → Run. Pak kdykoli: select * from analytika.trychtyr;
+-- Spusť v Supabase: SQL Editor → vlož celý soubor → Run (jde spustit znovu). Pak kdykoli:
+--   select * from analytika.trychtyr;                                   -- za celou dobu
+--   select * from analytika.trychtyr_od('2026-10-16 00:00+02');          -- jen od spuštění kampaně
 --
--- Pohled je ve vlastním schématu „analytika“, které Supabase API nevystavuje, a běží s právy toho, kdo
--- se ptá (security_invoker). Přes publishable klíč ho tedy nikdo nepřečte.
+-- Funkce a pohled jsou ve vlastním schématu „analytika“, které Supabase API nevystavuje, a běží s právy toho, kdo
+-- se ptá (security invoker). Přes publishable klíč je tedy nikdo nepřečte.
+--
+-- Trychtýř je agregovaný: kroky 1–3 podle návštěv (událostí s ID návštěvy), odeslání podle kontaktů. Jde z něj
+-- vyčíst, kolik návštěv kterým krokem prošlo a jaký podíl odeslal formulář, zvlášť podle verze úvodu. Nejde z něj
+-- vyčíst, jestli odesílající návštěva předtím otočila lístek (záměrně, kontakt nejde spárovat s návštěvou).
 --
 -- Kroky 1–3 se počítají z událostí podle ID návštěvy. Odeslání se počítá z tabulky kontaktů podle verze úvodu
 -- uložené u kontaktu: události od odeslání dál záměrně nemají ID návštěvy, aby kontakt nešel spárovat s návštěvou.
@@ -22,37 +28,41 @@
 create schema if not exists analytika;
 revoke all on schema analytika from anon, authenticated;
 
-create or replace view analytika.trychtyr with (security_invoker = true) as
+-- Trychtýř od zadaného okamžiku (události podle času události, kontakty podle času souhlasu).
+create or replace function analytika.trychtyr_od(p_od timestamptz)
+returns table (varianta text, poradi integer, krok text, navstev bigint, navstev_postupne bigint,
+               pct_z_prichodu numeric, pct_z_predchoziho numeric)
+language sql stable security invoker set search_path = '' as $$
 with navstevy as (
   select
-    varianta,
-    navsteva,
-    bool_or(udalost = 'prichod')          as prichod,
-    bool_or(udalost = 'otoceni_listku')   as otoceni,
-    bool_or(udalost in ('formular_otevren', 'formular_zacatek')) as formular
-  from public.events
-  where navsteva is not null
-  group by varianta, navsteva
+    e.varianta,
+    e.navsteva,
+    bool_or(e.udalost = 'prichod')          as prichod,
+    bool_or(e.udalost = 'otoceni_listku')   as otoceni,
+    bool_or(e.udalost in ('formular_otevren', 'formular_zacatek')) as formular
+  from public.events e
+  where e.navsteva is not null and e.cas >= p_od
+  group by e.varianta, e.navsteva
 ),
 souhrn as (
   select
-    varianta,
-    count(*) filter (where prichod)                          as prichod,
-    count(*) filter (where otoceni)                          as otoceni,
-    count(*) filter (where formular)                         as formular,
-    count(*) filter (where prichod and otoceni)              as otoceni_p,
-    count(*) filter (where prichod and otoceni and formular) as formular_p
-  from navstevy
-  group by varianta
+    n.varianta,
+    count(*) filter (where n.prichod)                              as prichod,
+    count(*) filter (where n.otoceni)                              as otoceni,
+    count(*) filter (where n.formular)                             as formular,
+    count(*) filter (where n.prichod and n.otoceni)                as otoceni_p,
+    count(*) filter (where n.prichod and n.otoceni and n.formular) as formular_p
+  from navstevy n
+  group by n.varianta
 ),
 kontakty as (
-  select varianta, count(*) as odeslani from public.leads group by varianta
+  select l.varianta, count(*) as odeslani from public.leads l where l.souhlas_cas >= p_od group by l.varianta
 ),
 kroky as (
   select v.varianta, k.poradi, k.krok, k.navstev, k.navstev_postupne, k.predchozi, coalesce(s.prichod, 0) as prichod
   from (values ('vychozi'), ('dvojce'), ('zacatek')) as v(varianta)
-  left join souhrn s using (varianta)
-  left join kontakty c using (varianta)
+  left join souhrn s on s.varianta = v.varianta
+  left join kontakty c on c.varianta = v.varianta
   cross join lateral (values
     (1, 'příchod',            coalesce(s.prichod, 0),   coalesce(s.prichod, 0),    null::bigint),
     (2, 'otočení lístku',     coalesce(s.otoceni, 0),   coalesce(s.otoceni_p, 0),  coalesce(s.prichod, 0)),
@@ -66,10 +76,19 @@ select
   krok,
   navstev,
   navstev_postupne,
-  round(100.0 * navstev / nullif(prichod, 0), 1) as pct_z_prichodu,
-  round(100.0 * coalesce(navstev_postupne, navstev) / nullif(predchozi, 0), 1) as pct_z_predchoziho
+  round(100.0 * navstev / nullif(prichod, 0), 1),
+  round(100.0 * coalesce(navstev_postupne, navstev) / nullif(predchozi, 0), 1)
 from kroky
 order by varianta, poradi;
+$$;
+revoke all on function analytika.trychtyr_od(timestamptz) from public, anon, authenticated;
+
+-- Za celou dobu (stejné sloupce jako dřív). Starší verze pohledu se nahradí.
+drop view if exists analytika.trychtyr;
+create view analytika.trychtyr with (security_invoker = true) as
+  select * from analytika.trychtyr_od('-infinity');
 
 -- Kolikrát se formulář úspěšně odeslal, včetně opakovaného e-mailu (události bez ID návštěvy):
 -- select varianta, count(*) as odeslani from public.events where udalost = 'odeslano' group by varianta;
+-- Příchody podle reklamy (detail příchodu je utm_source:utm_campaign:utm_content):
+-- select detail, count(*) from public.events where udalost = 'prichod' group by detail order by 2 desc;

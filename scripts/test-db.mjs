@@ -48,6 +48,7 @@ for (const role of ['anon', 'authenticated']) {
     ['volat uloz_udalost', `select public.uloz_udalost('${KLIC(1)}', gen_random_uuid(), 'prichod', 'vychozi', null)`],
     ['volat uklid', 'select public.uklid()'],
     ['číst trychtýř', 'select * from analytika.trychtyr'],
+    ['volat trychtýř od data', "select * from analytika.trychtyr_od('2026-01-01')"],
   ]) {
     const r = await as(role, sql);
     check(`${role} nesmí ${what}`, !!r.error && /permission denied/.test(r.error), r.error || 'prošlo!');
@@ -90,6 +91,8 @@ for (let i = 0; i < 101; i++) ev = await one('service_role', `select public.uloz
 check('uloz_udalost: 101. událost jedné návštěvy = limit', ev === 'limit' && (await one('service_role', `select count(*)::int from public.events where navsteva = '${visit}'`)) === 100, ev);
 for (let i = 0; i < 500; i++) await one('service_role', `select public.uloz_udalost('${KLIC(7)}', gen_random_uuid(), 'prichod', 'vychozi', null)`);
 check('uloz_udalost: 601. událost z jedné IP za hodinu = limit', (await one('service_role', `select public.uloz_udalost('${KLIC(7)}', gen_random_uuid(), 'prichod', 'vychozi', null)`)) === 'limit');
+check('events: detail do 80 znaků projde, 81 databáze odmítne', (await one('service_role', `select public.uloz_udalost('${KLIC(8)}', gen_random_uuid(), 'prichod', 'vychozi', '${'a'.repeat(80)}')`)) === 'ok'
+  && String(await one('service_role', `select public.uloz_udalost('${KLIC(8)}', gen_random_uuid(), 'prichod', 'vychozi', '${'a'.repeat(81)}')`)).includes('check constraint'));
 check('events: databáze odmítne „@“ v detailu', String(await one('service_role', `select public.uloz_udalost('${KLIC(8)}', gen_random_uuid(), 'prichod', 'vychozi', 'jana@example.com')`)).includes('check constraint'));
 check('events: databáze odmítne neznámou událost', String(await one('service_role', `select public.uloz_udalost('${KLIC(8)}', gen_random_uuid(), 'nakup', 'vychozi', null)`)).includes('check constraint'));
 const casDefault = await one('service_role', "select column_default from information_schema.columns where table_name = 'events' and column_name = 'cas'");
@@ -120,6 +123,13 @@ await db.exec("insert into public.leads (email, souhlas, varianta) values ('a@ex
 const t = (await db.query("select varianta, poradi, navstev, navstev_postupne, pct_z_prichodu::float p, pct_z_predchoziho::float q from analytika.trychtyr order by varianta, poradi")).rows;
 const radky = (v) => t.filter((r) => r.varianta === v).map((r) => `${r.poradi}:${r.navstev}/${r.navstev_postupne}/${r.p}/${r.q}`).join(' ');
 check('trychtýř: kroky, postupně, formulář v sekci Tahák a odeslání z kontaktů', radky('dvojce') === '1:3/3/100/null 2:1/1/33.3/33.3 3:2/1/66.7/100 4:2/null/66.7/100', radky('dvojce'));
+// od data: staré události a kontakt před datem se nepočítají
+await db.query("insert into public.events (navsteva, udalost, varianta, cas) values ('00000000-0000-4000-8000-000000000009', 'prichod', 'dvojce', '2026-01-01')");
+await db.exec("insert into public.leads (email, souhlas, varianta, souhlas_cas) values ('stara@example.com', true, 'dvojce', '2026-01-01')");
+const od = (await db.query("select poradi, navstev from analytika.trychtyr_od('2026-06-01') where varianta = 'dvojce' order by poradi")).rows.map((r) => `${r.poradi}:${r.navstev}`).join(' ');
+const vse = (await db.query("select poradi, navstev from analytika.trychtyr where varianta = 'dvojce' order by poradi")).rows.map((r) => `${r.poradi}:${r.navstev}`).join(' ');
+check('trychtýř od data: starší příchod a kontakt se nepočítají, pohled za celou dobu je počítá', od === '1:3 2:1 3:2 4:2' && vse === '1:4 2:1 3:2 4:3', `od: ${od} | vše: ${vse}`);
+await db.exec("delete from public.events where navsteva = '00000000-0000-4000-8000-000000000009'; delete from public.leads where email = 'stara@example.com'");
 check('trychtýř: verze bez návštěv se ukáže s nulami, kontakty se neztratí', radky('zacatek') === '1:0/0/null/null 2:0/0/null/null 3:0/0/null/null 4:1/null/null/null' && radky('vychozi').startsWith('1:0/0/'), radky('zacatek'));
 
 await db.close();
@@ -145,6 +155,11 @@ await db.close();
     await db3.exec('set role service_role');
     const novy = await q("select public.uloz_kontakt('" + 'b'.repeat(32) + "', 'novy@example.com', 'zacatek', 'demo-2026-10-11')");
     await db3.exec('reset role');
+    await db3.exec('set role service_role');
+    const dlouhy = await q(`select public.uloz_udalost('${'c'.repeat(32)}', gen_random_uuid(), 'prichod', 'dvojce', 'meta:etf-dvojcata:${'a'.repeat(24)}')`).catch((e) => e.message);
+    await db3.exec('reset role');
+    check('migrace: na staré databázi se limit detailu zvedne na 80 znaků (UTM u příchodu)', dlouhy === 'ok', String(dlouhy));
+    check('migrace: trychtýř od data funguje i na staré databázi', (await q("select count(*)::int from analytika.trychtyr_od(now() - interval '1 day')")) === 12);
     check('migrace: service_role po migraci uloží kontakt s verzí souhlasu', novy === 'novy' && (await q("select souhlas_verze from public.leads where email = 'novy@example.com'")) === 'demo-2026-10-11', String(novy));
     await db3.close();
   }

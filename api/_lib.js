@@ -18,7 +18,7 @@ const ETF = 'VOO|VTI|VT|VWO|SDY|VGT|AGG';
 const ZDROJ = /^(listky|lista|karty)$/;
 const ZDROJ_FORMULARE = /^(listky|lista|karty|sekce)$/;
 export const DETAILY = {
-  prichod: /^[a-z0-9_-]{1,20}$/, // sdileni nebo utm_source
+  prichod: /^(?=.*[a-z0-9])[a-z0-9_.-]{0,24}(:[a-z0-9_.-]{0,24}){0,2}$/, // sdileni nebo utm_source:utm_campaign:utm_content
   scroll: /^(25|50|75|100)$/,
   otoceni_listku: new RegExp(`^(${ETF}):(dvojce|original)$`),
   vyzva_zobrazena: /^listky$/,

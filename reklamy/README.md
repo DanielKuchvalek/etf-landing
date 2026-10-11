@@ -40,7 +40,7 @@ Nadpis a podnadpis první obrazovky se mají měnit, aby návštěvník hned vid
 
 **Alternativa:** Vercel rewrite podle parametru na dvě různé HTML stránky by se obešla bez JS. Nedoporučuju ji: obsah by byl dvakrát a při úpravách se rozjede. `[TODO]` Podporu podmínek podle query ve `vercel.json` jsem neověřoval.
 
-**Měření:** hodnota `v` se ukládá ke každé události i ke kontaktu, aby šel trychtýř porovnat podle verze. `utm_source` se ukládá jen jako detail příchodu, `utm_content` se neukládá (verzi reklamy nese `v`). ID návštěvy se s e-mailem nespojuje.
+**Měření:** hodnota `v` se ukládá ke každé události i ke kontaktu, aby šel trychtýř porovnat podle verze. K příchodu se ukládá i `utm_source:utm_campaign:utm_content`, takže jdou porovnat i reklamy uvnitř jedné verze úvodu. ID návštěvy se s e-mailem nespojuje.
 
 **Odkazy z reklam:**
 

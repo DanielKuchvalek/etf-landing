@@ -222,7 +222,7 @@ r = await run(event, req('/api/event', { body: ev(), type: 'text/plain;charset=U
 const e = r.calls[0] || {};
 check('event: platná událost přes sendBeacon (text/plain) → 204 a jedno volání uloz_udalost', r.status === 204 && r.calls.length === 1 && e.url === 'https://projekt.supabase.co/rest/v1/rpc/uloz_udalost', String(r.status));
 check('event: jen ID návštěvy, událost, verze, detail a hash IP (čas doplní databáze)', e.body && Object.keys(e.body).sort().join() === 'p_detail,p_klic,p_navsteva,p_udalost,p_varianta' && e.body.p_detail === 'VOO:dvojce', JSON.stringify(e.body));
-for (const [udalost, detail] of [['prichod', null], ['prichod', 'sdileni'], ['prichod', 'facebook'], ['scroll', '75'], ['cta', 'karty'], ['formular_zacatek', 'sekce']]) {
+for (const [udalost, detail] of [['prichod', null], ['prichod', 'sdileni'], ['prichod', 'facebook'], ['prichod', 'meta:etf-dvojcata:a-dvojce'], ['prichod', 'meta::b-zacatek'], ['scroll', '75'], ['cta', 'karty'], ['formular_zacatek', 'sekce']]) {
   r = await run(event, req('/api/event', { body: ev({ udalost, detail }), type: 'text/plain' }));
   check(`event: ${udalost}${detail ? ` s detailem ${detail}` : ''} → 204`, r.status === 204);
 }
@@ -246,6 +246,9 @@ for (const [name, body, chyba] of [
   ['událost „constructor“', ev({ udalost: 'constructor' }), 'udalost'],
   ['neznámá verze úvodu', ev({ varianta: 'jina' }), 'varianta'],
   ['e-mail v detailu', ev({ udalost: 'prichod', detail: 'jana@example.com' }), 'detail'],
+  ['UTM se čtyřmi částmi', ev({ udalost: 'prichod', detail: 'a:b:c:d' }), 'detail'],
+  ['UTM část delší než 24 znaků', ev({ udalost: 'prichod', detail: 'meta:' + 'x'.repeat(25) }), 'detail'],
+  ['UTM jen dvojtečky', ev({ udalost: 'prichod', detail: '::' }), 'detail'],
   ['libovolný text v detailu', ev({ udalost: 'scroll', detail: 'tajna-zprava' }), 'detail'],
   ['neexistující ETF v detailu', ev({ detail: 'QQQ:dvojce' }), 'detail'],
   ['detail jako číslo', ev({ udalost: 'scroll', detail: 50 }), 'detail'],

@@ -116,10 +116,11 @@ async function devDb(req, res, url) {
   res.end(JSON.stringify({ leads: leads.rows, events: events.rows, limity: limity.rows, vypadek }));
 }
 
-// Trychtýř z analytika.trychtyr (stejné SQL jako v Supabase) jako textová tabulka, s ?json jako JSON.
+// Trychtýř z analytika.trychtyr (stejné SQL jako v Supabase) jako textová tabulka, s ?json jako JSON, s ?od=datum od data.
 async function devFunnel(req, res, url) {
   if (!devAllowed(req)) { res.writeHead(403).end(); return log(req, 403); }
-  const rows = (await db.query('select * from analytika.trychtyr')).rows;
+  const od = url.searchParams.get('od'); // ?od=2026-10-16 → trychtýř jen od data
+  const rows = (od ? await db.query('select * from analytika.trychtyr_od($1::timestamptz)', [od]) : await db.query('select * from analytika.trychtyr')).rows;
   if (url.searchParams.has('json')) {
     res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
     return res.end(JSON.stringify(rows));
