@@ -202,7 +202,29 @@ Všechno je připravené, stačí založit projekty a zadat tři proměnné pros
 
 ## Očekávaná konverze
 
-_TODO: odhad konverze (a čeho přesně, např. návštěva → kontakt), z čeho vychází a co ji nejvíc ovlivní._
+**Odhad: 2–13 % návštěv odešle formulář, nejspíš kolem 6 %.** Konverze je návštěva (načtená stránka) → odeslaný formulář, stejně jako v trychtýři. **Všechna procenta v tabulce jsou můj odhad**, ne naměřená data. Po prvním týdnu kampaně je nahradí čísla z `analytika.trychtyr`.
+
+| Krok trychtýře | Pesimisticky | Středně | Optimisticky | Z čeho odhad vychází |
+|---|---|---|---|---|
+| 1. příchod | 100 % | 100 % | 100 % | výchozí bod, každá načtená stránka |
+| 2. otočení lístku (z příchodů) | 25 % | 40 % | 55 % | Lístky jsou na první obrazovce a jsou přesně to, co reklama slibuje. Z reklamy na sociálních sítích ale velká část lidí odejde po pár sekundách bez jediného klepnutí. |
+| 3. otevření formuláře (z těch, kdo otočili) | 20 % | 30 % | 40 % | Výzva se objeví hned pod otočeným lístkem. Kdo ale viděl dvojče, už dostal, kvůli čemu přišel, a tahák ho musí zaujmout navíc. |
+| 4. odeslání (z otevřených formulářů) | 40 % | 50 % | 60 % | Jedno pole a zaškrtnutí, tahák hned bez čekání na e-mail. Část lidí odradí, že dávají e-mail a souhlas s e-maily. |
+| **Návštěva → odeslání** | **2,0 %** | **6,0 %** | **13,2 %** | součin kroků 2–4 |
+
+**Výpočet po krocích na 1 000 návštěv:**
+- středně: 1 000 × 40 % = 400 otočí lístek → 400 × 30 % = 120 otevře formulář → 120 × 50 % = 60 odešle, tedy 6,0 %,
+- pesimisticky: 1 000 × 25 % = 250 → 250 × 20 % = 50 → 50 × 40 % = 20, tedy 2,0 %,
+- optimisticky: 1 000 × 55 % = 550 → 550 × 40 % = 220 → 220 × 60 % = 132, tedy 13,2 %.
+
+Zjednodušení: formulář jde otevřít i bez otočení lístku (spodní lišta, sekce Tahák). Tyhle cesty v odhadu zvlášť nejsou, počítám je jako součást kroku 3.
+
+**Srovnání s benchmarkem (skutečný zdroj, ne odhad):** podle [Unbounce](https://unbounce.com/landing-pages/whats-a-good-conversion-rate/) (Conversion Benchmark Report 2024, 41 000 landing pages a 57 milionů konverzí) je medián konverze landing page napříč obory 6,6 %, ve finančních službách 8,3 % a v podkategorii investování 3,9 %. Starší [stránka Unbounce o financích](https://unbounce.com/industry/finance/) uvádí pro finance a pojištění medián 3,8 % a rok dat neuvádí. Zdroje se rozcházejí, proto mezi nimi nevybírám. Střední odhad 6 % leží mezi investováním (3,9 %) a finančními službami (8,3 %). Benchmark zahrnuje všechny zdroje návštěv a všechny druhy konverzí, nejen e-mail za PDF, a český trh v něm zvlášť není. Je to tedy jen hrubá kontrola, že odhad není mimo.
+
+**Co konverzi nejvíc ovlivní:**
+- jestli úvod navazuje na slib reklamy (proto se mění podle `?v=`),
+- jestli lidé poznají, že se na lístek dá klepnout (krok 2),
+- jestli je tahák lákavý i pro toho, kdo už dvojče viděl (krok 3). Na tenhle krok míří [první hypotéza na A/B test](#hypotézy-na-ab-test).
 
 ## Hypotézy na A/B test
 
