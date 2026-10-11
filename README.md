@@ -2,7 +2,7 @@
 
 Řešení zadání B (konverzní landing page) do výběrového řízení na pozici Junior AI Developer.
 
-- **Stránka:** TODO (URL na Vercelu)
+- **Stránka:** [etf-dvojcata-demo.vercel.app](https://etf-dvojcata-demo.vercel.app/) (po nasazení; neoficiální ukázka, proto bez jména Clientela v adrese)
 - **Obě verze reklamy:** [reklamy/](reklamy/)
 - **Exporty konverzací s AI:** [ai-log/](ai-log/)
 
@@ -159,7 +159,7 @@ Všechno je připravené, stačí založit projekty a zadat tři proměnné pros
 **2. Vercel (web a funkce)**
 
 1. Na [vercel.com](https://vercel.com/new) → **Add New → Project** → importuj repozitář z GitHubu.
-2. **Project Name:** `etf-dvojcata-clientelo`. Adresa pak bude `https://etf-dvojcata-clientelo.vercel.app` a bude sedět s `og:image` ve stránce (`etf-dvojcata` už používá cizí projekt). Když zvolíš jiný název, změň adresu v `og:image` v `public/index.html`.
+2. **Project Name:** `etf-dvojcata-demo`. Adresa pak bude `https://etf-dvojcata-demo.vercel.app` a sedí s kanonickou adresou, `og:url` a `og:image` ve stránce. Stránka není oficiálně Clientela, proto bez jejich jména v adrese. `etf-dvojcata` už používá cizí projekt, `etf-dvojcata-demo` byl 11. 10. 2026 volný. Kdyby Vercel přidělil jinou adresu, změň tři řádky v hlavičce `public/index.html` (hledej `etf-dvojcata-demo`).
 3. **Framework Preset:** Other. Build ani výstupní složku neměň, nastavuje je [vercel.json](vercel.json): web z `public/`, funkce z `api/` ve Frankfurtu (`fra1`) a denní cron na `/api/keepalive`.
 4. **Environment Variables** (pro Production, případně i Preview):
    - `SUPABASE_URL`: Project URL ze Supabase,
@@ -205,7 +205,7 @@ _TODO: stack a proč (čisté HTML/CSS/JS bez build kroku, Vercel, Supabase), zp
 - **Secret klíč Supabase (`sb_secret_…`) jen na serveru.** Funkce ho posílá v hlavičce `apikey`, jak chce [dokumentace Supabase](https://supabase.com/docs/guides/api/api-keys) (nové klíče nejsou JWT, do `Authorization: Bearer` nepatří). Starý klíč `service_role` Supabase do konce roku 2026 ruší. Tabulky mají zapnuté RLS bez jediné politiky a odebraná práva pro `anon` a `authenticated`, takže publishable klíčem nejde nic přečíst ani zapsat.
 - **Lokální server se stejnými funkcemi** ([scripts/server.mjs](scripts/server.mjs)): servíruje `public/` a funkce z `api/` jako Vercel. Bez klíčů běží s podvrženou databází v paměti, takže formulář jde vyzkoušet i na telefonu ve stejné Wi-Fi a testy můžou ověřit, co se opravdu uložilo.
 - **Supabase projekt v EU regionu.** Ukládáme e-maily českých návštěvníků a databáze má být blízko serverless funkcím ve Frankfurtu.
-- **Denní keep-alive přes Vercel cron.** Bezplatný Supabase projekt se po čase bez aktivity pozastaví a formulář musí fungovat, i když stránku někdo otevře až za dva týdny. Cron volá [`/api/keepalive`](api/keepalive.js) jednou denně (víc bezplatný tarif Vercelu nedovolí) a ta udělá jeden malý dotaz do databáze. Funkce chce hlavičku s `CRON_SECRET`, cizí volání odmítne.
+- **Denní keep-alive přes Vercel cron.** Bezplatný Supabase projekt se po čase bez aktivity pozastaví a formulář musí fungovat, i když stránku někdo otevře až za dva týdny. Cron volá [`/api/keepalive`](api/keepalive.js) jednou denně (víc bezplatný tarif Vercelu nedovolí). Ta přes API Supabase spustí v databázi funkci `uklid`, která smaže staré záznamy limitů, takže jde o požadavek na API i o příkaz v databázi. Supabase ale nedefinuje, co přesně je „aktivita“ (riziko a doporučení jsou v sekci [Před spuštěním kampaně](#před-spuštěním-kampaně)). Funkce chce hlavičku s `CRON_SECRET`, cizí volání odmítne.
 - **Serverless funkce v regionu `fra1` (Frankfurt).** Kratší odezva pro české návštěvníky i k databázi v EU.
 
 ## Testování: co automaticky a co jen na telefonu
@@ -220,7 +220,7 @@ Skripty a návod jsou ve [scripts/](scripts/README.md). Všechny vracejí nenulo
   - jako Android: zmenší se celé okno.
 
   Kontroluje, že:
-  - nad klávesnicí je vidět nadpis panelu, pole, souhlas i tlačítko; na 320 px aspoň pole, souhlas a tlačítko,
+  - nad klávesnicí (s rezervou 50 px na lištu návrhů e-mailů) je vidět pole a tlačítko a souhlas začíná těsně pod nimi; na 375 a 390 px i nadpis panelu. Na 320 px se nadpis vejít nemusí, přednost má pole a tlačítko,
   - pozadí se pod panelem nepohne,
   - po zavření se stránka vrátí na stejné místo a fokus na tlačítko, které panel otevřelo,
   - nic nepřetéká do šířky.
@@ -310,7 +310,7 @@ Co musí doplnit nebo rozhodnout někdo jiný než vývojář. V návrhu zásad 
 **Vývojář (před ostrou kampaní):**
 
 - sledovat v logu Vercelu zamítnuté pokusy (`[lead] zamítnuto: …`). Kdyby spam prošel přes limity, přidat CAPTCHA (například Cloudflare Turnstile) a s právníkem probrat, co to znamená pro souhlas,
-- ověřit, že denní dotaz z keep-alive Supabase opravdu počítá jako aktivitu (předpoklad, z dokumentace neověřený),
+- **riziko keep-alive:** Supabase uvádí jen, že bezplatný projekt se pozastaví po týdnu neaktivity ([ceník](https://supabase.com/pricing), stejně v celé dokumentaci). Co se jako aktivita počítá, nedefinuje, takže nevím jistě, jestli denní volání z cronu stačí. **Den před odevzdáním (15. 10. 2026) otevři projekt v Supabase a zkontroluj, že neběží jako „Paused“.** Pozastavený projekt jde podle [dokumentace](https://supabase.com/docs/guides/platform/upgrading) do roka obnovit jedním tlačítkem v Supabase Studiu, data zůstanou,
 - [nasadit podle návodu](#nasazení-na-supabase-a-vercel) a projít kontrolu po nasazení.
 
 **Až stránku Clientelo převezme:**
@@ -319,7 +319,7 @@ Co musí doplnit nebo rozhodnout někdo jiný než vývojář. V návrhu zásad 
 
 **Po nasazení (vývojář):**
 
-- sladit adresu v `og:image` v `public/index.html` se skutečnou doménou. Je tam `https://etf-dvojcata-clientelo.vercel.app/og.png`, protože `etf-dvojcata.vercel.app` už používá cizí projekt. Pak odkaz zkontrolovat v [nástroji pro ladění sdílení od Facebooku](https://developers.facebook.com/tools/debug/).
+- ověřit, že projekt dostal adresu `https://etf-dvojcata-demo.vercel.app` (jinak změnit kanonickou adresu, `og:url` a `og:image` v `public/index.html`), a odkaz zkontrolovat v [nástroji pro ladění sdílení od Facebooku](https://developers.facebook.com/tools/debug/).
 
 ## Co v řešení chybí
 

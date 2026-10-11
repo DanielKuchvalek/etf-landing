@@ -301,6 +301,8 @@ try {
     });
     check('color-scheme jen světlé (tmavý režim iOS nic nepřebarví)', head.scheme === 'only light' && head.css.includes('only'), `${head.scheme} / ${head.css}`);
     check('favicon, ikona pro iOS a obrázek pro sdílení existují', head.files.every((f) => / 200 (image|text)/.test(f)), head.files.join(' | '));
+    const urls = await page.evaluate(() => [document.querySelector('link[rel=canonical]')?.href, document.querySelector('meta[property="og:url"]')?.content, document.querySelector('meta[property="og:image"]')?.content]);
+    check('kanonická adresa, og:url a og:image na https://etf-dvojcata-demo.vercel.app', urls[0] === 'https://etf-dvojcata-demo.vercel.app/' && urls[1] === urls[0] && urls[2] === urls[0] + 'og.png', urls.join(' | '));
     check('og:image: absolutní https adresa, 1200×630', /^https:\/\/[^/]+\/og\.png$/.test(head.ogImage) && head.ogSize === '1200×630', `${head.ogImage} ${head.ogSize}`);
     check('panel má aria-modal', head.modal === 'true');
     const robots = await page.$eval('meta[name=robots]', (m) => m.content).catch(() => null);
