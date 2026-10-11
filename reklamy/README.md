@@ -39,19 +39,19 @@ Nadpis a podnadpis první obrazovky se mají měnit, aby návštěvník hned vid
 
 **Alternativa:** Vercel rewrite podle parametru na dvě různé HTML stránky by se obešla bez JS. Nedoporučuju ji: obsah by byl dvakrát a při úpravách se rozjede. `[TODO]` Podporu podmínek podle query ve `vercel.json` jsem neověřoval.
 
-**Měření:** hodnota `v` (a `utm_content`) se ukládá ke každému eventu návštěvy, aby šel trychtýř porovnat podle verze. ID návštěvy se ani tady nespojuje s e-mailem.
+**Měření:** hodnota `v` se ukládá ke každé události i ke kontaktu, aby šel trychtýř porovnat podle verze. `utm_source` se ukládá jen jako detail příchodu, `utm_content` se neukládá (verzi reklamy nese `v`). ID návštěvy se s e-mailem nespojuje.
 
 **Odkazy z reklam:**
 
 ```
-https://[TODO doména]/?v=dvojce&utm_source=meta&utm_medium=paid_social&utm_campaign=etf-dvojcata&utm_content=a-dvojce
-https://[TODO doména]/?v=zacatek&utm_source=meta&utm_medium=paid_social&utm_campaign=etf-dvojcata&utm_content=b-zacatek
+https://etf-dvojcata-demo.vercel.app/?v=dvojce&utm_source=meta&utm_medium=paid_social&utm_campaign=etf-dvojcata&utm_content=a-dvojce
+https://etf-dvojcata-demo.vercel.app/?v=zacatek&utm_source=meta&utm_medium=paid_social&utm_campaign=etf-dvojcata&utm_content=b-zacatek
 ```
 
 ## Nastavení testu
 
 - Obě reklamy ve stejné kampani, stejné publikum, stejný rozpočet, souběžně.
-- **Hlavní metrika:** odeslané formuláře ÷ návštěvy, podle `utm_content`, z našeho měření.
+- **Hlavní metrika:** odeslané formuláře ÷ návštěvy podle verze úvodu (`v`), z našeho měření (`analytika.trychtyr`).
 - **Vedlejší metriky:**
   - míra prokliku (CTR) a cena za proklik z Meta,
   - kolik návštěv použilo „Najdi dvojče“.
