@@ -25,7 +25,7 @@ V jednom terminálu spusť server:
 ./scripts/serve.sh
 ```
 
-Server ([server.mjs](server.mjs)) servíruje `public/` a funkce z `api/` stejně jako Vercel, včetně hlaviček z `vercel.json` (CSP). Bez proměnných `SUPABASE_*` běží s podvrženou databází: PGlite (Postgres ve WASM) se skutečným `supabase/schema.sql`. Formulář i měření fungují, nic se nikam neposílá a na `/__dev/db` je vidět, co by se uložilo (jen z tohohle počítače). E-mailové domény končící `.invalid` se tváří, že nemají MX. U každé odpovědi 404 vypíše, kde soubor hledal a kdo se ptal. Se skutečnou databází: `node --env-file=.env.local scripts/server.mjs` (z kořene repa; obsah `.env.local` nikdy nevypisuj).
+Server ([server.mjs](server.mjs)) servíruje `public/` a funkce z `api/` stejně jako Vercel, včetně hlaviček z `vercel.json` (CSP). Bez proměnných `SUPABASE_*` běží s podvrženou databází: PGlite (Postgres ve WASM) se skutečným `supabase/schema.sql`. Formulář i měření fungují, nic se nikam neposílá a na `/__dev/db` je vidět, co by se uložilo, a na `/__dev/trychtyr` trychtýř ze `supabase/funnel.sql` (obojí jen z tohohle počítače). E-mailové domény končící `.invalid` se tváří, že nemají MX. U každé odpovědi 404 vypíše, kde soubor hledal a kdo se ptal. Se skutečnou databází: `node --env-file=.env.local scripts/server.mjs` (z kořene repa; obsah `.env.local` nikdy nevypisuj).
 
 V druhém terminálu:
 

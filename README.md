@@ -1,10 +1,25 @@
-# Srovnání ETF z NYSE – konverzní landing page
+# ETF dvojčata – konverzní landing page (zadání B)
 
-Řešení zadání B (konverzní landing page) do výběrového řízení na pozici Junior AI Developer.
+- **Stránka:** [etf-dvojcata-demo.vercel.app](https://etf-dvojcata-demo.vercel.app/) · reklama A „Dvojče“: [?v=dvojce](https://etf-dvojcata-demo.vercel.app/?v=dvojce) · reklama B „Začátek“: [?v=zacatek](https://etf-dvojcata-demo.vercel.app/?v=zacatek)
+- **Myšlenka:** americká ETF ti broker v Česku často nenabídne. Stránka k 7 známým ETF z NYSE jedním klepnutím ukáže evropské „dvojče“, které koupíš, a za e-mail dá PDF tahák s postupem nákupu.
+- **Očekávaná konverze** (návštěva → odeslaný formulář): 2–13 %, nejspíš kolem 6 %. Je to odhad, [výpočet po krocích](#očekávaná-konverze).
+- **Do ostrého spuštění chybí:** posouzení právníkem, údaje a e-mailová služba od správce, hotové obrázky reklam a ověření pravidel Meta pro finanční reklamu ([seznam](#před-spuštěním-kampaně)).
 
-- **Stránka:** [etf-dvojcata-demo.vercel.app](https://etf-dvojcata-demo.vercel.app/) (po nasazení; neoficiální ukázka, proto bez jména Clientela v adrese)
-- **Obě verze reklamy:** [reklamy/](reklamy/)
-- **Exporty konverzací s AI:** [ai-log/](ai-log/)
+## Jak to vyzkoušet za 2 minuty
+
+**Na mobilu:**
+
+1. Otevři [etf-dvojcata-demo.vercel.app/?v=dvojce](https://etf-dvojcata-demo.vercel.app/?v=dvojce). Nadpis navazuje na reklamu A, pro srovnání zkus [?v=zacatek](https://etf-dvojcata-demo.vercel.app/?v=zacatek).
+2. Klepni na lístek **VOO**. Otočí se a ukáže evropské dvojče VUAA, u kterých brokerů ho koupíš a kolik stojí ročně z 10 000 Kč. Pod lístky se objeví výzva k taháku.
+3. Klepni na „Chci tahák se všemi 7 dvojčaty“, zadej e-mail, zaškrtni souhlas a odešli. Přijde poděkování s tlačítkem „Otevřít tahák“ (PDF) a sdílením. Když stránku posuneš dál, objeví se dole lišta, která formulář otevře jako panel.
+4. Ochrana formuláře: zkus `x@mailinator.com` (jednorázová adresa) nebo `test@neexistuje.invalid` (doména nepřijímá poštu).
+
+**Kde je vidět trychtýř:**
+
+- **Na nasazené stránce** v Supabase: SQL Editor → `select * from analytika.trychtyr;` (příchod → otočení lístku → otevření formuláře → odeslání, zvlášť pro každou verzi úvodu).
+- **Lokálně bez Supabase:** `./scripts/serve.sh`, projdi stránku na http://127.0.0.1:8737/ a otevři http://127.0.0.1:8737/__dev/trychtyr. Server používá stejné SQL nad Postgresem v paměti (PGlite).
+
+Exporty konverzací s AI jsou v [ai-log/](ai-log/), reklamy v [reklamy/](reklamy/).
 
 ## Cílová skupina
 

@@ -169,6 +169,9 @@ try {
     check('měření: pokus, chyby a odeslání bez ID návštěvy', sBez.length >= 5 && sBez.every((e) => !('navsteva' in e)) && sBez.some((e) => e.udalost === 'odeslano'), sBez.map(key).join());
     check('databáze: události bez ID návštěvy dorazily a ID v nich není', db.events.filter((e) => e.navsteva === null).map(key).sort().join() === sBez.map(key).sort().join(), `${sBez.length} odesláno`);
     check('databáze: v událostech nikde e-mail', !JSON.stringify(db.events).includes('@'));
+    const tr = await fetch(`${BASE}__dev/trychtyr?json`).then((r) => r.json()).catch(() => []);
+    const krok4 = tr.find((r) => r.varianta === 'vychozi' && r.poradi === 4);
+    check('lokální trychtýř (/__dev/trychtyr): odeslání se počítá z kontaktů podle verze úvodu', !!krok4 && Number(krok4.navstev) === db.leads.filter((l) => l.varianta === 'vychozi').length && Number(krok4.navstev) >= 1 && krok4.navstev_postupne === null, JSON.stringify(krok4));
     check('měření: nikde e-mail', !JSON.stringify(evs).includes('@'));
     const names = evs.map((e) => e.udalost);
     for (const n of ['prichod', 'otoceni_listku', 'vyzva_zobrazena', 'cta', 'formular_otevren', 'formular_zacatek', 'odeslani_pokus', 'odeslani_chyba', 'odeslano']) check(`měření: událost ${n}`, names.includes(n));

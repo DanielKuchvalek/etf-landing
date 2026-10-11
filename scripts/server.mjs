@@ -1,7 +1,8 @@
 // Lokální server: statické soubory z public/ a funkce z api/ (stejně jako na Vercelu), včetně hlaviček z vercel.json.
 // Bez proměnných SUPABASE_* běží s podvrženou databází: PGlite (Postgres ve WASM) se skutečným supabase/schema.sql,
-// funkce volají jeho funkce stejně jako na Supabase. Na /__dev/db je vidět, co by se uložilo – jen z tohohle
-// počítače (ne z telefonu v síti) a jen přes adresu localhost / 127.0.0.1. Na Vercel se tenhle soubor nedostane.
+// funkce volají jeho funkce stejně jako na Supabase. Na /__dev/db je vidět, co by se uložilo, na /__dev/trychtyr
+// trychtýř z funnel.sql – jen z tohohle počítače (ne z telefonu v síti) a jen přes adresu localhost / 127.0.0.1.
+// Na Vercel se tenhle soubor nedostane.
 // Se skutečnou databází: node --env-file=../.env.local server.mjs  (klíče se nikdy nevypisují)
 // Použití: node server.mjs   (HOST=0.0.0.0 pro telefon ve stejné Wi-Fi, PORT=8737)
 import { createServer } from 'node:http';
@@ -115,6 +116,22 @@ async function devDb(req, res, url) {
   res.end(JSON.stringify({ leads: leads.rows, events: events.rows, limity: limity.rows, vypadek }));
 }
 
+// Trychtýř z analytika.trychtyr (stejné SQL jako v Supabase) jako textová tabulka, s ?json jako JSON.
+async function devFunnel(req, res, url) {
+  if (!devAllowed(req)) { res.writeHead(403).end(); return log(req, 403); }
+  const rows = (await db.query('select * from analytika.trychtyr')).rows;
+  if (url.searchParams.has('json')) {
+    res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
+    return res.end(JSON.stringify(rows));
+  }
+  const cols = ['varianta', 'poradi', 'krok', 'navstev', 'navstev_postupne', 'pct_z_prichodu', 'pct_z_predchoziho'];
+  const cell = (v) => (v == null ? '–' : String(v));
+  const width = cols.map((c) => Math.max(c.length, ...rows.map((r) => cell(r[c]).length)));
+  const line = (vals) => vals.map((v, i) => v.padEnd(width[i])).join('  ');
+  res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store' });
+  res.end([line(cols), ...rows.map((r) => line(cols.map((c) => cell(r[c]))))].join('\n') + '\n');
+}
+
 async function serveStatic(req, res, url) {
   let path;
   try { path = normalize(join(PUBLIC, decodeURIComponent(url.pathname))); } catch { res.writeHead(400).end(); return log(req, 400); }
@@ -138,6 +155,7 @@ createServer(async (req, res) => {
     const fn = url.pathname.match(/^\/api\/([a-z]+)$/);
     if (fn && FUNCTIONS.includes(fn[1])) return await callFunction(fn[1], req, res);
     if (fake && url.pathname === '/__dev/db') return await devDb(req, res, url);
+    if (fake && url.pathname === '/__dev/trychtyr') return await devFunnel(req, res, url);
     if (req.method !== 'GET' && req.method !== 'HEAD') { res.writeHead(405).end(); return log(req, 405); }
     return await serveStatic(req, res, url);
   } catch (e) {
