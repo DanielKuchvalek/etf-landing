@@ -67,10 +67,10 @@ h1{margin:26px 0 20px;font-size:62px;line-height:1.06;letter-spacing:-.02em;font
   <div class="card">
     <div class="top">evropské dvojče · ${sameIndex ? 'stejný' : 'podobný'} index</div>
     <div class="tk">${twin.burza.hodnota.ticker}<svg viewBox="0 0 120 50" preserveAspectRatio="none"><path d="M64 5C95 4 117 13 115 26c-2 13-29 20-58 19C26 44 4 36 5 24 6 12 31 4 70 7" fill="none" stroke="#141414" stroke-width="3" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></div>
-    <div class="ok">✓ koupíš u&nbsp;${brokers.join(', ')}</div>
+    <div class="ok">✓ v&nbsp;nabídce ${brokers.join(', ')}</div>
     <div class="fee">${kc(twin.ter)}&nbsp;Kč ročně z&nbsp;10&nbsp;000&nbsp;Kč <span>${voo.ticker}: ${kc(voo.ter)}&nbsp;Kč</span></div>
   </div>
-  <div class="stamp">Data od správců fondů, ověřeno ${date}</div>
+  <div class="stamp">Data od správců fondů a brokerů, ověřeno ${date}</div>
 </div>
 </div></body></html>`;
 

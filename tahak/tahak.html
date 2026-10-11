@@ -2,7 +2,7 @@
 <html lang="cs">
 <head>
 <meta charset="utf-8">
-<title>Tahák: 7 ETF z NYSE a jejich dvojčata, která koupíš z Česka</title>
+<title>Tahák: 7 ETF z NYSE a jejich evropská dvojčata z nabídky brokerů v Česku</title>
 <!--
   Zdroj PDF taháku. Generuje se příkazem: cd scripts && node pdf.mjs → public/tahak.pdf
   Údaje o fondech se při generování berou z data/etf.json (window.ETF_DATA), nic se nepřepisuje ručně.
@@ -61,8 +61,8 @@ ul.plain li{margin:0 0 1.5mm}
 
 <section class="page cover">
   <p class="kicker">ETF dvojčata · tahák</p>
-  <h1>7 ETF z NYSE a jejich <span class="hl">dvojčata</span>, která koupíš z Česka</h1>
-  <p class="muted">Co koupit a jak, když ti broker americké ETF nenabídne. Ke každému fondu jeho evropská verze, ISIN, poplatek a ověření, kde ji koupíš.</p>
+  <h1>7 ETF z NYSE a jejich evropská <span class="hl">dvojčata</span> z nabídky brokerů v Česku</h1>
+  <p class="muted">Co koupit a jak, když ti broker americké ETF nenabídne. Ke každému fondu jeho evropská verze, ISIN, poplatek a u kterých brokerů je ve veřejné nabídce.</p>
   <ul class="pairs" id="cover-pairs"></ul>
   <div class="note">
     <p><b>Jak tahák použít:</b> vyber si pár, opiš ticker nebo ISIN do aplikace brokera a postupuj podle kroků na straně „Jak koupit“.</p>
@@ -74,7 +74,7 @@ ul.plain li{margin:0 0 1.5mm}
   <p class="kicker">Proč dvojčata</p>
   <h2>Proč ti broker americká ETF často nenabídne</h2>
   <p>Fondy, které se v EU prodávají drobným investorům, potřebují dokument s klíčovými informacemi (KID). Americké fondy jako VOO ho nevydávají, a tak je brokeři často nenabízejí, nebo jen jako CFD. To je derivát, se kterým fond samotný nevlastníš.</p>
-  <p>Evropská dvojčata KID mají, takže je koupíš normálně. U VOO, SDY a AGG sledují stejný index jako originál, u ostatních podobný. Rozdíl je vždy u páru.</p>
+  <p>Evropská dvojčata KID mají, takže je brokeři nabízet můžou. U VOO, SDY a AGG sledují stejný index jako originál, u ostatních podobný. Rozdíl je vždy u páru.</p>
   <p class="small">Zdroj: nařízení (EU) č. 1286/2014 (PRIIPs), čl. 5 a 13; výklad ČNB a stránky brokerů, viz Zdroje na konci.</p>
   <h2 style="margin-top:5mm">Všech 7 párů</h2>
   <div id="cards"></div>
@@ -124,6 +124,7 @@ ul.plain li{margin:0 0 1.5mm}
   <h2>Než klikneš na „koupit“</h2>
   <ul class="plain">
     <li><b>Dvojče není vždy totéž co originál.</b> <span id="similar"></span></li>
+    <li><b>Ověř si dostupnost ve svém účtu.</b> Tahák vychází z veřejných seznamů produktů brokerů. Jestli fond koupíš ty, záleží na typu účtu a může se to změnit.</li>
     <li><b>Přečti si KID.</b> Broker ti ho musí dát před nákupem. Najdeš v něm rizika a náklady fondu.</li>
     <li><b>Hodnota v korunách se mění i s kurzem.</b> Fondy drží akcie a dluhopisy v cizích měnách.</li>
     <li><b>Daně tahák neřeší.</b> Jak se zdaňují zisky a dividendy, zjisti u daňového poradce.</li>
@@ -135,7 +136,7 @@ ul.plain li{margin:0 0 1.5mm}
     <p style="margin:0"><b>Trading 212:</b> převod měny 0,15 %. Platíš ho, když kupuješ v jiné měně, než je měna fondu.
       <a class="src" href="https://helpcentre.trading212.com/hc/en-us/articles/360018909758-What-is-the-FX-fee-Invest-Stocks-ISA">helpcentre.trading212.com/…/360018909758</a></p>
   </div>
-  <p class="small" style="margin-top:4mm"><b>Nejde o investiční doporučení.</b> Tahák ukazuje, jaké fondy existují, kolik stojí a kde je koupíš. Co koupíš, je tvoje rozhodnutí. Hodnota investice může klesnout a zpátky můžeš dostat méně, než vložíš.</p>
+  <p class="small" style="margin-top:4mm"><b>Nejde o investiční doporučení.</b> Tahák ukazuje, jaké fondy existují, kolik stojí a u kterých brokerů jsou v nabídce. Co koupíš, je tvoje rozhodnutí. Hodnota investice může klesnout a zpátky můžeš dostat méně, než vložíš.</p>
 
 </section>
 
@@ -188,7 +189,7 @@ ul.plain li{margin:0 0 1.5mm}
       li.appendChild(tk);
       var what = el('span', 'what');
       what.appendChild(el('span', 'ok', '✓ '));
-      what.appendChild(document.createTextNode('koupíš u ' + br.join(', ') + ' · ' + kc(u.ter.hodnota) + NB + 'Kč ročně z 10' + NB + '000' + NB + 'Kč'));
+      what.appendChild(document.createTextNode('v nabídce ' + br.join(', ') + ' · ' + kc(u.ter.hodnota) + NB + 'Kč ročně z 10' + NB + '000' + NB + 'Kč'));
       li.appendChild(what);
       cover.appendChild(li);
 

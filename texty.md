@@ -21,12 +21,12 @@ Všechny texty landing page v pořadí sekcí. Tykáme, bez rodu (žádné „hl
 ## 0. Titulek a náhled pro sdílení
 
 - **`<title>`:** Evropská dvojčata amerických ETF | ETF dvojčata
-- **Meta description a OG popis:** VOO, VT a dalších 5 ETF z USA ti broker v Česku často nenabídne. Najdi jejich evropská dvojčata, která koupíš.
+- **Meta description a OG popis:** VOO, VT a dalších 5 ETF z USA ti broker v Česku často nenabídne. Najdi jejich evropská dvojčata z nabídky brokerů v Česku.
   `[r: PRIIPs]` `[d: * › ucits_obdoba.kde_koupit.xtb_cz]`
 - **Obrázek pro sdílení (og:image, 1200×630, `public/og.png`, generuje `scripts/obrazky.mjs`):**
   - vlevo: logo, nadpis „Najdi evropské dvojče k VOO, VT a dalším ETF z USA“ (fix na „dvojče“), podnadpis „Americká ti broker často nenabídne, evropská ano.“
-  - vpravo: přeškrtnuté VOO → lístek s dvojčetem VUAA v kroužku, „✓ koupíš u XTB, Trading 212“, „7 Kč ročně z 10 000 Kč“, „VOO: 3 Kč“, pod ním „Data od správců fondů, ověřeno 10. 10. 2026“. Čísla a brokery skript bere z `data/etf.json`. `[d: VOO › ucits_obdoba.ter]` `[d: VOO › ter]` `[d: VOO › ucits_obdoba.kde_koupit]`
-  - alt: ETF dvojčata: k americkému VOO jeho evropské dvojče VUAA, u kterých brokerů ho koupíš a kolik stojí.
+  - vpravo: přeškrtnuté VOO → lístek s dvojčetem VUAA v kroužku, „✓ v nabídce XTB, Trading 212“, „7 Kč ročně z 10 000 Kč“, „VOO: 3 Kč“, pod ním „Data od správců fondů a brokerů, ověřeno 10. 10. 2026“. Čísla a brokery skript bere z `data/etf.json`. `[d: VOO › ucits_obdoba.ter]` `[d: VOO › ter]` `[d: VOO › ucits_obdoba.kde_koupit]`
+  - alt: ETF dvojčata: k americkému VOO jeho evropské dvojče VUAA, u kterých brokerů je v nabídce a kolik stojí.
 
 ---
 
@@ -67,7 +67,7 @@ Nadpis a podnadpis se mění podle parametru v URL (viz `reklamy/README.md`). Zb
 - **Nápověda vedle popisku:** Klepni a lístek otoč.
 - **Lístky (7).** Klepnutí lístek otočí, otočený je vždy jen jeden a druhé klepnutí ho vrátí. Bez JS jsou lístky odkazy na karty párů.
 
-| Přední strana | Zadní strana: štítek | Dvojče (v kroužku) | Kde koupit | Poplatek |
+| Přední strana | Zadní strana: štítek | Dvojče (v kroužku) | Kde ho najdeš | Poplatek |
 |---|---|---|---|---|
 | VOO · S&P 500 | dvojče · stejný index | VUAA | ✓ XTB, Trading 212 | 7 Kč ročně z 10 000 Kč |
 | VTI · celé USA | obdoba · podobný index | SXR4 | ✓ XTB, Trading 212, Degiro | 3 Kč ročně z 10 000 Kč |
@@ -95,12 +95,12 @@ Podrobnosti k otočenému lístku se objeví pod lístky a výzvou, bez přechod
 1. **Nadpis:** Evropské dvojče {originál} je {ticker dvojčete} (u VTI „Nejbližší evropská obdoba“)
 2. **Přeškrtnutý originál → dvojče v kroužku** (ručně kreslená šipka a kroužek)
 3. **Celý název dvojčete** `[d: X › ucits_obdoba.nazev]`
-4. **Kde koupit:** zeleně „✓ Ověřili jsme ho u …“, pak „Hledej ticker …“
+4. **Kde ho najdeš:** zeleně „✓ Je ve veřejné nabídce …“, pak „Hledej ticker …“
 5. **Poplatek:** tučně „N Kč ročně z každých 10 000 Kč“, za tím TER v % a originál
 6. **Index:** odznak „Stejný index“, nebo „Podobný, ne stejný“, a rozdíl
 7. **Dividendy** (u AGG Výnosy)
 
-U „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnost ověřili na jejich webu (`[d: X › ucits_obdoba.kde_koupit]`). Poplatek nikde nezvýrazňujeme žlutě.
+U „Kde ho najdeš“ jmenujeme všechny brokery, u kterých je fond ve veřejném seznamu produktů na jejich webu (nákup v konkrétním účtu ověřený není, proto „v nabídce“, ne „koupíš“) (`[d: X › ucits_obdoba.kde_koupit]`). Poplatek nikde nezvýrazňujeme žlutě.
 
 ### VOO → VUAA
 
@@ -109,7 +109,7 @@ U „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnost ověř
 - Stejný index: S&P 500. `[d: VOO › index]` `[d: VOO › ucits_obdoba.index]` `[d: VOO › ucits_obdoba.rozdil_oproti_originalu]`
 - Poplatek **7 Kč ročně z každých 10 000 Kč** (0,07 %). VOO má 0,03 % (3 Kč). `[d: VOO › ucits_obdoba.ter]` `[d: VOO › ter]`
 - Dividendy nevyplácí, investuje je zpátky do fondu. VOO je vyplácí čtvrtletně. `[d: VOO › ucits_obdoba.dividendova_politika]` `[d: VOO › dividendova_politika]`
-- ✓ Ověřili jsme ho u XTB a Trading 212. Hledej ticker VUAA, v eurech. `[d: VOO › ucits_obdoba.burza]` `[d: VOO › ucits_obdoba.kde_koupit.xtb_cz]` `[d: VOO › ucits_obdoba.kde_koupit.trading212]`
+- ✓ Je ve veřejné nabídce XTB a Trading 212. Hledej ticker VUAA, v eurech. `[d: VOO › ucits_obdoba.burza]` `[d: VOO › ucits_obdoba.kde_koupit.xtb_cz]` `[d: VOO › ucits_obdoba.kde_koupit.trading212]`
 
 ### VTI → SXR4
 
@@ -119,7 +119,7 @@ U „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnost ověř
 - Podobný, ne stejný index. SXR4 sleduje MSCI USA a drží 515 titulů, VTI celý americký trh s 3 507 akciemi. Přesné dvojče celého trhu jsme mezi evropskými fondy nenašli. `[d: VTI › ucits_obdoba.index]` `[d: VTI › ucits_obdoba.pocet_titulu]` `[d: VTI › index]` `[d: VTI › pocet_titulu]` `[d: VTI › ucits_obdoba.rozdil_oproti_originalu]`
 - Poplatek **3 Kč ročně z každých 10 000 Kč** (0,03 %). Stejně jako u VTI. `[d: VTI › ucits_obdoba.ter]` `[d: VTI › ter]`
 - Dividendy nevyplácí, investuje je zpátky do fondu. VTI je vyplácí čtvrtletně. `[d: VTI › ucits_obdoba.dividendova_politika]` `[d: VTI › dividendova_politika]`
-- ✓ Ověřili jsme ho u XTB, Trading 212 a Degira. Hledej ticker SXR4, v eurech. `[d: VTI › ucits_obdoba.burza]` `[d: VTI › ucits_obdoba.kde_koupit.xtb_cz]` `[d: VTI › ucits_obdoba.kde_koupit.trading212]` `[d: VTI › ucits_obdoba.kde_koupit.degiro]`
+- ✓ Je ve veřejné nabídce XTB, Trading 212 a Degira. Hledej ticker SXR4, v eurech. `[d: VTI › ucits_obdoba.burza]` `[d: VTI › ucits_obdoba.kde_koupit.xtb_cz]` `[d: VTI › ucits_obdoba.kde_koupit.trading212]` `[d: VTI › ucits_obdoba.kde_koupit.degiro]`
 
 ### VT → VWCE
 
@@ -128,7 +128,7 @@ U „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnost ověř
 - Podobný, ne stejný index. VWCE sleduje FTSE All-World, tedy velké a střední firmy z celého světa (3 784 akcií). VT sleduje širší FTSE Global All Cap (10 088 akcií). `[d: VT › ucits_obdoba.index]` `[d: VT › ucits_obdoba.pocet_titulu]` `[d: VT › index]` `[d: VT › pocet_titulu]` `[d: VT › ucits_obdoba.rozdil_oproti_originalu]` (popis „velké a střední firmy“ je z cíle fondu na stránce Vanguardu)
 - Poplatek **14 Kč ročně z každých 10 000 Kč** (0,14 %). VT má 0,06 % (6 Kč). `[d: VT › ucits_obdoba.ter]` `[d: VT › ter]`
 - Dividendy nevyplácí, investuje je zpátky do fondu. VT je vyplácí čtvrtletně. `[d: VT › ucits_obdoba.dividendova_politika]` `[d: VT › dividendova_politika]`
-- ✓ Ověřili jsme ho u XTB, Trading 212 a Degira. Hledej ticker VWCE, v eurech. `[d: VT › ucits_obdoba.burza]` `[d: VT › ucits_obdoba.kde_koupit.xtb_cz]` `[d: VT › ucits_obdoba.kde_koupit.trading212]` `[d: VT › ucits_obdoba.kde_koupit.degiro]`
+- ✓ Je ve veřejné nabídce XTB, Trading 212 a Degira. Hledej ticker VWCE, v eurech. `[d: VT › ucits_obdoba.burza]` `[d: VT › ucits_obdoba.kde_koupit.xtb_cz]` `[d: VT › ucits_obdoba.kde_koupit.trading212]` `[d: VT › ucits_obdoba.kde_koupit.degiro]`
 
 ### VWO → VFEA
 
@@ -137,7 +137,7 @@ U „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnost ověř
 - Podobný, ne stejný index. VFEA sleduje FTSE Emerging, tedy velké a střední firmy z rozvíjejících se trhů (2 306 akcií). VWO sleduje širší index (6 348 akcií). `[d: VWO › ucits_obdoba.index]` `[d: VWO › ucits_obdoba.pocet_titulu]` `[d: VWO › pocet_titulu]` `[d: VWO › ucits_obdoba.rozdil_oproti_originalu]`
 - Poplatek **17 Kč ročně z každých 10 000 Kč** (0,17 %). VWO má 0,06 % (6 Kč). `[d: VWO › ucits_obdoba.ter]` `[d: VWO › ter]`
 - Dividendy nevyplácí, investuje je zpátky do fondu. VWO je vyplácí čtvrtletně. `[d: VWO › ucits_obdoba.dividendova_politika]` `[d: VWO › dividendova_politika]`
-- ✓ Ověřili jsme ho u XTB a Trading 212. Hledej ticker VFEA, v eurech. `[d: VWO › ucits_obdoba.burza]` `[d: VWO › ucits_obdoba.kde_koupit.xtb_cz]` `[d: VWO › ucits_obdoba.kde_koupit.trading212]`
+- ✓ Je ve veřejné nabídce XTB a Trading 212. Hledej ticker VFEA, v eurech. `[d: VWO › ucits_obdoba.burza]` `[d: VWO › ucits_obdoba.kde_koupit.xtb_cz]` `[d: VWO › ucits_obdoba.kde_koupit.trading212]`
 
 ### SDY → SPYD
 
@@ -146,7 +146,7 @@ U „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnost ověř
 - Stejný index: S&P High Yield Dividend Aristocrats, tedy firmy, které dlouhodobě zvyšují dividendu. `[d: SDY › index]` `[d: SDY › ucits_obdoba.index]` `[d: SDY › typ]` (popis indexu je ze stránky SDY u State Street)
 - Poplatek **35 Kč ročně z každých 10 000 Kč** (0,35 %). Stejně jako u SDY. `[d: SDY › ucits_obdoba.ter]` `[d: SDY › ter]`
 - Dividendy vyplácí čtvrtletně, stejně jako SDY. `[d: SDY › ucits_obdoba.dividendova_politika]` `[d: SDY › dividendova_politika]`
-- ✓ Ověřili jsme ho u XTB a Trading 212. Hledej ticker SPYD, v eurech. `[d: SDY › ucits_obdoba.burza]` `[d: SDY › ucits_obdoba.kde_koupit.xtb_cz]` `[d: SDY › ucits_obdoba.kde_koupit.trading212]`
+- ✓ Je ve veřejné nabídce XTB a Trading 212. Hledej ticker SPYD, v eurech. `[d: SDY › ucits_obdoba.burza]` `[d: SDY › ucits_obdoba.kde_koupit.xtb_cz]` `[d: SDY › ucits_obdoba.kde_koupit.trading212]`
 
 ### VGT → QDVE
 
@@ -155,7 +155,7 @@ U „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnost ověř
 - Podobný, ne stejný index. QDVE drží jen technologické firmy z indexu S&P 500 (75 titulů), VGT širší výběr (318 akcií). `[d: VGT › ucits_obdoba.index]` `[d: VGT › ucits_obdoba.pocet_titulu]` `[d: VGT › pocet_titulu]` `[d: VGT › ucits_obdoba.rozdil_oproti_originalu]`
 - Poplatek **15 Kč ročně z každých 10 000 Kč** (0,15 %). VGT má 0,09 % (9 Kč). `[d: VGT › ucits_obdoba.ter]` `[d: VGT › ter]`
 - Dividendy nevyplácí, investuje je zpátky do fondu. VGT je vyplácí čtvrtletně. `[d: VGT › ucits_obdoba.dividendova_politika]` `[d: VGT › dividendova_politika]`
-- ✓ Ověřili jsme ho u XTB, Trading 212 a Degira. Hledej ticker QDVE, v eurech. `[d: VGT › ucits_obdoba.burza]` `[d: VGT › ucits_obdoba.kde_koupit.xtb_cz]` `[d: VGT › ucits_obdoba.kde_koupit.trading212]` `[d: VGT › ucits_obdoba.kde_koupit.degiro]`
+- ✓ Je ve veřejné nabídce XTB, Trading 212 a Degira. Hledej ticker QDVE, v eurech. `[d: VGT › ucits_obdoba.burza]` `[d: VGT › ucits_obdoba.kde_koupit.xtb_cz]` `[d: VGT › ucits_obdoba.kde_koupit.trading212]` `[d: VGT › ucits_obdoba.kde_koupit.degiro]`
 
 ### AGG → IUAA
 
@@ -164,25 +164,25 @@ U „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnost ověř
 - Stejný index: Bloomberg US Aggregate Bond, tedy americké dluhopisy. `[d: AGG › index]` `[d: AGG › ucits_obdoba.index]` `[d: AGG › typ]`
 - Poplatek **25 Kč ročně z každých 10 000 Kč** (0,25 %). AGG má 0,03 % (3 Kč). `[d: AGG › ucits_obdoba.ter]` `[d: AGG › ter]`
 - Výnosy nevyplácí, investuje je zpátky do fondu. AGG je vyplácí měsíčně. `[d: AGG › ucits_obdoba.dividendova_politika]` `[d: AGG › dividendova_politika]`
-- ✓ Ověřili jsme ho u XTB a Trading 212. Hledej ticker IUAA, v dolarech. `[d: AGG › ucits_obdoba.burza]` `[d: AGG › ucits_obdoba.kde_koupit.xtb_cz]` `[d: AGG › ucits_obdoba.kde_koupit.trading212]`
+- ✓ Je ve veřejné nabídce XTB a Trading 212. Hledej ticker IUAA, v dolarech. `[d: AGG › ucits_obdoba.burza]` `[d: AGG › ucits_obdoba.kde_koupit.xtb_cz]` `[d: AGG › ucits_obdoba.kde_koupit.trading212]`
 
 ---
 
 ## 3. Všech 7 párů
 
 - **H2:** Všech 7 párů na jednom místě
-- **Podnadpis:** Přeškrtnutý americký originál, vedle evropské dvojče, které koupíš z Česka. Poplatek je roční poplatek fondu.
-- **Karty:** žlutým fixem je zvýrazněné „✓ koupíš u …“, poplatek je bez zvýraznění a v korunách. `[d: * › ucits_obdoba.kde_koupit]` `[výpočet: TER × 100]` `[d: * › ter]` `[d: * › ucits_obdoba.rozdil_oproti_originalu]`
+- **Podnadpis:** Přeškrtnutý americký originál, vedle evropské dvojče z nabídky brokerů v Česku. Poplatek je roční poplatek fondu.
+- **Karty:** žlutým fixem je zvýrazněné „✓ v nabídce …“, poplatek je bez zvýraznění a v korunách. `[d: * › ucits_obdoba.kde_koupit]` `[výpočet: TER × 100]` `[d: * › ter]` `[d: * › ucits_obdoba.rozdil_oproti_originalu]`
 
 | Karta | Zvýrazněné | Poplatek | Pod tím |
 |---|---|---|---|
-| ~~VOO~~ → VUAA | ✓ koupíš u XTB, Trading 212 | 7 Kč ročně z 10 000 Kč (VOO: 3 Kč) | S&P 500 · stejný index |
-| ~~VTI~~ → SXR4 | ✓ koupíš u XTB, Trading 212, Degiro | 3 Kč ročně z 10 000 Kč (VTI: 3 Kč) | celé USA · podobný index |
-| ~~VT~~ → VWCE | ✓ koupíš u XTB, Trading 212, Degiro | 14 Kč ročně z 10 000 Kč (VT: 6 Kč) | celý svět · podobný index |
-| ~~VWO~~ → VFEA | ✓ koupíš u XTB, Trading 212 | 17 Kč ročně z 10 000 Kč (VWO: 6 Kč) | rozvíjející se trhy · podobný index |
-| ~~SDY~~ → SPYD | ✓ koupíš u XTB, Trading 212 | 35 Kč ročně z 10 000 Kč (SDY: 35 Kč) | dividendy · stejný index |
-| ~~VGT~~ → QDVE | ✓ koupíš u XTB, Trading 212, Degiro | 15 Kč ročně z 10 000 Kč (VGT: 9 Kč) | technologie · podobný index |
-| ~~AGG~~ → IUAA | ✓ koupíš u XTB, Trading 212 | 25 Kč ročně z 10 000 Kč (AGG: 3 Kč) | dluhopisy · stejný index |
+| ~~VOO~~ → VUAA | ✓ v nabídce XTB, Trading 212 | 7 Kč ročně z 10 000 Kč (VOO: 3 Kč) | S&P 500 · stejný index |
+| ~~VTI~~ → SXR4 | ✓ v nabídce XTB, Trading 212, Degiro | 3 Kč ročně z 10 000 Kč (VTI: 3 Kč) | celé USA · podobný index |
+| ~~VT~~ → VWCE | ✓ v nabídce XTB, Trading 212, Degiro | 14 Kč ročně z 10 000 Kč (VT: 6 Kč) | celý svět · podobný index |
+| ~~VWO~~ → VFEA | ✓ v nabídce XTB, Trading 212 | 17 Kč ročně z 10 000 Kč (VWO: 6 Kč) | rozvíjející se trhy · podobný index |
+| ~~SDY~~ → SPYD | ✓ v nabídce XTB, Trading 212 | 35 Kč ročně z 10 000 Kč (SDY: 35 Kč) | dividendy · stejný index |
+| ~~VGT~~ → QDVE | ✓ v nabídce XTB, Trading 212, Degiro | 15 Kč ročně z 10 000 Kč (VGT: 9 Kč) | technologie · podobný index |
+| ~~AGG~~ → IUAA | ✓ v nabídce XTB, Trading 212 | 25 Kč ročně z 10 000 Kč (AGG: 3 Kč) | dluhopisy · stejný index |
 
 - **Tlačítko pod kartami:** Chci tahák s ISINy a postupem nákupu. Otevře formulář v panelu na místě, nepřeskakuje dolů.
 
@@ -200,7 +200,7 @@ U „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnost ověř
 ## 5. Odkud máme data
 
 - **H2:** Odkud máme data
-- **Text:** Všechno jsme vzali přímo z webů správců fondů (Vanguard, iShares, State Street). Kde koupit, jsme ověřili na webech brokerů (XTB, Trading 212, Degiro). Stav k 10. 10. 2026.
+- **Text:** Všechno jsme vzali přímo z webů správců fondů (Vanguard, iShares, State Street). Jestli je fond v nabídce, jsme ověřili ve veřejných seznamech produktů brokerů (XTB, Trading 212, Degiro). Stav k 10. 10. 2026. **Jestli ho koupíš ve svém účtu, si ověř přímo v aplikaci brokera:** nabídka se může lišit podle typu účtu a mezitím se může změnit.
   `[d: meta.overeno_dne]` `[d: meta.brokeri_overeno_dne]` `[d: * › *.zdroj]`
 - **Text:** Poplatky i velikost fondů se mění. Před nákupem si je zkontroluj v dokumentu KID u svého brokera.
 - **Rozbalovací odkaz:** Zdroje ke každému údaji
@@ -218,7 +218,7 @@ U „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnost ověř
   - Poplatky originálů a dvojčat vedle sebe. `[d: * › ter]` `[d: * › ucits_obdoba.ter]`
   - Postup nákupu u XTB a Trading 212 krok za krokem. (Podle nápověd brokerů, viz tahak.md.)
 - **Náhled taháku nad odrážkami:** horní část titulní strany PDF, pootočená o 1,5° a dole rozmazaná. Generuje ji `scripts/pdf.mjs` z PDF.
-  - alt: Náhled první strany taháku: sedm párů ETF, u každého fajfka, kde ho koupíš, a poplatek v korunách.
+  - alt: Náhled první strany taháku: sedm párů ETF, u každého fajfka, u kterých brokerů je v nabídce, a poplatek v korunách.
 - **Pole:**
   - popisek: Tvůj e-mail
   - placeholder: jmeno@email.cz

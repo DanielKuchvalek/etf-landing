@@ -62,9 +62,9 @@ for e in data["etf"]:
     card_html = card.group(0) if card else ""
     card_text = plain(card_html)
     fix = re.search(r'<span class="fix">(.*?)</span>', card_html, re.S)
-    card_missing = [x for x in [twin, f"{kc(u['ter']['hodnota'])} Kč ročně z 10 000 Kč", "koupíš u " + ", ".join(broker_names)] if x not in card_text]
-    if "<mark" in card_html or not fix or "Kč" in plain(fix.group(1)) or "koupíš u" not in plain(fix.group(1)):
-        card_missing.append("žlutě má být „koupíš u …“, ne poplatek")
+    card_missing = [x for x in [twin, f"{kc(u['ter']['hodnota'])} Kč ročně z 10 000 Kč", "v nabídce " + ", ".join(broker_names)] if x not in card_text]
+    if "<mark" in card_html or not fix or "Kč" in plain(fix.group(1)) or "v nabídce" not in plain(fix.group(1)):
+        card_missing.append("žlutě má být „v nabídce …“, ne poplatek")
 
     # zadní strana lístku: dvojče, kde koupit, poplatek v Kč, stejný/podobný index
     card_back = re.search(rf'<a class="listek[^"]*"[^>]*data-etf="{tk}".*?</a>', page, re.S)

@@ -69,7 +69,7 @@ U peněz to nesmí působit dětsky. Hravé jsou jen ozdoby, čísla, zdroje a u
   - zelená fajfka `#177A41`,
   - červená `#C62F3B` jen na přeškrtnutí originálu.
 - **Žlutý fix** je hlavní prvek:
-  - nepravidelný tah (inline SVG) přes klíčová slova v nadpisech a přes „koupíš u …“ na kartách párů,
+  - nepravidelný tah (inline SVG) přes klíčová slova v nadpisech a přes „v nabídce …“ na kartách párů,
   - nikdy přes poplatek, aby oko jako první nevidělo „dvojče je dražší“.
 - **Lístky z taháku** místo tlačítek výběru:
   - pootočené nejvýš o 1,5°, páska jen u každého druhého,

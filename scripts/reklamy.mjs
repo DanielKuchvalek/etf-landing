@@ -82,7 +82,7 @@ h1{font-size:${s.h1}px}
     <div class="orig">${voo.ticker}</div>
     ${ARROW_DOWN}
     <div class="card twin"><span class="tk"><span class="fixbg"></span>${twin}${RING}</span>
-      <div class="line1 ok">evropské dvojče · koupíš z&nbsp;Česka</div></div>
+      <div class="line1 ok">evropské dvojče · v&nbsp;nabídce brokerů v&nbsp;Česku</div></div>
     <div class="line2 muted">${indexText}</div>
   </div>
   <div class="group offer-group">${OFFER}</div>
@@ -117,7 +117,7 @@ const FEED = { w: 1080, h: 1350, area: { t: 70, b: 70, l: 80, r: 80 } };
 const STORY = { w: 1080, h: 1920, area: { t: 270, b: 450, l: 65, r: 65 } }; // bezpečná zóna 9 : 16
 const OUT = [
   ['a-dvojce-feed.png', adA, FEED, { gap: 22, logo: 34, h1: 80, sub: 54, orig: 78, arrow: 76, tk: 176, pad: 24, line: 40, small: 34, offer: 42, disc: 26 }],
-  ['a-dvojce-stories.png', adA, STORY, { spread: true, gap: 22, logo: 38, h1: 86, sub: 60, orig: 88, arrow: 84, tk: 196, pad: 26, line: 44, small: 38, offer: 46, disc: 28 }],
+  ['a-dvojce-stories.png', adA, STORY, { spread: true, gap: 20, logo: 36, h1: 86, sub: 58, orig: 84, arrow: 76, tk: 190, pad: 24, line: 38, small: 36, offer: 44, disc: 26 }],
   ['b-zacatek-feed.png', adB, FEED, { gap: 18, logo: 32, h1: 86, sub: 42, row: 38, line: 36, offer: 40, disc: 24 }],
   ['b-zacatek-stories.png', adB, STORY, { spread: true, gap: 16, logo: 36, h1: 96, sub: 44, row: 40, line: 38, offer: 42, disc: 26 }],
 ];

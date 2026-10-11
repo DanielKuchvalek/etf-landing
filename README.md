@@ -1,7 +1,7 @@
 # ETF dvojčata – konverzní landing page (zadání B)
 
 - **Živá stránka** (nasazeno 11. 10. 2026): [etf-dvojcata-demo.vercel.app](https://etf-dvojcata-demo.vercel.app/) · reklama A „Dvojče“: [?v=dvojce](https://etf-dvojcata-demo.vercel.app/?v=dvojce) · reklama B „Začátek“: [?v=zacatek](https://etf-dvojcata-demo.vercel.app/?v=zacatek)
-- **Myšlenka:** americká ETF ti broker v Česku často nenabídne. Stránka k 7 známým ETF z NYSE jedním klepnutím ukáže evropské „dvojče“, které koupíš, a za e-mail dá PDF tahák s postupem nákupu.
+- **Myšlenka:** americká ETF ti broker v Česku často nenabídne. Stránka k 7 známým ETF z NYSE jedním klepnutím ukáže evropské „dvojče“ z nabídky brokerů v Česku a za e-mail dá PDF tahák s postupem nákupu.
 - **Očekávaná konverze** (návštěva → odeslaný formulář): 2–13 %, nejspíš kolem 6 %. Je to odhad, [výpočet po krocích](#očekávaná-konverze).
 - **Do ostrého spuštění chybí:** posouzení právníkem, rozhodnutí o double opt-inu, údaje a e-mailová služba od správce, ověření pravidel Meta pro finanční reklamu a vlastní doména ([seznam](#před-spuštěním-kampaně)).
 
@@ -10,7 +10,7 @@
 **Na mobilu:**
 
 1. Otevři [etf-dvojcata-demo.vercel.app/?v=dvojce](https://etf-dvojcata-demo.vercel.app/?v=dvojce). Nadpis navazuje na reklamu A, pro srovnání zkus [?v=zacatek](https://etf-dvojcata-demo.vercel.app/?v=zacatek).
-2. Klepni na lístek **VOO**. Otočí se a ukáže evropské dvojče VUAA, u kterých brokerů ho koupíš a kolik stojí ročně z 10 000 Kč. Pod lístky se objeví výzva k taháku.
+2. Klepni na lístek **VOO**. Otočí se a ukáže evropské dvojče VUAA, u kterých brokerů je v nabídce a kolik stojí ročně z 10 000 Kč. Pod lístky se objeví výzva k taháku.
 3. Klepni na „Chci tahák s postupem nákupu“, zadej e-mail, zaškrtni souhlas a odešli. Přijde poděkování s tlačítkem „Otevřít tahák“ (PDF) a sdílením. Když stránku posuneš dál, objeví se dole lišta, která formulář otevře jako panel.
 4. Ochrana formuláře: zkus `x@mailinator.com` (jednorázová adresa) nebo `test@neexistuje.invalid` (doména nepřijímá poštu).
 
@@ -41,9 +41,9 @@ Exporty konverzací s AI jsou v [ai-log/](ai-log/), reklamy v [reklamy/](reklamy
 
 ## Lead magnet a moment žádosti o kontakt
 
-**Co návštěvník dostane:** PDF „Tahák: 7 ETF z NYSE a jejich dvojčata, která koupíš z Česka“ ([public/tahak.pdf](public/tahak.pdf), 8 stran A5): ISINy, poplatky, kde koupit a postup nákupu u XTB a Trading 212 krok za krokem, se zdrojem u každého kroku. Generuje se z [tahak/tahak.html](tahak/tahak.html) a dat, takže po změně dat stačí přegenerovat.
+**Co návštěvník dostane:** PDF „Tahák: 7 ETF z NYSE a jejich evropská dvojčata z nabídky brokerů v Česku“ ([public/tahak.pdf](public/tahak.pdf), 8 stran A5): ISINy, poplatky, kde koupit a postup nákupu u XTB a Trading 212 krok za krokem, se zdrojem u každého kroku. Generuje se z [tahak/tahak.html](tahak/tahak.html) a dat, takže po změně dat stačí přegenerovat.
 
-**Hodnota je vidět ještě před formulářem.** Lístky se 7 ETF jsou na první obrazovce. Klepnutím se lístek otočí a ukáže evropské dvojče, u kterých brokerů ho koupíš a kolik stojí ročně z 10 000 Kč. Pod lístky se ukážou podrobnosti (index, poplatek proti originálu, dividendy). Zdarma, bez e-mailu. Pod podnadpisem je hned na první obrazovce i řádek „Tahák zdarma v PDF: ISINy a postup nákupu krok za krokem.“, aby stránka navázala na nabídku z obou reklam ještě před otočením lístku. Dělba je jasná: na stránce návštěvník vidí, **co** koupit, v taháku dostane, **jak** to udělat.
+**Hodnota je vidět ještě před formulářem.** Lístky se 7 ETF jsou na první obrazovce. Klepnutím se lístek otočí a ukáže evropské dvojče, u kterých brokerů je v nabídce a kolik stojí ročně z 10 000 Kč. Pod lístky se ukážou podrobnosti (index, poplatek proti originálu, dividendy). Zdarma, bez e-mailu. Pod podnadpisem je hned na první obrazovce i řádek „Tahák zdarma v PDF: ISINy a postup nákupu krok za krokem.“, aby stránka navázala na nabídku z obou reklam ještě před otočením lístku. Dělba je jasná: na stránce návštěvník vidí, **co** koupit, v taháku dostane, **jak** to udělat.
 
 **Kdy žádáme o kontakt:**
 
@@ -67,8 +67,8 @@ Texty všech částí jsou v [texty.md](texty.md).
 ## Pořadí sekcí a zdůvodnění
 
 1. **Úvod navazující na reklamu a rovnou lístky s ETF.** Návštěvník má jen pár sekund. První obrazovka musí zopakovat slib reklamy a nabídnout akci bez scrollování. Nadpis se mění podle toho, ze které reklamy návštěvník přišel (viz [reklamy/](reklamy/)).
-2. **Výsledek a výzva k taháku.** Otočený lístek ukáže dvojče, kde ho koupíš a kolik stojí: okamžitá hodnota zdarma. Výzva se objeví hned pod lístky ve chvíli, kdy je zájem nejvyšší, a formulář se rozbalí na místě. Pod ní jsou podrobnosti (index, poplatek proti originálu, dividendy).
-3. **Přehled všech 7 párů v kompaktních kartách.** Pro ty, kdo chtějí vidět celek, než se rozhodnou. Karty zvýrazňují „✓ koupíš u …“ a poplatek ukazují lidsky v korunách; ISINy a postup zůstávají v taháku.
+2. **Výsledek a výzva k taháku.** Otočený lístek ukáže dvojče, u kterých brokerů je v nabídce a kolik stojí: okamžitá hodnota zdarma. Výzva se objeví hned pod lístky ve chvíli, kdy je zájem nejvyšší, a formulář se rozbalí na místě. Pod ní jsou podrobnosti (index, poplatek proti originálu, dividendy).
+3. **Přehled všech 7 párů v kompaktních kartách.** Pro ty, kdo chtějí vidět celek, než se rozhodnou. Karty zvýrazňují „✓ v nabídce …“ a poplatek ukazují lidsky v korunách; ISINy a postup zůstávají v taháku.
 4. **Proč ti broker americká ETF často nenabídne (2–3 věty).** Vysvětlení, proč dvojčata vůbec potřebujeme. Až tady, protože ten, kdo přišel z reklamy „Dvojče“, už důvod zná z úvodu a nechce ho číst před výsledkem.
 5. **Důvěra: zdroje dat s datem a upozornění, že nejde o investiční doporučení.** Těsně před formulářem odpovídá na otázku „můžu tomu věřit?“. Krátká verze (zdroj, datum, „Není to investiční doporučení“) je i hned pod lístky.
 6. **Formulář (e-mail a souhlas).** Pro ty, kdo dočetli až sem. Výzvy ze sekce 2 a z lišty dole sem nevedou, otevírají formulář na místě: skok přes tři sekce stojí konverze a návštěvník ztratí kontext. Tuhle změnu oproti původnímu návrhu navrhla AI (Claude Code).
@@ -87,7 +87,7 @@ Obě pro Meta (Facebook a Instagram) na mobilu: statický obrázek 4 : 5 do feed
 |---|---|---|
 | Úhel | zklamání: broker nenabízí VOO, o kterém slyšeli | nejistota: fondy teprve poznávají |
 | Primární text začíná | „Broker ti nenabídl VOO? Není to chyba.“ | „Začínáš s ETF? Tady je 7 známých fondů z USA…“ |
-| Obrázek | VOO → VUAA, „evropské dvojče · koupíš z Česka“ | sešit se 7 typy ETF a tickery, nic nezakroužkované |
+| Obrázek | VOO → VUAA, „evropské dvojče · v nabídce brokerů v Česku“ | lístek se 7 fondy a jejich evropskými verzemi, nic nezakroužkované |
 | Nadpis první obrazovky | Broker ti nenabídl VOO? Není to chyba. | Začínáš s ETF? |
 | Pro koho | 25–40 let, o ETF už slyšeli a VOO možná zkoušeli koupit | 25–40 let, s ETF teprve začínají a konkrétní fond nehledají |
 | Kam vede | [etf-dvojcata-demo.vercel.app/?v=dvojce](https://etf-dvojcata-demo.vercel.app/?v=dvojce) | [etf-dvojcata-demo.vercel.app/?v=zacatek](https://etf-dvojcata-demo.vercel.app/?v=zacatek) |
@@ -232,7 +232,7 @@ Snímky před úpravami a po nich a snímky s klávesnicí ve WebKitu jsou v sek
 
 ## Zdroje dat
 
-- **Údaje o fondech** (ticker, ISIN, burza, poplatek TER, index, velikost, počet titulů, dividendy) jsou z webů správců: Vanguard, iShares a State Street (SPDR). **Kde fond koupíš**, je ověřené na webech brokerů XTB, Trading 212 a Degiro. U Fia se to ověřit nepodařilo, proto ho stránka nejmenuje.
+- **Údaje o fondech** (ticker, ISIN, burza, poplatek TER, index, velikost, počet titulů, dividendy) jsou z webů správců: Vanguard, iShares a State Street (SPDR). **Jestli je fond v nabídce brokera**, je ověřené ve veřejných seznamech produktů XTB, Trading 212 a Degiro, ne nákupem v účtu; stránka i tahák proto píšou „v nabídce“, ne „koupíš“, a radí ověřit si dostupnost ve vlastním účtu. U Fia se to ověřit nepodařilo, proto ho stránka nejmenuje.
 - **Každý údaj má v [data/etf.json](data/etf.json) hodnotu, zdroj (URL), datum, ke kterému platí, a datum ověření.** Co se ověřit nepodařilo, je prázdné s poznámkou. Všechno je ověřené 10. 10. 2026. Proč ke každému americkému ETF hledáme evropskou obdobu (PRIIPs, KID, výklad ČNB), je v [data/README.md](data/README.md).
 - **Na stránce** je zdroj a datum hned pod lístky, v sekci se zdroji u každého údaje a v patičce.
 - **Kontroly:** skript ověří, že každý údaj má zdroj a datum a ISIN platnou kontrolní číslici ([check_data.py](scripts/check_data.py)), že čísla na stránce sedí s daty ([check_page.py](scripts/check_page.py)) a že s nimi sedí i text PDF ([check_pdf.py](scripts/check_pdf.py)).
