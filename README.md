@@ -11,7 +11,7 @@
 
 1. Otevři [etf-dvojcata-demo.vercel.app/?v=dvojce](https://etf-dvojcata-demo.vercel.app/?v=dvojce). Nadpis navazuje na reklamu A, pro srovnání zkus [?v=zacatek](https://etf-dvojcata-demo.vercel.app/?v=zacatek).
 2. Klepni na lístek **VOO**. Otočí se a ukáže evropské dvojče VUAA, u kterých brokerů ho koupíš a kolik stojí ročně z 10 000 Kč. Pod lístky se objeví výzva k taháku.
-3. Klepni na „Chci tahák se všemi 7 dvojčaty“, zadej e-mail, zaškrtni souhlas a odešli. Přijde poděkování s tlačítkem „Otevřít tahák“ (PDF) a sdílením. Když stránku posuneš dál, objeví se dole lišta, která formulář otevře jako panel.
+3. Klepni na „Chci tahák s postupem nákupu“, zadej e-mail, zaškrtni souhlas a odešli. Přijde poděkování s tlačítkem „Otevřít tahák“ (PDF) a sdílením. Když stránku posuneš dál, objeví se dole lišta, která formulář otevře jako panel.
 4. Ochrana formuláře: zkus `x@mailinator.com` (jednorázová adresa) nebo `test@neexistuje.invalid` (doména nepřijímá poštu).
 
 Takhle to vypadá na iPhonu 13 (390 × 844). Úvod, lístek a formulář jsou z živé stránky (11. 10. 2026, požadavky na `/api/` zablokované, nic se neodeslalo), poděkování z lokálního serveru s podvrženou databází:
@@ -47,9 +47,16 @@ Exporty konverzací s AI jsou v [ai-log/](ai-log/), reklamy v [reklamy/](reklamy
 
 **Kdy žádáme o kontakt:**
 
-1. Hned po prvním otočení lístku: pod lístky se objeví „Chci tahák se všemi 7 dvojčaty“. Návštěvník právě dostal hodnotu a ví, že zbylých 6 párů a postup jsou v taháku. Formulář se rozbalí na místě.
+1. Hned po prvním otočení lístku: pod lístky se objeví „Chci tahák s postupem nákupu“. Návštěvník právě viděl dvojče a výzva mu nabízí, co mu ještě chybí: jak ho koupit. Formulář se rozbalí na místě.
 2. Spodní lištou, která se ukáže, když lístky zmizí z obrazovky a výzva ani formulář nejsou vidět. Formulář se otevře jako panel tam, kde návštěvník právě je.
 3. Formulářem v sekci Tahák pro ty, kdo dočtou až dolů.
+
+**Co tahák slibuje.** Jen to, co PDF přidává navíc ke stránce: ISINy všech dvojčat a postup nákupu u XTB a Trading 212 krok za krokem. Dvojčata samotná stránka ukáže zdarma, takže slib „všech 7 dvojčat“, který tu byl dřív, by nabízel něco, co návštěvník už má. Varianty textu tlačítka pod lístky:
+1. „Chci tahák s postupem nákupu“ (vybraná: nejkratší, nezalomí se ani na 320 px, navazuje na „Tahák zdarma“ z reklam a sedí s tlačítkem u karet „Chci tahák s ISINy a postupem nákupu“),
+2. „Chci postup nákupu krok za krokem“ (konkrétnější, ale bez slova tahák, které reklama slibuje),
+3. „Chci tahák: ISINy a postup nákupu“ (úplné, ale ISIN začátečník nezná).
+
+Spodní lišta: „Tahák zdarma: ISINy a postup nákupu“, reklamy: „Tahák zdarma: ISINy a postup nákupu →“.
 
 **Formulář:** jen e-mail a souhlas (proč, je v [obchodním pohledu](#obchodní-pohled)). Tlačítko je hned pod polem, aby ho na iPhonu nezakryla klávesnice ani lišta s návrhy e-mailů.
 
@@ -147,26 +154,28 @@ Seřazené podle očekávaného dopadu na konverzi návštěva → odeslání. H
 
 **1. Formulář rovnou pod otočeným lístkem**
 - **Hypotéza:** když po prvním otočení uvidí návštěvník rovnou pole na e-mail, odpadne jedno klepnutí ve chvíli největšího zájmu a víc lidí formulář odešle.
-- **Co měníme:** pod lístky se místo tlačítka „Chci tahák se všemi 7 dvojčaty“, které formulář teprve rozbalí, ukáže rovnou formulář (pole, „Získat tahák“, souhlas). Zbytek stránky zůstane stejný.
+- **Co měníme:** pod lístky se místo tlačítka „Chci tahák s postupem nákupu“, které formulář teprve rozbalí, ukáže rovnou formulář (pole, „Získat tahák“, souhlas). Zbytek stránky zůstane stejný.
 - **Metrika:** návštěva → odeslání. Kontrolní: návštěva → otočení lístku (formulář pod lístky nesmí odradit od dalšího otáčení).
 - **Minimum:** z 6 % na 7,5 % (+25 %) → 4 388 návštěv na verzi, **asi 8 800 celkem**.
 - **Proč první:** míří na krok s největším odhadovaným úbytkem v procentech (z těch, kdo otočí lístek, formulář neotevře 70 %) a mění jen jeden prvek. Čekám od ní největší dopad.
 
-**2. Jeden lístek otočený hned po načtení**
+**2. Poslední tři lístky zamčené za e-mail**
+- **Hypotéza:** když se dvojčata SDY, VGT a AGG ukážou až po zadání e-mailu, část lidí, kteří chtějí vidět celý přehled, e-mail zadá. Teď dostanou všech 7 dvojčat zdarma a důvod k e-mailu je jen postup nákupu.
+- **Co měníme:** lístky SDY, VGT a AGG mají místo „otoč“ zámek a po klepnutí otevřou formulář („Dvojče najdeš v taháku“). VOO a ostatní zůstanou volně, takže slib reklamy A platí. Karty párů níž ukážou u zamčených fondů jen originál.
+- **Metrika:** návštěva → odeslání. Kontrolní: podíl návštěv, které odejdou hned po klepnutí na zamčený lístek, a stížnosti v komentářích u reklamy.
+- **Minimum:** z 6 % na 7,2 % (+20 %) → 6 717 návštěv na verzi, **asi 13 400 celkem**.
+- **Proč druhá:** může mít velký dopad, ale nese riziko: jde proti zásadě, že hodnota je vidět před formulářem, část lidí odradí a nesmí ji vidět lidé z reklamy B, která slibuje všech 7 fondů a jejich evropské verze. Test proto jen na návštěvách z reklamy A (`?v=dvojce`) a až po první hypotéze.
+
+**3. Jeden lístek otočený hned po načtení**
 - **Hypotéza:** část lidí nepozná, že se na lístek dá klepnout, nebo to nezkusí. Když lístek VOO ukáže dvojče sám, hodnota je vidět bez jediné akce a víc lidí dojde k výzvě.
 - **Co měníme:** lístek VOO se chvíli po načtení sám otočí na VUAA, ostatní zůstanou lícem nahoru.
 - **Metrika:** návštěva → odeslání. Vedlejší: návštěva → otočení lístku, které by se mělo zvednout nejvíc.
-- **Minimum:** z 6 % na 7,2 % (+20 %) → 6 717 návštěv na verzi, **asi 13 400 celkem**.
-- **Proč druhá:** míří na krok 2, kde v absolutních číslech odejde odhadem nejvíc lidí (600 z 1 000), ale na odeslání působí jen nepřímo. Kdo uvidí dvojče bez klepnutí, nemusí o tahák stát. Proto čekám menší dopad než u první.
-
-**3. Výzva slibuje „jak koupit“ místo „všech 7 dvojčat“**
-- **Hypotéza:** kdo otočil lístek, už ví, co koupit, ale neví jak. Výzva, která slibuje postup nákupu, je pro něj konkrétnější než seznam, jehož část už viděl.
-- **Co měníme:** text tlačítka pod lístky a ve spodní liště, například „Chci postup nákupu krok za krokem“. Formulář i tahák zůstanou stejné.
-- **Metrika:** návštěva → odeslání. Vedlejší: otočení lístku → otevření formuláře.
 - **Minimum:** z 6 % na 6,9 % (+15 %) → 11 690 návštěv na verzi, **asi 23 400 celkem**.
-- **Proč třetí:** mění jen slova, ne počet kroků ani to, co návštěvník vidí. Čekám nejmenší efekt, a proto potřebuje nejvíc návštěv. Na druhou stranu se připraví nejrychleji.
+- **Proč třetí:** míří na krok 2, kde v absolutních číslech odejde odhadem nejvíc lidí (600 z 1 000), ale na odeslání působí jen nepřímo. Kdo uvidí dvojče bez klepnutí, nemusí o tahák stát. Proto čekám nejmenší dopad.
 
-**Výpočet minima:** n na verzi = (z₁₋α/₂ + z₁₋β)² × [p₁(1 − p₁) + p₂(1 − p₂)] ÷ (p₂ − p₁)², kde α = 0,05 oboustranně (z = 1,96) a síla testu 80 % (z = 0,84), takže (1,96 + 0,84)² ≈ 7,85. Například první hypotéza: 7,85 × (0,06 × 0,94 + 0,075 × 0,925) ÷ 0,015² = 7,85 × 0,1258 ÷ 0,000225 ≈ 4 388. Výchozí konverze 6 % je střední odhad. Kdyby skutečná byla 2 %, potřebný počet návštěv vyjde zhruba třikrát vyšší (u první hypotézy 13 807 na verzi). Výpočet je proto potřeba zopakovat s konverzí naměřenou v prvním týdnu. Při 500 návštěvách denně (předpoklad) by první test trval asi 18 dní, druhý 27 a třetí 47.
+**Co už hypotéza není:** dřívější třetí hypotéza „výzva slibuje postup nákupu místo všech 7 dvojčat“. Stránka dvojčata ukáže zdarma, takže slib „všech 7 dvojčat“ byl chyba, ne varianta k testu. Je opravený všude (výzva, lišta, panel, sekce Tahák, reklamy).
+
+**Výpočet minima:** n na verzi = (z₁₋α/₂ + z₁₋β)² × [p₁(1 − p₁) + p₂(1 − p₂)] ÷ (p₂ − p₁)², kde α = 0,05 oboustranně (z = 1,96) a síla testu 80 % (z = 0,84), takže (1,96 + 0,84)² ≈ 7,85. Například první hypotéza: 7,85 × (0,06 × 0,94 + 0,075 × 0,925) ÷ 0,015² = 7,85 × 0,1258 ÷ 0,000225 ≈ 4 388. Výchozí konverze 6 % je střední odhad. Kdyby skutečná byla 2 %, potřebný počet návštěv vyjde zhruba třikrát vyšší (u první hypotézy 13 807 na verzi). Výpočet je proto potřeba zopakovat s konverzí naměřenou v prvním týdnu. Při 500 návštěvách denně (předpoklad) by první test trval asi 18 dní, druhý 27 a třetí 47. Druhý test běží jen na návštěvách z reklamy A, takže potrvá déle podle toho, jaký podíl provozu A přivede.
 
 **Co je pro test potřeba připravit:** stránka zatím rozlišuje jen verzi reklamy (`?v=`). Pro test na stránce je potřeba přidat druhý parametr nebo náhodné přidělení verze při načtení (bez ukládání do prohlížeče) a ukládat ho k událostem i ke kontaktu. Testy pouštět po jednom, s délkou určenou předem a bez předčasného vyhodnocování.
 

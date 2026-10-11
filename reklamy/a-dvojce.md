@@ -26,7 +26,7 @@ Hotové obrázky: [a-dvojce-feed.png](a-dvojce-feed.png) (1080 × 1350) a [a-dvo
 - **Hook nahoře:** otázka z primárního textu „Broker ti nenabídl VOO?“ a pod ní menší „Není to chyba.“ se žlutým fixem. Je to nejvýraznější text po VUAA. Bez něj by nebylo jasné, proč je VOO přeškrtnuté.
 - Pod tím **VOO** přeškrtnuté jako na stránce, šipka dolů a největší **VUAA** v kroužku a se žlutým fixem na lístku s páskou.
 - Na lístku: „evropské dvojče · koupíš z Česka“, pod ním drobně „Stejný index S&P 500“. `[d: VOO › ucits_obdoba.rozdil_oproti_originalu]`
-- **Nabídka dole** (lístek s páskou, „Tahák zdarma“ se žlutým fixem): „Tahák zdarma: všech 7 dvojčat v PDF →“. Říká, co člověk po kliknutí dostane, stejně jako výzva na stránce („Chci tahák se všemi 7 dvojčaty“, „PDF hned a zdarma“).
+- **Nabídka dole** (lístek s páskou, „Tahák zdarma“ se žlutým fixem): „Tahák zdarma: ISINy a postup nákupu →“. Slibuje jen to, co PDF přidává navíc ke stránce (dvojčata stránka ukáže zdarma), stejně jako výzva na stránce („Chci tahák s postupem nákupu“, „PDF hned a zdarma“).
 - **Pod ní nenápadně:** „Není investiční doporučení.“
 - Žádní lidé s telefonem, žádná loga, žádné rozhraní brokera. Původně „nejvýš tři řádky textu“; hook a nabídka přibyly, protože bez nich byla reklama moc strohá (zpětná vazba 11. 10. 2026).
 

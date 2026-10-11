@@ -49,13 +49,13 @@ h1{margin:0;font-weight:800;letter-spacing:-.02em;line-height:1.05}
 .row b{font-weight:800}`;
 
 // Společné: nabídka dole (lístek s páskou a fixem, slib jako výzva na stránce) a drobné upozornění
-const OFFER = `<div class="offer card"><span class="fix">Tahák zdarma</span>: všech 7&nbsp;dvojčat v&nbsp;PDF&nbsp;→</div>
+const OFFER = `<div class="offer card"><span class="fix">Tahák zdarma</span>: ISINy a&nbsp;postup nákupu&nbsp;→</div>
   <div class="disc muted">Není investiční doporučení.</div>`;
 const COMMON = (w, h, area, s) => `body{width:${w}px;height:${h}px}
 .page{left:${area.l}px;top:${area.t}px;width:${w - area.l - area.r}px;height:${h - area.t - area.b}px;gap:${s.gap}px;justify-content:${s.spread ? 'space-between' : 'center'}}
 .group{display:flex;flex-direction:column;align-items:center;gap:${s.gap}px;width:100%}
 .logo{font-size:${s.logo}px}
-.offer{padding:.5em .9em;font-size:${s.offer}px;font-weight:800;transform:rotate(-1.2deg)}
+.offer{max-width:94%;padding:.5em .9em;font-size:${s.offer}px;font-weight:800;text-wrap:balance;transform:rotate(-1.2deg)}
 .offer::before{width:110px;height:32px;margin-left:-55px;top:-16px}
 .disc{font-size:${s.disc}px;margin-top:-${s.gap * 0.4}px}
 .offer-group{margin-top:${s.gap * 0.8}px}`;

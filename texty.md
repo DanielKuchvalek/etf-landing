@@ -76,8 +76,8 @@ Nadpis a podnadpis se mění podle parametru v URL (viz `reklamy/README.md`). Zb
 
   `[d: * › typ]` `[d: * › ucits_obdoba.rozdil_oproti_originalu]` `[d: * › ucits_obdoba.burza.ticker]` `[d: * › ucits_obdoba.kde_koupit]` `[výpočet: TER × 100 = Kč z 10 000 Kč, d: * › ucits_obdoba.ter]`
 - **Po prvním otočení se pod lístky objeví výzva:**
-  - tlačítko: Chci tahák se všemi 7 dvojčaty. Formulář se rozbalí na místě.
-  - pod ním: ISINy, poplatky a postup nákupu krok za krokem. PDF hned a zdarma.
+  - tlačítko: Chci tahák s postupem nákupu. Formulář se rozbalí na místě.
+  - pod ním: ISINy všech dvojčat a postup nákupu u XTB a Trading 212 krok za krokem. PDF hned a zdarma.
 - **Pod výběrem (u lístků, ne až v patičce):** Data od správců fondů a brokerů, ověřeno 10. 10. 2026 (zdroje). Není to investiční doporučení. „zdroje“ vede na sekci se zdroji.
   `[d: meta.overeno_dne]`
 
@@ -209,7 +209,7 @@ U „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnost ověř
 
 ## 6. Formulář
 
-- **H2:** Tahák: 7 ETF z NYSE a jejich dvojčata, která koupíš z Česka
+- **H2:** Tahák: ISINy dvojčat a postup nákupu krok za krokem (slibuje jen to, co PDF přidává ke stránce; dvojčata stránka ukáže zdarma)
 - **Co v něm je:**
   - ISIN a ticker všech 7 dvojčat. Zkopíruješ je rovnou do aplikace brokera. `[d: * › ucits_obdoba.isin]` `[d: * › ucits_obdoba.burza]`
   - Poplatky originálů a dvojčat vedle sebe. `[d: * › ter]` `[d: * › ucits_obdoba.ter]`
@@ -260,12 +260,12 @@ U „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnost ověř
 
 ## Tlačítko pořád vidět dole (mobil)
 
-- **Text:** Tahák zdarma: všech 7 dvojčat
+- **Text:** Tahák zdarma: ISINy a postup nákupu
 - **Tlačítko (žluté):** Chci tahák. Otevře panel s formulářem.
 - **Kdy je lišta vidět:** až když jsou lístky mimo obrazovku (nepřekrývá je) a zrovna není vidět výzva ani formulář.
 - **Panel:**
-  - nadpis: Tahák: 7 ETF z NYSE a jejich dvojčata, která koupíš z Česka
-  - pod ním: ISINy, poplatky a postup nákupu krok za krokem. PDF hned a zdarma.
+  - nadpis: Tahák: ISINy dvojčat a postup nákupu krok za krokem
+  - pod ním: ISINy všech dvojčat a postup nákupu u XTB a Trading 212 krok za krokem. PDF hned a zdarma.
   - zavírací tlačítko „×“ s popiskem pro čtečky „Zavřít“
 - **Chování:**
   - objeví se, až jsou lístky mimo obrazovku,
@@ -303,7 +303,7 @@ U „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnost ověř
 
 ## Rozhodnutí (10. 10. 2026)
 
-- **Tlačítko:** „Chci tahák se všemi 7 dvojčaty“.
+- **Tlačítko:** „Chci tahák s postupem nákupu“.
 - **Brokeři:** jmenujeme všechny, u kterých se dostupnost podaří ověřit na jejich webu.
 - **VOO zůstává hlavním příkladem.** Háček je formulovaný tak, aby platil, i kdyby VOO některý broker prodával.
 - **Název stránky:** ETF dvojčata.
