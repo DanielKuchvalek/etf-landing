@@ -311,7 +311,7 @@ try {
     const t = (await page.evaluate(() => document.body.innerText)).replace(/\u00a0/g, ' ');
     const robots = await page.$eval('meta[name=robots]', (m) => m.content).catch(() => null);
     check('zásady: označené jako ukázka do výběrového řízení a noindex', t.includes('Ukázka do výběrového řízení.') && robots === 'noindex', String(robots));
-    check('zásady: správce Daniel Kuchválek, kontakt, výmaz do 31. 12. 2026, region databáze', ['Správcem osobních údajů je Daniel Kuchválek', 'd.kuchvale@gmail.com', '31. 12. 2026', 'eu-central-1'].every((x) => t.includes(x)));
+    check('zásady: správce Daniel Kuchválek, kontakt, výmaz do 31. 12. 2026, region databáze', ['Správcem osobních údajů je Daniel Kuchválek', 'd.kuchvalek@gmail.com', '31. 12. 2026', 'eu-central-1'].every((x) => t.includes(x)));
     check('zásady: nic k doplnění, žádné TODO ani Clientelo', !/doplní|TODO|Clientelo/.test(t) && !(await page.$('.doplni, .todo')));
     check('zásady: bez chyb v konzoli', !realErrors(logs).length, realErrors(logs).map((l) => l.text).join(' | '));
     await page.close();
