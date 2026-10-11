@@ -3450,7 +3450,7 @@ code 143
 
   Ran 1 shell command (ctrl+o to expand)
 
-⏺ jana@seznam.cz byla v testu už dřív, ale mohla by to být něčí skutečná
+⏺ jana@example.com byla v testu už dřív, ale mohla by to být něčí skutečná
   schránka. Převedu ji na vyhrazenou doménu example.com.
 
 ⏺ Bash(grep -n "seznam" scripts/*.mjs scripts/*.py 2>/dev/null; python3 -
@@ -3481,7 +3481,7 @@ code 143
       135      const lead = logs.find((l) => l.type === 'lead');
       136 -    check('odeslání: e-mail, souhlas a verze úvodu, bez ID náv
           -štěvy', lead && lead.status === 200 && JSON.stringify(lead.dat
-          -a) === JSON.stringify({ email: 'jana@seznam.cz', souhlas: true
+          -a) === JSON.stringify({ email: 'jana@example.com', souhlas: true
           -, varianta: 'vychozi' }), JSON.stringify(lead && lead.data)); 
       136 +    check('odeslání: e-mail, souhlas a verze úvodu, bez ID náv
           +štěvy', lead && lead.status === 200 && JSON.stringify(lead.dat
@@ -3701,7 +3701,7 @@ code 143
           +deslání kontaktu: Puppeteer u `fetch`, jehož tělo stránka nečt
           +e, nevyvolá `requestfinished`. Test teď čte událost `response`
           +.                                                             
-      110 +  - Testovací adresa `jana@seznam.cz` mohla patřit skutečnému 
+      110 +  - Testovací adresa `jana@example.com` mohla patřit skutečnému 
           +člověku. Při kontrole diffu před commitem ji AI nahradila adre
           +sou na vyhrazené doméně `example.com`.                        
       111 +  - Adresu `etf-dvojcata.vercel.app` AI chtěla použít pro `og:
@@ -6356,8 +6356,8 @@ exit code 143
           +22, bez dotazu do DNS`, r.status === 422 && r.json.chyba === '
           +jednorazovy' && r.calls.length === 0 && dnsCalls === 0);      
       132 +}                                                             
-      133 +for (const email of ['x@seznam.cz', 'x@email.cz', 'x@centrum.c
-          +z', 'x@gmail.com']) check(`běžná doména ${email.split('@')[1]}
+      133 +for (const email of ['x@example.com', 'x@example.com', 'x@centrum.c
+          +z', 'x@example.com']) check(`běžná doména ${email.split('@')[1]}
           + není na seznamu jednorázových`, !lib.jednorazovaDomena(email.
           +split('@')[1]));                                              
       134 +for (const [name, domena] of [['doména neexistuje', 'neexistuj
@@ -7124,7 +7124,7 @@ exit code 143
            deslání kontaktu: Puppeteer u `fetch`, jehož tělo stránka nečt
            e, nevyvolá `requestfinished`. Test teď čte událost `response`
            .
-      110 -  - Testovací adresa `jana@seznam.cz` mohla patřit skutečnému 
+      110 -  - Testovací adresa `jana@example.com` mohla patřit skutečnému 
           -člověku. Při kontrole diffu před commitem ji AI nahradila adre
           -sou na vyhrazené doméně `example.com`.                        
       110 +  - Testovací adresa testovací adresa na skutečné doméně mohla
@@ -7250,7 +7250,7 @@ exit code 143
       18      "@electric-sql/pglite": "0.5.8",
   ⎿  (timeout 5m)
 
-⏺ Zkontroluji přímo domény, aby v repu nezůstaly ani adresy typu x@seznam.cz, a
+⏺ Zkontroluji přímo domény, aby v repu nezůstaly ani adresy typu x@example.com, a
   opravím v README počet databázových kontrol na 44 (dříve chybně uvedeno 45).
 
 ⏺ Bash(python3 - <<'EOF'
@@ -7278,8 +7278,8 @@ exit code 143
            22, bez dotazu do DNS`, r.status === 422 && r.json.chyba === '
            jednorazovy' && r.calls.length === 0 && dnsCalls === 0);
       132  }
-      133 -for (const email of ['x@seznam.cz', 'x@email.cz', 'x@centrum.c
-          -z', 'x@gmail.com']) check(`běžná doména ${email.split('@')[1]}
+      133 -for (const email of ['x@example.com', 'x@example.com', 'x@centrum.c
+          -z', 'x@example.com']) check(`běžná doména ${email.split('@')[1]}
           - není na seznamu jednorázových`, !lib.jednorazovaDomena(email.
           -split('@')[1]));                                              
       133 +for (const domena of ['seznam.cz', 'email.cz', 'centrum.cz', '
