@@ -1,9 +1,10 @@
 // POST /api/event – uloží anonymní událost z cesty návštěvníka (funkce uloz_udalost, tabulka events).
 // Přijímá jen ID návštěvy (náhodné UUID z paměti stránky), název události, verzi úvodu a detail z pevného
 // seznamu pro každou událost (_lib.js, DETAILY), takže se přes měření nedají ukládat libovolná data.
+// Události od odeslání formuláře dál (BEZ_NAVSTEVY) musí přijít bez ID návštěvy, ostatní s ním.
 // Proti zahlcení: tělo nejvýš 512 B, 600 událostí za hodinu z jedné IP a 100 na návštěvu (počítá databáze).
 // Prohlížeč posílá přes navigator.sendBeacon, tedy jako text/plain.
-import { VARIANTY, DETAILY, odpoved, nactiTelo, ciziPuvod, klicIp, chybiNastaveni, rpc } from './_lib.js';
+import { VARIANTY, DETAILY, BEZ_NAVSTEVY, odpoved, nactiTelo, ciziPuvod, klicIp, chybiNastaveni, rpc } from './_lib.js';
 
 const MAX_BYTES = 512;
 const POLE = ['navsteva', 'udalost', 'varianta', 'detail'];
@@ -22,16 +23,17 @@ export default {
     try { d = JSON.parse(text); } catch { return odpoved(400, { ok: false, chyba: 'format' }); }
     if (!d || typeof d !== 'object' || Array.isArray(d)) return odpoved(400, { ok: false, chyba: 'format' });
     if (Object.keys(d).some((k) => !POLE.includes(k))) return odpoved(400, { ok: false, chyba: 'pole' });
-    if (typeof d.navsteva !== 'string' || !UUID.test(d.navsteva)) return odpoved(400, { ok: false, chyba: 'navsteva' });
     if (!Object.hasOwn(DETAILY, d.udalost)) return odpoved(400, { ok: false, chyba: 'udalost' });
+    const bezNavstevy = BEZ_NAVSTEVY.includes(d.udalost);
+    if (bezNavstevy ? d.navsteva !== undefined : typeof d.navsteva !== 'string' || !UUID.test(d.navsteva)) return odpoved(400, { ok: false, chyba: 'navsteva' });
     if (!VARIANTY.includes(d.varianta)) return odpoved(400, { ok: false, chyba: 'varianta' });
     if (d.detail != null && (typeof d.detail !== 'string' || !DETAILY[d.udalost].test(d.detail))) return odpoved(400, { ok: false, chyba: 'detail' });
     if (chybiNastaveni(['SUPABASE_URL', 'SUPABASE_SECRET_KEY', 'ANTISPAM_SECRET'])) return odpoved(503, { ok: false, chyba: 'konfigurace' });
 
     try {
-      // čas doplní databáze (zaokrouhlený na hodiny), od prohlížeče ho nebereme
+      // čas doplní databáze (zaokrouhlený na minuty), od prohlížeče ho nebereme
       const vysledek = await rpc('uloz_udalost', {
-        p_klic: klicIp(request, 'event'), p_navsteva: d.navsteva, p_udalost: d.udalost, p_varianta: d.varianta, p_detail: d.detail ?? null,
+        p_klic: klicIp(request, 'event'), p_navsteva: bezNavstevy ? null : d.navsteva, p_udalost: d.udalost, p_varianta: d.varianta, p_detail: d.detail ?? null,
       }, 5000);
       if (vysledek === 'limit') return odpoved(429, { ok: false, chyba: 'limit' });
     } catch (e) {

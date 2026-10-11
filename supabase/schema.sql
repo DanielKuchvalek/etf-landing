@@ -11,8 +11,9 @@ alter default privileges in schema public revoke all on tables from anon, authen
 alter default privileges in schema public revoke all on sequences from anon, authenticated;
 alter default privileges in schema public revoke execute on functions from public, anon, authenticated;
 
--- Kontakty: e-mail, souhlas, čas souhlasu a verze úvodu z ?v=. Nic víc: žádná IP, prohlížeč ani ID návštěvy.
--- Klíč je náhodné UUID, ne pořadové číslo: podle pořadí by šel kontakt spárovat s událostí „odeslano“.
+-- Kontakty: e-mail, souhlas, čas souhlasu a verze úvodu z ?v= (podle ní trychtýř počítá odeslání, viz funnel.sql).
+-- Nic víc: žádná IP, prohlížeč ani ID návštěvy. Klíč je náhodné UUID, ne pořadové číslo (podle pořadí zápisu
+-- by šel kontakt řadit k událostem).
 create table if not exists public.leads (
   id          uuid        primary key default gen_random_uuid(),
   email       text        not null unique
@@ -24,16 +25,18 @@ create table if not exists public.leads (
 );
 
 -- Anonymní události z cesty návštěvníka. Bez e-mailu; ID návštěvy žije jen v paměti jednoho načtení stránky.
--- Čas jen na celé hodiny a klíč náhodný, aby se nedaly řadit podle pořadí zápisu (viz README, Bezpečnost).
+-- Události od odeslání formuláře dál (pokus, chyba, odeslání, otevření taháku, sdílení) jsou vždy bez ID návštěvy,
+-- aby nešlo poznat, která návštěva kontakt odeslala. Čas jen na celé minuty a klíč náhodný (viz README, Měření).
 create table if not exists public.events (
   id        uuid        primary key default gen_random_uuid(),
-  navsteva  uuid        not null,
+  navsteva  uuid,
   udalost   text        not null check (udalost in (
               'prichod', 'scroll', 'otoceni_listku', 'vyzva_zobrazena', 'cta', 'formular_otevren',
               'formular_zacatek', 'odeslani_pokus', 'odeslani_chyba', 'odeslano', 'tahak_otevren', 'sdileni')),
   varianta  text        not null check (varianta in ('vychozi', 'dvojce', 'zacatek')),
   detail    text        check (detail ~ '^[A-Za-z0-9_:.-]{1,40}$'),
-  cas       timestamptz not null default date_trunc('hour', now())
+  cas       timestamptz not null default date_trunc('minute', now()),
+  check ((navsteva is null) = (udalost in ('odeslani_pokus', 'odeslani_chyba', 'odeslano', 'tahak_otevren', 'sdileni')))
 );
 create index if not exists events_udalost_varianta on public.events (udalost, varianta);
 create index if not exists events_navsteva on public.events (navsteva);
@@ -74,12 +77,15 @@ begin
   return 'duplicita';
 end $$;
 
--- Událost: nejvýš 600 za hodinu z jedné IP a 100 na jednu návštěvu. Vrací 'ok' nebo 'limit'.
+-- Událost: nejvýš 600 za hodinu z jedné IP a 100 na jednu návštěvu (události bez ID návštěvy hlídá jen limit IP).
+-- Vrací 'ok' nebo 'limit'.
 create or replace function public.uloz_udalost(p_klic text, p_navsteva uuid, p_udalost text, p_varianta text, p_detail text)
 returns text language plpgsql security invoker set search_path = '' as $$
 begin
   if not public.zapocitej(p_klic, 600) then return 'limit'; end if;
-  if (select count(*) from public.events where navsteva = p_navsteva) >= 100 then return 'limit'; end if;
+  if p_navsteva is not null and (select count(*) from public.events where navsteva = p_navsteva) >= 100 then
+    return 'limit';
+  end if;
   insert into public.events (navsteva, udalost, varianta, detail) values (p_navsteva, p_udalost, p_varianta, p_detail);
   return 'ok';
 end $$;

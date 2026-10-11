@@ -222,9 +222,23 @@ r = await run(event, req('/api/event', { body: ev(), type: 'text/plain;charset=U
 const e = r.calls[0] || {};
 check('event: platná událost přes sendBeacon (text/plain) → 204 a jedno volání uloz_udalost', r.status === 204 && r.calls.length === 1 && e.url === 'https://projekt.supabase.co/rest/v1/rpc/uloz_udalost', String(r.status));
 check('event: jen ID návštěvy, událost, verze, detail a hash IP (čas doplní databáze)', e.body && Object.keys(e.body).sort().join() === 'p_detail,p_klic,p_navsteva,p_udalost,p_varianta' && e.body.p_detail === 'VOO:dvojce', JSON.stringify(e.body));
-for (const [udalost, detail] of [['prichod', null], ['prichod', 'sdileni'], ['prichod', 'facebook'], ['scroll', '75'], ['cta', 'karty'], ['formular_zacatek', 'sekce'], ['odeslani_chyba', 'mx'], ['tahak_otevren', 'panel'], ['sdileni', 'kopie']]) {
+for (const [udalost, detail] of [['prichod', null], ['prichod', 'sdileni'], ['prichod', 'facebook'], ['scroll', '75'], ['cta', 'karty'], ['formular_zacatek', 'sekce']]) {
   r = await run(event, req('/api/event', { body: ev({ udalost, detail }), type: 'text/plain' }));
   check(`event: ${udalost}${detail ? ` s detailem ${detail}` : ''} → 204`, r.status === 204);
+}
+// od odeslání formuláře dál bez ID návštěvy (kontakt nejde spárovat s návštěvou), s ním je to chyba
+check('event: seznam událostí bez ID návštěvy', lib.BEZ_NAVSTEVY.join() === 'odeslani_pokus,odeslani_chyba,odeslano,tahak_otevren,sdileni');
+for (const [udalost, detail] of [['odeslani_pokus', 'lista'], ['odeslani_chyba', 'mx'], ['odeslano', 'sekce'], ['tahak_otevren', 'panel'], ['sdileni', 'kopie']]) {
+  const { navsteva, ...bez } = ev({ udalost, detail });
+  r = await run(event, req('/api/event', { body: bez, type: 'text/plain' }));
+  check(`event: ${udalost} bez ID návštěvy → 204, do databáze jde ID návštěvy null`, r.status === 204 && r.calls[0] && r.calls[0].body.p_navsteva === null, `${r.status}`);
+  r = await run(event, req('/api/event', { body: ev({ udalost, detail }), type: 'text/plain' }));
+  check(`event: ${udalost} s ID návštěvy → 400, nic se neuloží`, r.status === 400 && r.json.chyba === 'navsteva' && r.calls.length === 0, `${r.status}`);
+}
+{
+  const { navsteva, ...bez } = ev({ udalost: 'prichod', detail: null });
+  r = await run(event, req('/api/event', { body: bez, type: 'text/plain' }));
+  check('event: příchod bez ID návštěvy → 400', r.status === 400 && r.json.chyba === 'navsteva' && r.calls.length === 0);
 }
 for (const [name, body, chyba] of [
   ['neplatné ID návštěvy', ev({ navsteva: 'abc' }), 'navsteva'],

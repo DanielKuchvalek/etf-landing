@@ -24,6 +24,9 @@ export const DETAILY = {
   tahak_otevren: /^(panel|listky|sekce)$/,
   sdileni: /^(nativni|zruseno|kopie|rucne)$/,
 };
+// Události od odeslání formuláře dál jsou vždy bez ID návštěvy, ostatní vždy s ním (hlídá i databáze).
+// Podle nich by šlo poznat, která návštěva kontakt odeslala, a spárovat ji s e-mailem (viz README, Měření).
+export const BEZ_NAVSTEVY = ['odeslani_pokus', 'odeslani_chyba', 'odeslano', 'tahak_otevren', 'sdileni'];
 
 // Limity (počítá je databáze, viz supabase/schema.sql): kontakty 30 za hodinu z jedné IP,
 // události 600 za hodinu z jedné IP a nejvýš 100 na jednu návštěvu.

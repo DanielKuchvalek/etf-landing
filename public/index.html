@@ -497,9 +497,11 @@ html{scroll-behavior:auto}
   }
   var visitId = uuid();
 
-  // Měření: anonymní událost (sendBeacon stránku nezdrží), nikdy s e-mailem
+  // Měření: anonymní událost (sendBeacon stránku nezdrží), nikdy s e-mailem. Od odeslání formuláře dál
+  // bez ID návštěvy, aby kontakt nešel spárovat s návštěvou (stejný seznam hlídá api/_lib.js i databáze)
   function track(name, detail) {
-    var e = { navsteva: visitId, udalost: name, varianta: variant };
+    var e = { udalost: name, varianta: variant };
+    if (!/^(odeslan|tahak|sdileni)/.test(name)) e.navsteva = visitId;
     detail = String(detail == null ? '' : detail).replace(/[^A-Za-z0-9_:.-]/g, '').slice(0, 40);
     if (detail) e.detail = detail;
     var body = JSON.stringify(e);

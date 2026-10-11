@@ -88,7 +88,16 @@ for (let i = 0; i < 500; i++) await one('service_role', `select public.uloz_udal
 check('uloz_udalost: 601. událost z jedné IP za hodinu = limit', (await one('service_role', `select public.uloz_udalost('${KLIC(7)}', gen_random_uuid(), 'prichod', 'vychozi', null)`)) === 'limit');
 check('events: databáze odmítne „@“ v detailu', String(await one('service_role', `select public.uloz_udalost('${KLIC(8)}', gen_random_uuid(), 'prichod', 'vychozi', 'jana@example.com')`)).includes('check constraint'));
 check('events: databáze odmítne neznámou událost', String(await one('service_role', `select public.uloz_udalost('${KLIC(8)}', gen_random_uuid(), 'nakup', 'vychozi', null)`)).includes('check constraint'));
-check('events: čas jen na celé hodiny', (await one('service_role', 'select bool_and(cas = date_trunc(\'hour\', cas)) from public.events')) === true);
+const casDefault = await one('service_role', "select column_default from information_schema.columns where table_name = 'events' and column_name = 'cas'");
+check('events: čas jen na celé minuty (zaokrouhlí databáze)', (await one('service_role', 'select bool_and(cas = date_trunc(\'minute\', cas)) from public.events')) === true && /date_trunc\('minute'/.test(casDefault), casDefault);
+// události od odeslání formuláře dál jsou bez ID návštěvy, ostatní s ním (aby kontakt nešel spárovat s návštěvou)
+for (const u of ['odeslani_pokus', 'odeslani_chyba', 'odeslano', 'tahak_otevren', 'sdileni']) {
+  check(`events: ${u} bez ID návštěvy se uloží`, (await one('service_role', `select public.uloz_udalost('${KLIC(10)}', null, '${u}', 'dvojce', null)`)) === 'ok');
+  check(`events: ${u} s ID návštěvy databáze odmítne`, String(await one('service_role', `select public.uloz_udalost('${KLIC(10)}', gen_random_uuid(), '${u}', 'dvojce', null)`)).includes('check constraint'));
+}
+check('events: příchod bez ID návštěvy databáze odmítne', String(await one('service_role', `select public.uloz_udalost('${KLIC(10)}', null, 'prichod', 'dvojce', null)`)).includes('check constraint'));
+for (let i = 0; i < 100; i++) await one('service_role', `select public.uloz_udalost('${KLIC(11)}', null, 'odeslano', 'dvojce', 'sekce')`);
+check('uloz_udalost: události bez ID návštěvy hlídá jen limit IP (ne 100 na návštěvu)', (await one('service_role', `select public.uloz_udalost('${KLIC(11)}', null, 'odeslano', 'dvojce', 'sekce')`)) === 'ok');
 check('limity: klíč musí vypadat jako hash (žádná IP)', String(await one('service_role', "select public.zapocitej('192.168.1.10', 5)")).includes('check constraint'));
 
 // --- úklid ---
@@ -96,15 +105,18 @@ await db.exec(`insert into public.limity (klic, okno, pocet) values ('${KLIC(9)}
 const smazano = await one('service_role', 'select public.uklid()');
 check('uklid: smaže počítadla starší než 2 dny, novější nechá', smazano === 1 && (await one('service_role', `select count(*)::int from public.limity where klic = '${KLIC(9)}'`)) === 0 && (await one('service_role', 'select count(*)::int from public.limity')) > 0, String(smazano));
 
-// --- trychtýř ---
-await db.exec('delete from public.events');
+// --- trychtýř: kroky 1–3 z událostí podle návštěvy, odeslání z kontaktů podle verze úvodu ---
+await db.exec('delete from public.events; delete from public.leads');
 const ev3 = async (v, items) => { for (const u of items) await db.query("insert into public.events (navsteva, udalost, varianta) values ($1, $2, 'dvojce')", [v, u]); };
-await ev3('00000000-0000-4000-8000-000000000001', ['prichod', 'otoceni_listku', 'formular_otevren', 'odeslano']);
-await ev3('00000000-0000-4000-8000-000000000002', ['prichod', 'formular_zacatek', 'odeslano']); // formulář v sekci Tahák
+await ev3('00000000-0000-4000-8000-000000000001', ['prichod', 'otoceni_listku', 'formular_otevren']);
+await ev3('00000000-0000-4000-8000-000000000002', ['prichod', 'formular_zacatek']); // formulář v sekci Tahák
 await ev3('00000000-0000-4000-8000-000000000003', ['prichod']);
-const t = (await db.query("select poradi, navstev, navstev_postupne, pct_z_prichodu::float p from analytika.trychtyr where varianta = 'dvojce' order by poradi")).rows;
-const got = t.map((r) => `${r.poradi}:${r.navstev}/${r.navstev_postupne}/${r.p}`).join(' ');
-check('trychtýř: kroky, postupně i formulář v sekci Tahák', got === '1:3/3/100 2:1/1/33.3 3:2/1/66.7 4:2/1/66.7', got);
+await ev3(null, ['odeslani_pokus', 'odeslano', 'odeslano', 'tahak_otevren']); // bez ID návštěvy: nesmí přibýt návštěva
+await db.exec("insert into public.leads (email, souhlas, varianta) values ('a@example.com', true, 'dvojce'), ('b@example.com', true, 'dvojce'), ('c@example.com', true, 'zacatek')");
+const t = (await db.query("select varianta, poradi, navstev, navstev_postupne, pct_z_prichodu::float p, pct_z_predchoziho::float q from analytika.trychtyr order by varianta, poradi")).rows;
+const radky = (v) => t.filter((r) => r.varianta === v).map((r) => `${r.poradi}:${r.navstev}/${r.navstev_postupne}/${r.p}/${r.q}`).join(' ');
+check('trychtýř: kroky, postupně, formulář v sekci Tahák a odeslání z kontaktů', radky('dvojce') === '1:3/3/100/null 2:1/1/33.3/33.3 3:2/1/66.7/100 4:2/null/66.7/100', radky('dvojce'));
+check('trychtýř: verze bez návštěv se ukáže s nulami, kontakty se neztratí', radky('zacatek') === '1:0/0/null/null 2:0/0/null/null 3:0/0/null/null 4:1/null/null/null' && radky('vychozi').startsWith('1:0/0/'), radky('zacatek'));
 
 await db.close();
 console.log(fails ? `\nCELKEM CHYB: ${fails}` : '\nVŠE OK');

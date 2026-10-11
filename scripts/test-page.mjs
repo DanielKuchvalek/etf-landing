@@ -156,9 +156,16 @@ try {
     const db = await devDb();
     const row = db.leads.find((l) => l.email === 'jana@example.com');
     check('databáze: kontakt uložený jen se sloupci e-mail, souhlas, čas souhlasu a verze', !!row && Object.keys(row).sort().join() === 'email,id,souhlas,souhlas_cas,varianta', JSON.stringify(row));
-    const visit = evs[0] && evs[0].navsteva;
-    const stored = db.events.filter((e) => e.navsteva === visit).map((e) => `${e.udalost}:${e.detail}`).sort().join();
-    check('databáze: každá odeslaná událost této návštěvy opravdu dorazila', !!visit && stored === evs.map((e) => `${e.udalost}:${e.detail ?? null}`).sort().join() && evs.every((e) => e.navsteva === visit), `${evs.length} odesláno`);
+    // od odeslání formuláře dál bez ID návštěvy, aby kontakt nešel spárovat s návštěvou
+    const BEZ = ['odeslani_pokus', 'odeslani_chyba', 'odeslano', 'tahak_otevren', 'sdileni'];
+    const sVisit = evs.filter((e) => !BEZ.includes(e.udalost));
+    const sBez = evs.filter((e) => BEZ.includes(e.udalost));
+    const key = (e) => `${e.udalost}:${e.detail ?? null}`;
+    const visit = sVisit[0] && sVisit[0].navsteva;
+    const stored = db.events.filter((e) => e.navsteva === visit).map(key).sort().join();
+    check('databáze: každá odeslaná událost této návštěvy opravdu dorazila', !!visit && stored === sVisit.map(key).sort().join() && sVisit.every((e) => e.navsteva === visit), `${sVisit.length} odesláno`);
+    check('měření: pokus, chyby a odeslání bez ID návštěvy', sBez.length >= 5 && sBez.every((e) => !('navsteva' in e)) && sBez.some((e) => e.udalost === 'odeslano'), sBez.map(key).join());
+    check('databáze: události bez ID návštěvy dorazily a ID v nich není', db.events.filter((e) => e.navsteva === null).map(key).sort().join() === sBez.map(key).sort().join(), `${sBez.length} odesláno`);
     check('databáze: v událostech nikde e-mail', !JSON.stringify(db.events).includes('@'));
     check('měření: nikde e-mail', !JSON.stringify(evs).includes('@'));
     const names = evs.map((e) => e.udalost);
@@ -265,12 +272,13 @@ try {
       await page.tap(`${T} [data-tahak]`);
       await sleep(250);
       const op = events(logs).filter((e) => e.udalost === 'tahak_otevren');
-      check('měření: otevření taháku', op.length === 1 && op[0].detail === 'sekce', JSON.stringify(op));
+      check('měření: otevření taháku, bez ID návštěvy', op.length === 1 && op[0].detail === 'sekce' && !('navsteva' in op[0]), JSON.stringify(op));
     }
     await page.tap(`${T} [data-sdilej]`);
     await sleep(300);
-    const sh = events(logs).filter((e) => e.udalost === 'sdileni').map((e) => e.detail);
-    check(`měření: sdílení (${mode})`, sh.join() === mode, sh.join());
+    const shEv = events(logs).filter((e) => e.udalost === 'sdileni');
+    const sh = shEv.map((e) => e.detail);
+    check(`měření: sdílení (${mode}), bez ID návštěvy`, sh.join() === mode && shEv.every((e) => !('navsteva' in e)), sh.join());
     if (mode === 'kopie') check('sdílení bez nativní nabídky: odkaz zkopírovaný', ((await text(page, `${T} [data-sdileni-stav]`)) || '').startsWith('Odkaz je zkopírovaný'));
     if (mode === 'rucne') {
       const url = await page.$eval(`${T} .share-url`, (i) => i.value).catch(() => null);
