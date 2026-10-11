@@ -85,3 +85,28 @@ Doplňuje exporty konverzací (`/export`), které nezachytí celý průběh prá
   - Po prvním otočení se ukázala spodní lišta a překryla třetí řadu lístků, takže klepnutí na SDY a VGT trefilo lištu. Zjistil to automatický test; teď se lišta ukáže, až jsou lístky mimo obrazovku. Skutečná vada UX, ne testu.
   - „Trading 212“ se zalamovalo mezi slovem a číslem. Ukázal to snímek; doplněná nezlomitelná mezera.
   - Test po stažení PDF neukončil proces. Doplněný explicitní konec.
+
+### 2026-10-11 – opravy po druhém testu na iPhonu, příprava Supabase a Vercelu
+
+- **Zadání pro AI:**
+  - nejdřív napsat příčinu chyby s klávesnicí na iPhonu, pak opravit a otestovat ve WebKitu (Playwright, iPhone 13 a SE) se simulovanou klávesnicí,
+  - zjistit 404 u PDF, zápis PDF přes dočasný soubor, poděkování nesmí slibovat stažení,
+  - poděkování s tlačítkem, prvním krokem a sdílením (měřené),
+  - zásady: IČO a sídlo z ARES, místo žlutých TODO „doplní správce“,
+  - favicon, obrázek pro sdílení, `color-scheme`, přístupnost panelu, šířka 320 px,
+  - schéma Supabase, trychtýř, funkce v `api/` s testy na podvrženou databázi, `vercel.json`, návod.
+- **Kontrola výstupu:**
+  - test ve WebKitu (72 kontrol) se dvěma modely klávesnice (iOS: zmenšený visualViewport, Android: zmenšené okno) a snímky s nakreslenou klávesnicí,
+  - test funkcí s podvrženou databází (54 kontrol),
+  - test stránky v Chromu (109 kontrol), nově porovnává odeslané události s tím, co server uložil, a zkouší výpadek databáze,
+  - při přegenerování PDF 170 požadavků na soubor, všechny 200 a celý soubor,
+  - u nových kontrol ověřeno, že na staré verzi stránky selžou (přetékání lístků na 320 px),
+  - snímky, obrázek pro sdílení a zásady prohlédnuté očima, Lighthouse.
+- **Kde se AI spletla a jak se na to přišlo:**
+  - Chybu s klávesnicí zavedla AI sama v předchozí verzi: panel `position: fixed` u spodku a fokus do pole hned po `showModal()` během animace. Headless Chrome klávesnici nemá, takže to žádný test neukázal. Našel to člověk na iPhonu.
+  - Kontrola šířky hlídala jen vodorovné přetečení, takže nezachytila, že na 320 px rub lístku se třemi brokery přetéká svisle přes další řadu. AI na to přišla při prohlížení snímků z 320 px a doplnila svislou kontrolu.
+  - Headless WebKit nerespektuje `backface-visibility`, takže všechny lístky ukazovaly zrcadlově rub. Na iPhonu to podle člověka fungovalo. Odhalil to snímek z WebKitu; stránka má teď pojistku přes `visibility`.
+  - Test měření po přechodu na skutečné požadavky nezachytil odeslání kontaktu: Puppeteer u `fetch`, jehož tělo stránka nečte, nevyvolá `requestfinished`. Test teď čte událost `response`.
+  - Testovací adresa `jana@seznam.cz` mohla patřit skutečnému člověku. Při kontrole diffu před commitem ji AI nahradila adresou na vyhrazené doméně `example.com`.
+  - Adresu `etf-dvojcata.vercel.app` AI chtěla použít pro `og:image`, ale kontrola ukázala, že ji už používá cizí projekt. Zvolila volnou `etf-dvojcata-clientelo` a zapsala to do návodu.
+  - Příčinu 404 u PDF se nepodařilo zjistit. AI to neoznačila za vyřešené: zapsala, co vyloučila, a přidala diagnostiku do lokálního serveru.
