@@ -40,6 +40,7 @@ node jednorazove-domeny.mjs        # aktualizuje seznam jednorázových e-mailov
 node test-page.mjs                 # interakce na 375 px: výběr ETF, formuláře, panel, měření, uložení do databáze
 node test-webkit.mjs               # WebKit, iPhone 13 / SE / SE 320 px: formuláře se simulovanou klávesnicí
 node lighthouse.mjs                # Lighthouse (mobil) pro všechny verze úvodu
+node check-live.mjs                # nasazená stránka jen čtením: hlavičky, /api/token, keep-alive 401, soubory, nadpisy (bez zápisu do databáze)
 node screenshots.mjs po            # snímky do docs/screenshots/po-*.png
 node pdf.mjs                       # vygeneruje public/tahak.pdf z tahak/tahak.html a data/etf.json
 node obrazky.mjs                   # favicony a obrázek pro sdílení public/og.png (1200×630) z data/etf.json
