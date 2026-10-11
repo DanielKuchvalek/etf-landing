@@ -48,8 +48,12 @@ a{color:var(--ink);text-decoration-thickness:1px;text-underline-offset:2px}
 .listek[aria-pressed="true"] .listek-in{transform:rotateY(180deg)}
 .listek:active .lice{transform:scale(.98)}
 .listek:active .rub{transform:rotateY(180deg) scale(.98)}
-.lice,.rub{position:absolute;inset:0;display:flex;flex-direction:column;padding:12px;border:1.5px solid var(--ink);border-radius:6px;background:var(--card);-webkit-backface-visibility:hidden;backface-visibility:hidden;box-shadow:2px 3px 0 rgba(20,20,20,.08);transition:transform .1s var(--ease)}
-.rub{transform:rotateY(180deg);padding:9px 11px}
+/* backface-visibility WebKit respektuje jen při hardwarovém skládání vrstev; pojistka: líc a rub se přepnou
+   viditelností v půlce otočení (lístek je v tu chvíli z boku) */
+.lice,.rub{position:absolute;inset:0;display:flex;flex-direction:column;padding:12px;border:1.5px solid var(--ink);border-radius:6px;background:var(--card);-webkit-backface-visibility:hidden;backface-visibility:hidden;box-shadow:2px 3px 0 rgba(20,20,20,.08);transition:transform .1s var(--ease),visibility 0s .22s}
+.rub{transform:rotateY(180deg);padding:9px 11px;visibility:hidden}
+.listek[aria-pressed="true"] .rub{visibility:visible}
+.listek[aria-pressed="true"] .lice{visibility:hidden}
 .lice .tk{font-size:1.625rem;line-height:1.1}
 .lice .co{font-size:.875rem;color:var(--ink-2);margin-top:2px}
 .lice .otoc{margin-top:auto;align-self:flex-end;font-size:.75rem;color:var(--ink-2)}
@@ -134,12 +138,25 @@ details>div p:last-child{margin:0}
 .bar{position:fixed;right:0;bottom:0;left:0;z-index:10;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));border-top:1.5px solid var(--ink);background:var(--card);animation:up .2s var(--ease)}
 .bar-in{display:flex;align-items:center;gap:12px;max-width:40rem;margin:0 auto}
 .bar p{flex:1;margin:0;font-size:.9375rem;font-weight:700;line-height:1.25}
-dialog.sheet{width:100%;max-width:40rem;max-height:92vh;max-height:92dvh;margin:auto auto 0;padding:0;border:0;border-top:2px solid var(--ink);border-radius:14px 14px 0 0;background:var(--card);color:var(--ink);overscroll-behavior:contain}
+/* Panel: výšku a odsazení zespodu nastavuje JS podle visualViewport (iOS při klávesnici nezmenší layout viewport).
+   Pozadí se zamyká přes body.zamceno, overflow:hidden na html iOS nestačí. */
+body.zamceno{position:fixed;right:0;left:0;width:100%}
+dialog.sheet{width:100%;max-width:40rem;max-height:92vh;max-height:92dvh;margin:auto auto 0;padding:0;border:0;border-top:2px solid var(--ink);border-radius:14px 14px 0 0;background:var(--card);color:var(--ink);overflow-y:auto;overscroll-behavior:contain}
 dialog.sheet[open]{animation:up .22s var(--ease)}
-dialog.sheet::backdrop{background:rgb(20 20 20 / .45)}
+dialog.sheet::backdrop{background:rgb(20 20 20 / .55)}
 .sheet-in{position:relative;padding:20px 16px calc(20px + env(safe-area-inset-bottom,0px))}
 .sheet-in h2{font-size:1.25rem;padding-right:40px}
+.sheet-in h2:focus{outline:none}
 .sheet-close{position:absolute;top:6px;right:6px;width:44px;height:44px;border:0;background:none;color:var(--ink);font-size:1.75rem;line-height:1;cursor:pointer;touch-action:manipulation}
+/* otevřená klávesnice: formulář (a panel) se zhustí, aby se nad klávesnici vešlo pole, souhlas i tlačítko;
+   popisek pole zůstává pro čtečky */
+.lead-form.kb{gap:10px}
+.lead-form.kb .field-label{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.lead-form.kb>.small{display:none}
+dialog.sheet.kb .sheet-in{padding-block:12px}
+dialog.sheet.kb h2{font-size:1.0625rem;margin-bottom:.2em}
+dialog.sheet.kb [data-host]>.small{display:none}
+dialog.sheet.kb .lead-form{margin-top:8px}
 @keyframes up{from{transform:translateY(100%)}}
 /* patička */
 .foot{padding-block:48px 120px;font-size:.8125rem;color:var(--ink-2)}
@@ -380,7 +397,7 @@ html{scroll-behavior:auto}
     </ul>
     <div class="form-slot" data-slot="sekce">
       <form class="lead-form" action="/api/lead" method="post" novalidate>
-        <label class="field">Tvůj e-mail
+        <label class="field"><span class="field-label">Tvůj e-mail</span>
           <input type="email" name="email" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" enterkeyhint="send" placeholder="jmeno@email.cz" required>
         </label>
         <label class="consent">
@@ -423,7 +440,7 @@ html{scroll-behavior:auto}
   <div class="sheet-in">
     <button class="sheet-close" type="button" aria-label="Zavřít" data-zavri>×</button>
     <div data-host>
-    <h2 id="panel-nadpis">Tahák: 7&nbsp;ETF z&nbsp;NYSE a&nbsp;jejich dvojčata, která koupíš z&nbsp;Česka</h2>
+    <h2 id="panel-nadpis" tabindex="-1">Tahák: 7&nbsp;ETF z&nbsp;NYSE a&nbsp;jejich dvojčata, která koupíš z&nbsp;Česka</h2>
     <p class="small">ISINy, poplatky a&nbsp;postup nákupu krok za krokem. PDF hned a&nbsp;zdarma.</p>
     <div class="form-slot" data-slot="lista"></div>
     </div>
@@ -493,9 +510,10 @@ html{scroll-behavior:auto}
   var dialog = doc.getElementById('panel');
   var heroOut = false;
   var done = false;
+  var typing = false;
   var blockers = new Set();
   function updateBar() {
-    bar.hidden = !(!done && heroOut && blockers.size === 0 && !dialog.open);
+    bar.hidden = !(!done && heroOut && blockers.size === 0 && !dialog.open && !typing);
   }
   if ('IntersectionObserver' in window) {
     new IntersectionObserver(function (en) {
@@ -617,7 +635,80 @@ html{scroll-behavior:auto}
     form.elements.email.focus();
   });
 
-  function openSheet(zdroj) {
+  /* Klávesnice na iPhonu: iOS nezmenší layout viewport, jen visual viewport. Pevně umístěný panel
+     by zůstal pod klávesnicí a iOS by kvůli poli posouval stránku i panel. Proto:
+     - pozadí zamkneme přes position: fixed (dokument pak nejde posunout) a po zavření vrátíme pozici,
+     - spodek panelu posadíme na horní hranu klávesnice a výšku omezíme na viditelnou část,
+     - po otevření klávesnice posuneme panel nebo stránku tak, aby bylo vidět pole i tlačítko. */
+  var vv = window.visualViewport;
+  var coarse = window.matchMedia('(pointer: coarse)').matches;
+  var baseH = vv ? vv.height : window.innerHeight;
+  var lockY = 0;
+  var opener = null;
+  function isTextField(el) { return !!el && el.tagName === 'INPUT' && el.type !== 'checkbox'; }
+  function keyboardOpen() { return !!vv && isTextField(doc.activeElement) && vv.height < baseH - 120; }
+  function jumpBy(dy) {
+    var html = doc.documentElement;
+    html.style.scrollBehavior = 'auto';
+    window.scrollBy(0, dy);
+    html.style.scrollBehavior = '';
+  }
+  function lockPage() {
+    lockY = window.scrollY;
+    doc.body.style.top = -lockY + 'px';
+    doc.body.classList.add('zamceno');
+  }
+  function unlockPage() {
+    doc.body.classList.remove('zamceno');
+    doc.body.style.top = '';
+    jumpBy(lockY - window.scrollY);
+  }
+  function fitSheet() {
+    var kb = keyboardOpen();
+    var a = doc.activeElement;
+    doc.querySelectorAll('.lead-form').forEach(function (f) { f.classList.toggle('kb', kb && f.contains(a)); });
+    dialog.classList.toggle('kb', kb && dialog.contains(a));
+    if (!dialog.open) return;
+    var s = dialog.style;
+    if (!vv || Math.abs(vv.scale - 1) > 0.01) { s.marginBottom = s.maxHeight = ''; return; }
+    s.marginBottom = Math.max(0, window.innerHeight - vv.height - vv.offsetTop) + 'px';
+    s.maxHeight = Math.round(kb ? vv.height - 8 : vv.height * 0.92) + 'px';
+  }
+  /* Pole s fokusem a tlačítko odeslat mají být nad klávesnicí; když se nevejdou obě, má přednost pole. */
+  function keepFormVisible() {
+    var a = doc.activeElement;
+    var form = a && a.closest && a.closest('.lead-form');
+    if (!form || !keyboardOpen()) return;
+    var field = (a.closest('.field, .consent') || a).getBoundingClientRect();
+    var btn = form.querySelector('[type=submit]').getBoundingClientRect();
+    var inSheet = dialog.contains(form);
+    var viewTop = inSheet ? dialog.getBoundingClientRect().top : vv.offsetTop;
+    var viewH = inSheet ? dialog.clientHeight : vv.height;
+    var need = btn.bottom + 12 - (viewTop + viewH);
+    var room = field.top - 8 - viewTop;
+    var dy = need > 0 ? Math.min(need, room) : Math.min(0, room);
+    if (Math.abs(dy) < 1) return;
+    if (inSheet) dialog.scrollTop += dy; else jumpBy(dy);
+  }
+  if (vv) {
+    vv.addEventListener('resize', function () {
+      if (!isTextField(doc.activeElement)) baseH = vv.height;
+      fitSheet();
+      requestAnimationFrame(keepFormVisible);
+    });
+    vv.addEventListener('scroll', fitSheet);
+  }
+  doc.addEventListener('focusin', function (e) {
+    typing = isTextField(e.target);
+    updateBar();
+    fitSheet();
+    if (keyboardOpen()) requestAnimationFrame(keepFormVisible);
+  });
+  doc.addEventListener('focusout', function () {
+    setTimeout(function () { typing = isTextField(doc.activeElement); updateBar(); fitSheet(); }, 0);
+  });
+
+  function openSheet(zdroj, el) {
     track('cta', { zdroj: zdroj });
     if (done) return;
     if (typeof dialog.showModal !== 'function') {
@@ -625,17 +716,30 @@ html{scroll-behavior:auto}
       return;
     }
     var form = mount('lista', zdroj);
+    opener = el;
+    lockPage();
     dialog.showModal();
+    dialog.scrollTop = 0;
+    fitSheet();
     updateBar();
     track('formular_otevren', { zdroj: zdroj });
-    form.elements.email.focus();
+    // Na dotykovém displeji fokus na nadpis: klávesnice nevyskočí během animace panelu. S myší rovnou do pole.
+    (coarse ? dialog.querySelector('h2') || form.elements.email : form.elements.email).focus({ preventScroll: true });
   }
   doc.querySelectorAll('[data-otevri="lista"], [data-otevri="karty"]').forEach(function (el) {
-    el.addEventListener('click', function (e) { e.preventDefault(); openSheet(el.getAttribute('data-otevri')); });
+    el.addEventListener('click', function (e) { e.preventDefault(); openSheet(el.getAttribute('data-otevri'), el); });
   });
   dialog.querySelector('[data-zavri]').addEventListener('click', function () { dialog.close(); });
   dialog.addEventListener('click', function (e) { if (e.target === dialog) dialog.close(); });
-  dialog.addEventListener('close', updateBar);
+  dialog.addEventListener('close', function () {
+    dialog.classList.remove('kb');
+    dialog.style.marginBottom = dialog.style.maxHeight = '';
+    unlockPage();
+    typing = false;
+    updateBar();
+    if (opener && opener.getClientRects().length) opener.focus({ preventScroll: true });
+    opener = null;
+  });
 
   /* Po odeslání: poděkování nahradí celý blok s formulářem a stáhne se PDF. */
   function finish(submitted) {

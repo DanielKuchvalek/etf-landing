@@ -11,6 +11,12 @@ npm install
 
 Používá nainstalovaný Google Chrome. Jinou cestu nastavíš proměnnou `CHROME_PATH`.
 
+Test ve WebKitu (engine Safari) potřebuje Playwright a jeho WebKit. Ten se stáhne do `scripts/node_modules`:
+
+```
+npm run webkit
+```
+
 ## Po každé změně
 
 V jednom terminálu spusť server:
@@ -26,6 +32,7 @@ python3 scripts/check_data.py      # data/etf.json: každý údaj má zdroj a da
 python3 scripts/check_page.py      # čísla na stránce odpovídají data/etf.json
 cd scripts
 node test-page.mjs                 # interakce na 375 px: výběr ETF, formuláře, panel, měření
+node test-webkit.mjs               # WebKit, iPhone 13 / SE / SE 320 px: formuláře se simulovanou klávesnicí
 node lighthouse.mjs                # Lighthouse (mobil) pro všechny verze úvodu
 node screenshots.mjs po            # snímky do docs/screenshots/po-*.png
 node pdf.mjs                       # vygeneruje public/tahak.pdf z tahak/tahak.html a data/etf.json

@@ -7,10 +7,13 @@
     "test": "node test-page.mjs",
     "shots": "node screenshots.mjs",
     "lighthouse": "node lighthouse.mjs",
-    "pdf": "node pdf.mjs"
+    "pdf": "node pdf.mjs",
+    "webkit": "PLAYWRIGHT_BROWSERS_PATH=0 playwright install webkit",
+    "test:webkit": "node test-webkit.mjs"
   },
   "devDependencies": {
     "lighthouse": "13.5.0",
+    "playwright": "1.63.0",
     "puppeteer-core": "25.13.0"
   }
 }

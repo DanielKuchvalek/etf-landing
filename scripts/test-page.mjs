@@ -143,8 +143,8 @@ try {
     await sleep(400);
     check('panel s formulářem otevřený', await page.$eval('#panel', (d) => d.open));
     check('lišta schovaná při otevřeném panelu', !(await visible(page, '#lista')));
-    const af = await page.evaluate(() => document.activeElement.name);
-    check('fokus v poli e-mail v panelu', af === 'email', af);
+    const af = await page.evaluate(() => document.activeElement.id);
+    check('fokus na nadpisu panelu (dotyk: klávesnice nevyskočí během animace)', af === 'panel-nadpis', af);
     await page.tap('#panel [data-zavri]');
     await sleep(300);
     check('panel zavřený křížkem', !(await page.$eval('#panel', (d) => d.open)));

@@ -88,6 +88,35 @@ _TODO: stack a proč (čisté HTML/CSS/JS bez build kroku, Vercel, Supabase), zp
 - **Denní keep-alive přes Vercel cron.** Bezplatný Supabase projekt se po čase bez aktivity pozastaví a formulář musí fungovat, i když stránku někdo otevře až za dva týdny.
 - **Serverless funkce v regionu `fra1` (Frankfurt).** Kratší odezva pro české návštěvníky i k databázi v EU.
 
+## Testování: co automaticky a co jen na telefonu
+
+Skripty a návod jsou ve [scripts/](scripts/README.md). Všechny vracejí nenulový kód, když něco neprojde.
+
+**Automaticky:**
+
+- **Chrome (headless, 375 px, dotyk):** výběr ETF a otočení všech lístků, chybové hlášky formuláře, odeslání, panel, lišta dole, měření (každá událost a že e-mail nikdy nejde s ID návštěvy), `prefers-reduced-motion`.
+- **WebKit, tedy engine Safari (Playwright, emulace iPhonu 13, iPhonu SE 3. generace a iPhonu SE 1. generace s šířkou 320 px):** panel a formuláře na místě s otevřenou klávesnicí. Emulátor softwarovou klávesnici nemá, proto ji test simuluje dvěma způsoby:
+  - jako iOS: layout viewport zůstane, zmenší se jen `visualViewport` a viditelná oblast se posune k poli,
+  - jako Android: zmenší se celé okno.
+
+  Kontroluje, že:
+  - nad klávesnicí je vidět nadpis panelu, pole, souhlas i tlačítko; na 320 px aspoň pole, souhlas a tlačítko,
+  - pozadí se pod panelem nepohne,
+  - po zavření se stránka vrátí na stejné místo a fokus na tlačítko, které panel otevřelo,
+  - nic nepřetéká do šířky.
+
+  Viditelnou výšku nad klávesnicí (328 px na iPhonu 13, 343 px na SE, 244 px na 320 px) jsme odhadli pesimisticky, nenaměřili.
+- **Lighthouse (mobil), data proti zdrojům, čísla na stránce proti datům, text PDF proti datům.**
+
+**Jen na skutečném telefonu:**
+
+- skutečná klávesnice iOS: její výška, lišta nad ní (šipky, Hotovo, automatické doplnění e-mailu) a to, jak Safari sám posouvá stránku k poli,
+- plynulost otočení lístků (3D na grafickém čipu; headless WebKit ho kreslí bez něj, proto stránka má pojistku, aby neprosvítal rub),
+- otevření a uložení PDF v Safari,
+- nativní sdílení a kopírování odkazu,
+- výřez displeje a domovský indikátor (safe area), tmavý režim iOS,
+- dotyková odezva a gumové dotažení stránky.
+
 ## Nejasnosti v zadání a moje rozhodnutí
 
 - **„ETF obchodované na NYSE“:** beru NYSE i NYSE Arca, fondy obchodované hlavně na Nasdaqu (např. QQQ) vynechávám. Většina amerických ETF je kotovaná na NYSE Arca, která patří pod NYSE Group.
