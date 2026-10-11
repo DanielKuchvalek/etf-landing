@@ -299,7 +299,7 @@ U „Kde ho najdeš“ jmenujeme všechny brokery, u kterých je fond ve veřejn
 
 - Data: weby správců fondů a brokerů, ověřeno 10. 10. 2026. `[d: meta.overeno_dne]`
 - Nejde o investiční doporučení ani nabídku investičního nástroje. Investování nese riziko.
-- Provozovatel a správce údajů: Daniel Kuchválek, kontakt@test.cz · Zásady ochrany osobních údajů
+- Provozovatel a správce údajů: Daniel Kuchválek, d.kuchvale@gmail.com · Zásady ochrany osobních údajů
 - Nenápadně, menším písmem: Ukázkové řešení do výběrového řízení. (Spolu s `noindex` zůstane, dokud jde o ukázku.)
 
 ---
