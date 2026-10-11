@@ -377,7 +377,8 @@ Skripty a návod jsou ve [scripts/](scripts/README.md). Všechny vracejí nenulo
 - otevření a uložení PDF v Safari,
 - nativní sdílení a kopírování odkazu,
 - výřez displeje a domovský indikátor (safe area), tmavý režim iOS,
-- dotyková odezva a gumové dotažení stránky.
+- dotyková odezva a gumové dotažení stránky,
+- **Android vůbec:** skutečné zařízení nemám, co je ověřené jen v emulaci, je v [Co v řešení chybí](#co-v-řešení-chybí).
 
 **Snímky před úpravami a po nich** jsou v [docs/screenshots/](docs/screenshots/) (375 px, generuje `scripts/screenshots.mjs`):
 
@@ -405,7 +406,7 @@ Panel a formulář na místě s otevřenou klávesnicí ve WebKitu (simulace, vi
 - **Rozdělení návštěv pro A/B test na stránce:** hypotézy jsou připravené, přepínač verzí a jeho ukládání ne ([Hypotézy](#hypotézy-na-ab-test)).
 - **Formulář bez JavaScriptu** nefunguje kvůli tokenu proti botům. Obsah stránky bez JS funguje.
 - **Dostupnost u brokerů jen částečně:** u Degira jsou ověřené 3 ze 7 dvojčat, u Fia žádné ([data/README.md](data/README.md)). Stránka jmenuje jen ověřené brokery.
-- **Test na skutečném telefonu s Androidem** neproběhl, jen na iPhonu. Android je pokrytý jen simulací (zmenšené okno).
+- **Android: zařízení nemám, na skutečném telefonu s Androidem stránka testovaná není.** Je to známé omezení. Android používá v Chromu stejný engine (Blink) jako headless Chrome v testech, takže v emulaci telefonu (375 px, dotyk, [test-page.mjs](scripts/test-page.mjs)) je ověřené: otočení všech lístků, chybové hlášky, odeslání a poděkování, panel ze spodní lišty, sdílení (nativní, zrušené, kopie, ruční), měření, CSP, `prefers-reduced-motion` a nic nepřetéká do šířky. Lighthouse měří v mobilní emulaci se zpomaleným procesorem a sítí. Klávesnici, která zmenší celé okno jako na Androidu, simuluje test ve WebKitu. **Neověřené zůstává:** skutečná klávesnice (Gboard a další) a její lišta s návrhy, nativní nabídka sdílení Androidu, otevření PDF v Chromu na Androidu a plynulost otočení lístků na slabším telefonu.
 - **Jistota, že denní keep-alive stačí** proti uspání bezplatného projektu Supabase ([Před spuštěním kampaně](#před-spuštěním-kampaně)).
 
 ## Před spuštěním kampaně
