@@ -3,7 +3,7 @@
 - **Živá stránka** (nasazeno 11. 10. 2026): [etf-dvojcata-demo.vercel.app](https://etf-dvojcata-demo.vercel.app/) · reklama A „Dvojče“: [?v=dvojce](https://etf-dvojcata-demo.vercel.app/?v=dvojce) · reklama B „Začátek“: [?v=zacatek](https://etf-dvojcata-demo.vercel.app/?v=zacatek)
 - **Myšlenka:** americká ETF ti broker v Česku často nenabídne. Stránka k 7 známým ETF z NYSE jedním klepnutím ukáže evropské „dvojče“, které koupíš, a za e-mail dá PDF tahák s postupem nákupu.
 - **Očekávaná konverze** (návštěva → odeslaný formulář): 2–13 %, nejspíš kolem 6 %. Je to odhad, [výpočet po krocích](#očekávaná-konverze).
-- **Do ostrého spuštění chybí:** posouzení právníkem, rozhodnutí o double opt-inu, údaje a e-mailová služba od správce, hotové obrázky reklam, ověření pravidel Meta pro finanční reklamu a vlastní doména ([seznam](#před-spuštěním-kampaně)).
+- **Do ostrého spuštění chybí:** posouzení právníkem, rozhodnutí o double opt-inu, údaje a e-mailová služba od správce, ověření pravidel Meta pro finanční reklamu a vlastní doména ([seznam](#před-spuštěním-kampaně)).
 
 ## Jak to vyzkoušet za 2 minuty
 
@@ -69,7 +69,12 @@ Texty všech částí jsou v [texty.md](texty.md).
 
 ## Dvě verze reklamy
 
-Obě pro Meta (Facebook a Instagram) na mobilu: statický obrázek 4 : 5 do feedu a 9 : 16 do Stories a Reels, tlačítko „Zjistit víc“. Texty a popis obrázků jsou v [reklamy/](reklamy/README.md). Obrázky jsou popsané jako zadání pro grafika, hotové nejsou.
+Obě pro Meta (Facebook a Instagram) na mobilu: statický obrázek 4 : 5 do feedu a 9 : 16 do Stories a Reels, tlačítko „Zjistit víc“. Texty jsou v [reklamy/](reklamy/README.md). Obrázky generuje [scripts/reklamy.mjs](scripts/reklamy.mjs) z HTML ve stylu stránky (sešit, fix, lístky), takže jdou upravit a přegenerovat. U Stories a Reels je text mimo horních 270 px a dolních 450 px, kde je ovládání aplikace.
+
+| | Feed 1080 × 1350 | Stories a Reels 1080 × 1920 |
+|---|---|---|
+| **A „Dvojče“** | <img src="reklamy/a-dvojce-feed.png" width="240" alt="Reklama A do feedu: VOO přeškrtnuté, šipka, VUAA v kroužku, evropské dvojče, koupíš z Česka"> | <img src="reklamy/a-dvojce-stories.png" width="190" alt="Reklama A do Stories"> |
+| **B „Začátek“** | <img src="reklamy/b-zacatek-feed.png" width="240" alt="Reklama B do feedu: Kterým ETF začít? a seznam 7 typů ETF s tickery"> | <img src="reklamy/b-zacatek-stories.png" width="190" alt="Reklama B do Stories"> |
 
 | | A „Dvojče“ ([a-dvojce.md](reklamy/a-dvojce.md)) | B „Začátek“ ([b-zacatek.md](reklamy/b-zacatek.md)) |
 |---|---|---|
@@ -393,7 +398,6 @@ Panel a formulář na místě s otevřenou klávesnicí ve WebKitu (simulace, vi
 
 ## Co v řešení chybí
 
-- **Hotové obrázky reklam.** Obě reklamy mají text a podrobný popis obrázku pro grafika, obrázky samotné nejsou.
 - **E-maily po odeslání.** Tahák se ukáže hned, ale e-mailová služba a první e-maily nejsou. Vybere je správce, je to další zpracovatel do zásad.
 - **Double opt-in:** doporučení a co je k němu potřeba, je v [Bezpečnosti](#bezpečnost-a-ochrana-proti-spamu). Postavený není.
 - **Rozdělení návštěv pro A/B test na stránce:** hypotézy jsou připravené, přepínač verzí a jeho ukládání ne ([Hypotézy](#hypotézy-na-ab-test)).
@@ -427,9 +431,9 @@ Stránka je nasazená a funguje. Zbývá to, co musí doplnit nebo rozhodnout n�
 
 **Reklama:**
 
-- nechat podle popisu vyrobit obrázky obou reklam ([reklamy/](reklamy/README.md)),
+- zkontrolovat obrázky reklam v náhledu Ads Manageru (bezpečné zóny Stories a Reels jsem ověřil jen z návodů třetích stran),
 - ověřit u Meta, jestli kampaň nespadá do speciální kategorie „Finanční produkty a služby“ (ta může omezit cílení podle věku) a jestli pravidla pro finanční služby nevyžadují ověření inzerenta nebo upozornění přímo v reklamě,
-- ověřit rozměry obrázků a limity textů v Meta Ads Guide.
+- ověřit limity textů v Ads Manageru.
 
 **Vývojář:**
 

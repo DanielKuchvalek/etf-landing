@@ -19,6 +19,8 @@
 
 ## Obrázek
 
+Hotové obrázky: [a-dvojce-feed.png](a-dvojce-feed.png) (1080 × 1350) a [a-dvojce-stories.png](a-dvojce-stories.png) (1080 × 1920), generuje je [scripts/reklamy.mjs](../scripts/reklamy.mjs) z HTML ve stylu stránky. Ticker dvojčete a „Stejný index S&P 500“ bere z `data/etf.json`. Navíc je nahoře malý název „ETF dvojčata“, stejný jako na stránce, aby návštěvník poznal, kam přišel.
+
 **Feed 4 : 5**
 
 - Nahoře velký ticker **VOO**, pod ním šipka dolů a ještě větší **VUAA** v akcentní barvě zvoleného designu.
@@ -29,7 +31,7 @@
 **Stories a Reels 9 : 16**
 
 - Stejný obsah, VOO a VUAA nad sebou, víc vzduchu.
-- Text držet mimo horní a dolní okraj, kde Instagram překrývá ovládání (`[TODO]` přesné zóny podle Meta).
+- Text je mimo horních 270 px, dolních 450 px a 65 px po stranách (ovládání Instagramu a Facebooku; skript to kontroluje). Oficiální zóny Meta jsem neověřil, jen z návodů třetích stran, které se rozcházejí (dole 250–670 px), proto před spuštěním zkontrolovat v náhledu Ads Manageru.
 
 ## Navazující úvod stránky
 

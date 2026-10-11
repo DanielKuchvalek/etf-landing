@@ -25,9 +25,11 @@
 
 ## Obrázek
 
+Hotové obrázky: [b-zacatek-feed.png](b-zacatek-feed.png) (1080 × 1350) a [b-zacatek-stories.png](b-zacatek-stories.png) (1080 × 1920), generuje je [scripts/reklamy.mjs](../scripts/reklamy.mjs) z HTML ve stylu stránky. Seznam typů a tickerů bere ze stejných lístků jako stránka.
+
 **Feed 4 : 5** (design „Tahák v sešitě“)
 
-- Čtverečkovaný papír, nahoře modrou propiskou: „Kterým ETF začít?“
+- Čtverečkovaný papír, nahoře „Kterým ETF začít?“ jako nadpis stránky se žlutým fixem na „začít“. Původně „modrou propiskou“; modrá ze vzhledu stránky vypadla (`design.md`), tak ani reklama ji nemá.
 - Pod tím úhledný seznam 7 typů s tickery:
   - S&P 500 · VOO
   - celé USA · VTI
@@ -41,7 +43,7 @@
 - Žádný řádek není zakroužkovaný ani označený jako „nejlepší“, nic nedoporučujeme.
 - Dole jeden řádek: „Co v nich je a kde je koupíš z Česka“.
 
-**Stories a Reels 9 : 16:** stejný seznam, větší písmo, text mimo okraje s ovládáním (`[TODO]` přesné zóny podle Meta).
+**Stories a Reels 9 : 16:** stejný seznam, větší písmo, text je mimo horních 270 px, dolních 450 px a 65 px po stranách (ovládání Instagramu a Facebooku; skript to kontroluje). Oficiální zóny Meta jsem neověřil, jen z návodů třetích stran, které se rozcházejí (dole 250–670 px), proto před spuštěním zkontrolovat v náhledu Ads Manageru.
 
 ## Navazující úvod stránky
 

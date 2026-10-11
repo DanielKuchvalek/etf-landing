@@ -19,7 +19,8 @@ Původní reklamu B „Poplatky“ jsme zahodili. Bez srovnávacího fondu se zd
 - **Obrázky:**
   - feed na výšku 4 : 5 (1080 × 1350 px),
   - Stories a Reels 9 : 16 (1080 × 1920 px).
-  - `[TODO]` Rozměry a bezpečné zóny pro text ověřit v Meta Ads Guide před výrobou.
+  - hotové v této složce (`*-feed.png`, `*-stories.png`), generuje je [scripts/reklamy.mjs](../scripts/reklamy.mjs) z HTML, takže texty a vzhled jdou upravit a přegenerovat,
+  - u 9 : 16 text je mimo horních 270 px, dolních 450 px a 65 px po stranách (ovládání Instagramu a Facebooku; skript to kontroluje). Oficiální zóny Meta jsem neověřil, jen z návodů třetích stran, které se rozcházejí (dole 250–670 px), proto před spuštěním zkontrolovat v náhledu Ads Manageru.
 - **Texty:**
   - primární text je krátký, aby háček byl vidět před zkrácením „… Zobrazit víc“,
   - nadpis do jednoho řádku,
