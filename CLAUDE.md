@@ -19,6 +19,7 @@ Navržená struktura. Složky vznikají, až jsou potřeba.
 public/        web – jediná složka, kterou Vercel servíruje
   index.html   celá stránka; CSS a JS jsou inline (jeden požadavek)
   tahak.pdf    lead magnet, generovaný (needitovat ručně)
+  favicon.*, apple-touch-icon.png, og.png   ikony a obrázek pro sdílení, generuje scripts/obrazky.mjs
   ochrana-osobnich-udaju.html   návrh zásad (musí schválit právník)
 api/           serverless funkce (zpracování formuláře)
 tahak/         zdroj PDF taháku (tahak.html), generuje scripts/pdf.mjs

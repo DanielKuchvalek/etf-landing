@@ -1,12 +1,13 @@
 // Vygeneruje public/tahak.pdf ze zdroje tahak/tahak.html a dat data/etf.json (headless Chrome)
 // a náhled první strany public/img/tahak-nahled.webp pro formulář (potřebuje macOS kvůli PDFKit).
 // Použití: node pdf.mjs   (po každé změně dat nebo taháku)
-import { readFileSync, statSync, writeFileSync, renameSync, mkdirSync, mkdtempSync, rmSync } from 'node:fs';
+import { readFileSync, statSync, mkdirSync, mkdtempSync, rmSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { basename, dirname, join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { launch } from './lib/browser.mjs';
+import { writeAtomic } from './lib/write.mjs';
 
 const PREVIEW_W = 480;
 const PREVIEW_H = 420;
@@ -14,18 +15,6 @@ const PREVIEW_H = 420;
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const data = JSON.parse(readFileSync(join(root, 'data', 'etf.json'), 'utf8'));
 const out = join(root, 'public', 'tahak.pdf');
-
-// Zápis přes dočasný soubor ve stejné složce a přejmenování (na stejném disku atomické):
-// běžící server tak nikdy neuvidí chybějící ani napůl zapsaný soubor.
-function writeAtomic(path, data) {
-  const tmp = join(dirname(path), `.${basename(path)}.tmp-${process.pid}`);
-  try {
-    writeFileSync(tmp, data);
-    renameSync(tmp, path);
-  } finally {
-    rmSync(tmp, { force: true });
-  }
-}
 
 const browser = await launch();
 try {

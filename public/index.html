@@ -9,11 +9,20 @@
 <meta property="og:description" content="VOO, VT a dalších 5 ETF z USA ti broker v Česku často nenabídne. Najdi jejich evropská dvojčata, která koupíš.">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="cs_CZ">
+<meta property="og:site_name" content="ETF dvojčata">
+<!-- og:image musí mít absolutní adresu: po nasazení ji sladit s doménou na Vercelu (README, Nasazení) -->
+<meta property="og:image" content="https://etf-dvojcata-clientelo.vercel.app/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ETF dvojčata: k americkému VOO jeho evropské dvojče VUAA, u kterých brokerů ho koupíš a kolik stojí.">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#FFFDF5">
-<meta name="color-scheme" content="light">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23141414'/%3E%3Cpath d='M6 21c3-1 7-1 10 0M17 21c3-1 6-1 9 0' stroke='%23FFE45C' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M8 11l3 3 6-7' stroke='%2339B26B' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<meta name="color-scheme" content="only light">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <style>
-:root{--paper:#FFFDF5;--grid:#EDEFF2;--card:#fff;--ink:#141414;--ink-2:#4A4A4A;--line:#D8D4C8;--fix:#FFE45C;--ok:#177A41;--red:#C62F3B;--ease:cubic-bezier(.2,.8,.2,1)}
+:root{color-scheme:only light;--paper:#FFFDF5;--grid:#EDEFF2;--card:#fff;--ink:#141414;--ink-2:#4A4A4A;--line:#D8D4C8;--fix:#FFE45C;--ok:#177A41;--red:#C62F3B;--ease:cubic-bezier(.2,.8,.2,1)}
 *,*::before,*::after{box-sizing:border-box}
 [hidden]{display:none!important}
 html{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent;scroll-behavior:smooth;scroll-padding-top:12px}
@@ -40,17 +49,18 @@ a{color:var(--ink);text-decoration-thickness:1px;text-underline-offset:2px}
 .note{font-size:.875rem;color:var(--ink-2);margin:0}
 .picker-label{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;font-weight:700;margin:18px 0 12px}
 .hint{font-weight:400;font-size:.875rem;color:var(--ink-2)}
-/* lístky z taháku: po klepnutí se otočí (jen CSS), vzadu je dvojče */
+/* lístky z taháku: po klepnutí se otočí (jen CSS), vzadu je dvojče; líc a rub jsou ve stejné buňce mřížky,
+   takže lístek je vysoký podle delší strany a na úzkém displeji nic nepřeteče */
 .listky{display:grid;grid-template-columns:1fr 1fr;gap:12px 10px}
-.listek{position:relative;display:block;height:124px;color:var(--ink);text-decoration:none;perspective:900px;transform:rotate(var(--r,0deg));touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.listek{position:relative;display:grid;min-height:124px;color:var(--ink);text-decoration:none;perspective:900px;transform:rotate(var(--r,0deg));touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 .listek.paska::before{content:"";position:absolute;z-index:2;top:-6px;left:50%;width:40px;height:13px;margin-left:-20px;background:rgba(214,203,168,.55);transform:rotate(-2deg)}
-.listek-in{position:relative;display:block;height:100%;transform-style:preserve-3d;transition:transform .45s var(--ease)}
+.listek-in{position:relative;display:grid;transform-style:preserve-3d;transition:transform .45s var(--ease)}
 .listek[aria-pressed="true"] .listek-in{transform:rotateY(180deg)}
 .listek:active .lice{transform:scale(.98)}
 .listek:active .rub{transform:rotateY(180deg) scale(.98)}
 /* backface-visibility WebKit respektuje jen při hardwarovém skládání vrstev; pojistka: líc a rub se přepnou
    viditelností v půlce otočení (lístek je v tu chvíli z boku) */
-.lice,.rub{position:absolute;inset:0;display:flex;flex-direction:column;padding:12px;border:1.5px solid var(--ink);border-radius:6px;background:var(--card);-webkit-backface-visibility:hidden;backface-visibility:hidden;box-shadow:2px 3px 0 rgba(20,20,20,.08);transition:transform .1s var(--ease),visibility 0s .22s}
+.lice,.rub{grid-area:1/1;display:flex;flex-direction:column;padding:12px;border:1.5px solid var(--ink);border-radius:6px;background:var(--card);-webkit-backface-visibility:hidden;backface-visibility:hidden;box-shadow:2px 3px 0 rgba(20,20,20,.08);transition:transform .1s var(--ease),visibility 0s .22s}
 .rub{transform:rotateY(180deg);padding:9px 11px;visibility:hidden}
 .listek[aria-pressed="true"] .rub{visibility:visible}
 .listek[aria-pressed="true"] .lice{visibility:hidden}
@@ -442,7 +452,7 @@ html{scroll-behavior:auto}
   </div>
 </div>
 
-<dialog class="sheet" id="panel" aria-labelledby="panel-nadpis">
+<dialog class="sheet" id="panel" aria-modal="true" aria-labelledby="panel-nadpis">
   <div class="sheet-in">
     <button class="sheet-close" type="button" aria-label="Zavřít" data-zavri>×</button>
     <div data-host>
@@ -734,6 +744,14 @@ html{scroll-behavior:auto}
   }
   doc.querySelectorAll('[data-otevri="lista"], [data-otevri="karty"]').forEach(function (el) {
     el.addEventListener('click', function (e) { e.preventDefault(); openSheet(el.getAttribute('data-otevri'), el); });
+  });
+  // Tab v panelu dokola: z posledního prvku na první (a se Shiftem obráceně), fokus neuteče do prohlížeče
+  dialog.addEventListener('keydown', function (e) {
+    if (e.key !== 'Tab') return;
+    var f = [].filter.call(dialog.querySelectorAll('button, a[href], input:not([tabindex="-1"])'), function (el) { return !el.disabled && el.getClientRects().length; });
+    var i = f.indexOf(doc.activeElement);
+    if (!e.shiftKey && i === f.length - 1) { e.preventDefault(); f[0].focus(); }
+    else if (e.shiftKey && i === 0) { e.preventDefault(); f[f.length - 1].focus(); }
   });
   dialog.querySelector('[data-zavri]').addEventListener('click', function () { dialog.close(); });
   dialog.addEventListener('click', function (e) { if (e.target === dialog) dialog.close(); });

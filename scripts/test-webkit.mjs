@@ -186,6 +186,8 @@ try {
       await sleep(550);
       // rub neotočených lístků nesmí prosvítat (headless WebKit nerespektuje backface-visibility)
       const faces = await page.$$eval('.listek', (ls) => ls.map((l) => `${l.dataset.etf}:${getComputedStyle(l.querySelector('.lice')).visibility[0]}${getComputedStyle(l.querySelector('.rub')).visibility[0]}`));
+      const spill = await page.$$eval('.lice, .rub', (fs) => fs.filter((f) => f.scrollHeight - f.clientHeight > 1).map((f) => `${f.closest('.listek').dataset.etf}:${f.className} ${f.scrollHeight}/${f.clientHeight}`));
+      check(`${tag}: obsah lístků (líc i rub) se vejde, nic nepřetéká dolů`, !spill.length, spill.join(', '));
       check(`${tag}: viditelný jen líc, u otočeného jen rub`, faces.every((f) => f.startsWith('VWO') ? f.endsWith('hv') : f.endsWith('vh')), faces.join(' '));
       const over = await page.evaluate(() => {
         const W = document.documentElement.clientWidth;

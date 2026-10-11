@@ -23,6 +23,10 @@ Všechny texty landing page v pořadí sekcí. Tykáme, bez rodu (žádné „hl
 - **`<title>`:** Evropská dvojčata amerických ETF | ETF dvojčata
 - **Meta description a OG popis:** VOO, VT a dalších 5 ETF z USA ti broker v Česku často nenabídne. Najdi jejich evropská dvojčata, která koupíš.
   `[r: PRIIPs]` `[d: * › ucits_obdoba.kde_koupit.xtb_cz]`
+- **Obrázek pro sdílení (og:image, 1200×630, `public/og.png`, generuje `scripts/obrazky.mjs`):**
+  - vlevo: logo, nadpis „Najdi evropské dvojče k VOO, VT a dalším ETF z USA“ (fix na „dvojče“), podnadpis „Americká ti broker často nenabídne, evropská ano.“
+  - vpravo: přeškrtnuté VOO → lístek s dvojčetem VUAA v kroužku, „✓ koupíš u XTB, Trading 212“, „7 Kč ročně z 10 000 Kč“, „VOO: 3 Kč“, pod ním „Data od správců fondů, ověřeno 10. 10. 2026“. Čísla a brokery skript bere z `data/etf.json`. `[d: VOO › ucits_obdoba.ter]` `[d: VOO › ter]` `[d: VOO › ucits_obdoba.kde_koupit]`
+  - alt: ETF dvojčata: k americkému VOO jeho evropské dvojče VUAA, u kterých brokerů ho koupíš a kolik stojí.
 
 ---
 

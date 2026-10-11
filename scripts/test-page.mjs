@@ -257,6 +257,50 @@ try {
     await page.close();
   }
 
+  // 10) Hlavička: ikony, obrázek pro sdílení, jen světlé barvy
+  {
+    const { page } = await open();
+    const head = await page.evaluate(async () => {
+      const attr = (sel, a) => (document.querySelector(sel) || { getAttribute: () => null }).getAttribute(a);
+      const status = async (u) => { const r = await fetch(u); return `${u} ${r.status} ${r.headers.get('content-type')}`; };
+      const og = await createImageBitmap(await (await fetch('/og.png')).blob());
+      return {
+        scheme: attr('meta[name=color-scheme]', 'content'), css: getComputedStyle(document.documentElement).colorScheme,
+        ogImage: attr('meta[property="og:image"]', 'content'), ogSize: `${og.width}×${og.height}`,
+        files: await Promise.all(['/favicon.svg', '/favicon.ico', '/apple-touch-icon.png', '/og.png'].map(status)),
+        modal: attr('#panel', 'aria-modal'),
+      };
+    });
+    check('color-scheme jen světlé (tmavý režim iOS nic nepřebarví)', head.scheme === 'only light' && head.css.includes('only'), `${head.scheme} / ${head.css}`);
+    check('favicon, ikona pro iOS a obrázek pro sdílení existují', head.files.every((f) => / 200 (image|text)/.test(f)), head.files.join(' | '));
+    check('og:image: absolutní https adresa, 1200×630', /^https:\/\/[^/]+\/og\.png$/.test(head.ogImage) && head.ogSize === '1200×630', `${head.ogImage} ${head.ogSize}`);
+    check('panel má aria-modal', head.modal === 'true');
+    await page.close();
+  }
+
+  // 11) Panel z klávesnice (počítač bez dotyku): Enter otevře, fokus v poli, Tab zůstane v panelu, Esc zavře a vrátí fokus
+  {
+    const page = await browser.newPage();
+    await page.setViewport({ width: 1024, height: 768 });
+    await page.goto(BASE, { waitUntil: 'networkidle0' });
+    await page.evaluate(() => document.getElementById('pary').scrollIntoView({ behavior: 'instant' }));
+    await sleep(400);
+    const y0 = await page.evaluate(() => Math.round(scrollY));
+    await page.focus('[data-otevri="lista"]');
+    await page.keyboard.press('Enter');
+    await sleep(400);
+    check('klávesnice: Enter otevře panel a fokus je v poli e-mail', await page.evaluate(() => document.getElementById('panel').open && document.activeElement.name === 'email'));
+    let inside = true;
+    for (let i = 0; i < 7; i++) { await page.keyboard.press('Tab'); inside = inside && await page.evaluate(() => document.getElementById('panel').contains(document.activeElement)); }
+    for (let i = 0; i < 7; i++) { await page.keyboard.down('Shift'); await page.keyboard.press('Tab'); await page.keyboard.up('Shift'); inside = inside && await page.evaluate(() => document.getElementById('panel').contains(document.activeElement)); }
+    check('klávesnice: Tab i Shift+Tab zůstávají v panelu', inside);
+    await page.keyboard.press('Escape');
+    await sleep(300);
+    const after = await page.evaluate(() => ({ open: document.getElementById('panel').open, focus: document.activeElement.getAttribute('data-otevri'), y: Math.round(scrollY) }));
+    check('klávesnice: Esc zavře panel, fokus zpátky na tlačítku, stránka na místě', !after.open && after.focus === 'lista' && after.y === y0, JSON.stringify({ ...after, y0 }));
+    await page.close();
+  }
+
   // 5) Skryté pole proti botům
   {
     const { page, logs } = await open();
