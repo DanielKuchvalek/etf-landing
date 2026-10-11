@@ -40,10 +40,24 @@ const devDb = (q = '') => fetch(`${BASE}__dev/db${q}`).then((r) => r.json());
 const waitFor = (page, sel, ms = 12000) => page.waitForSelector(sel, { timeout: ms }).then(() => true, () => false);
 const waitError = (page, F, ms = 12000) => page.waitForFunction((F) => { const p = document.querySelector(`${F} .form-error`); return p && !p.hidden && !document.querySelector(`${F} [type=submit]`).disabled; }, { timeout: ms }, F).then(() => true, () => false);
 const visible = (page, sel) => page.$eval(sel, (el) => !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length)).catch(() => false);
-const text = (page, sel) => page.$eval(sel, (el) => el.textContent.trim()).catch(() => null);
+// Klepnutí bez plynulého posunu: puppeteer před klepnutím k prvku posouvá a se scroll-behavior: smooth
+// klepne doprostřed posunu, vedle prvku. Proto prvek nejdřív okamžitě vystředíme.
+const tapStill = async (page, sel) => { await page.$eval(sel, (el) => el.scrollIntoView({ block: 'center', behavior: 'instant' })); await sleep(50); await page.tap(sel); };
+const text = (page, sel) =>page.$eval(sel, (el) => el.textContent.trim()).catch(() => null);
 
 try {
   await devDb('?smazat=1&vypadek=0');
+
+  // 0) JS do 20 kB (limit z CLAUDE.md, všechny vložené skripty) a ID návštěvy i bez crypto.randomUUID (http v lokální síti)
+  {
+    const html = await fetch(BASE).then((r) => r.text());
+    const js = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].reduce((n, m) => n + Buffer.byteLength(m[1]), 0);
+    check('JavaScript na stránce do 20 000 B', js <= 20000, `${js} B`);
+    const { page, logs } = await open('', () => { delete Crypto.prototype.randomUUID; });
+    const ev = logs.find((l) => l.type === 'event' && l.data && l.data.udalost === 'prichod');
+    check('ID návštěvy bez crypto.randomUUID: UUID v4, server ho přijme', !!ev && ev.status === 204 && /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(ev.data.navsteva), ev && `${ev.status} ${ev.data.navsteva}`);
+    await page.close();
+  }
 
   // 1) Varianty úvodu
   const H1 = {
@@ -115,7 +129,7 @@ try {
     await page.type(`${F} input[name=email]`, '.com');
     await page.tap(`${F} [type=submit]`); await sleep(100);
     check('chyba: chybí souhlas', (await err()) === 'Zaškrtni prosím souhlas.', await err());
-    await page.tap(`${F} input[name=consent]`);
+    await tapStill(page, `${F} input[name=consent]`);
     await page.setOfflineMode(true);
     await page.tap(`${F} [type=submit]`); await sleep(100);
     check('chyba: offline', (await err()) === 'Vypadá to, že nejde internet. Zkontroluj připojení a zkus to znovu.', await err());
@@ -185,7 +199,7 @@ try {
     check('tlačítko pod kartami otevře panel (ne skok dolů)', await page.$eval('#panel', (d) => d.open));
     const F = '#panel .lead-form';
     await page.type(`${F} input[name=email]`, 'petr@example.com');
-    await page.tap(`${F} input[name=consent]`);
+    await tapStill(page, `${F} input[name=consent]`);
     await page.tap(`${F} [type=submit]`);
     await waitFor(page, '#panel .thanks');
     check('odeslání z panelu → poděkování', ((await text(page, '#panel .thanks h3')) || '') === 'Hotovo, tahák je tvůj.');
@@ -238,7 +252,7 @@ try {
     const { page, logs } = await open('', before);
     const F = '[data-slot="sekce"] .lead-form';
     await page.type(`${F} input[name=email]`, 'eva@example.com');
-    await page.tap(`${F} input[name=consent]`);
+    await tapStill(page, `${F} input[name=consent]`);
     await page.tap(`${F} [type=submit]`);
     await waitFor(page, '#tahak .thanks');
     await sleep(700); // fokus na poděkování stránku plynule posune, klepat až potom
@@ -372,7 +386,7 @@ try {
     const focus = await page.evaluate(() => document.activeElement.name);
     check('Enter bez souhlasu: hláška o souhlasu a fokus na zaškrtávátku', err === 'Zaškrtni prosím souhlas.' && focus === 'consent', `${err} | ${focus}`);
     await sleep(700); // fokus na zaškrtávátko stránku plynule posune, klepnout až potom
-    await page.tap(`${F} input[name=consent]`);
+    await tapStill(page, `${F} input[name=consent]`);
     await page.focus(`${F} input[name=email]`);
     await page.keyboard.press('Enter');
     await waitFor(page, '#tahak .thanks');
@@ -413,7 +427,7 @@ try {
     const F = '[data-slot="sekce"] .lead-form';
     await devDb('?vypadek=1');
     await page.type(`${F} input[name=email]`, 'petra@example.com');
-    await page.tap(`${F} input[name=consent]`);
+    await tapStill(page, `${F} input[name=consent]`);
     await page.tap(`${F} [type=submit]`);
     await waitError(page, F);
     const err = ((await text(page, `${F} .form-error`)) || '').replace(/\u00a0/g, ' ');

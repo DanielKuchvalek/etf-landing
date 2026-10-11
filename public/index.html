@@ -487,20 +487,17 @@ html{scroll-behavior:auto}
   var doc = document;
   var qs = new URLSearchParams(location.search);
   var variant = ['dvojce', 'zacatek'].indexOf(qs.get('v')) >= 0 ? qs.get('v') : 'vychozi';
-  /* ID návštěvy: náhodné UUID jen v paměti tohoto načtení stránky (nic se neukládá do prohlížeče).
-     crypto.randomUUID funguje jen přes https, proto náhrada přes getRandomValues (třeba telefon v lokální síti). */
+  // ID návštěvy jen v paměti tohoto načtení; randomUUID chybí na http (telefon v lokální síti)
   function uuid() {
-    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    if (crypto.randomUUID) return crypto.randomUUID();
     var b = crypto.getRandomValues(new Uint8Array(16));
-    b[6] = (b[6] & 15) | 64;
-    b[8] = (b[8] & 63) | 128;
-    var h = [].map.call(b, function (x) { return (x + 256).toString(16).slice(1); }).join('');
-    return h.slice(0, 8) + '-' + h.slice(8, 12) + '-' + h.slice(12, 16) + '-' + h.slice(16, 20) + '-' + h.slice(20);
+    b[6] = b[6] & 15 | 64;
+    b[8] = b[8] & 63 | 128;
+    return [].map.call(b, function (x, i) { return (i > 3 && i < 11 && i % 2 == 0 ? '-' : '') + (x + 256).toString(16).slice(1); }).join('');
   }
   var visitId = uuid();
 
-  /* Měření: anonymní událost na /api/event (sendBeacon, stránku nezdrží). Detail je krátký text bez „@“,
-     server jiné odmítne. ID návštěvy se nikdy neposílá s e-mailem. */
+  // Měření: anonymní událost (sendBeacon stránku nezdrží), nikdy s e-mailem
   function track(name, detail) {
     var e = { navsteva: visitId, udalost: name, varianta: variant };
     detail = String(detail == null ? '' : detail).replace(/[^A-Za-z0-9_:.-]/g, '').slice(0, 40);
@@ -510,9 +507,7 @@ html{scroll-behavior:auto}
     if (window.fetch) fetch('/api/event', { method: 'POST', body: body, keepalive: true, headers: { 'Content-Type': 'text/plain' } }).catch(function () {});
   }
 
-  /* Token proti botům: podepsaný čas vydání ze /api/token, stránka si ho vezme hned po načtení.
-     Server odmítne kontakt bez tokenu a potichu zahodí odeslaný dřív než 3 s po vydání (to stihne jen bot).
-     Kdo je rychlejší, chvíli počká na „Odesílám…“, o kontakt nepřijde. */
+  // Token proti botům: server zahodí kontakt do 3 s od vydání, rychlejší člověk počká na „Odesílám…“
   var MIN_FORM_MS = 3200;
   var token = null;
   var tokenAt = 0;
@@ -536,12 +531,11 @@ html{scroll-behavior:auto}
   window.addEventListener('load', function () { setTimeout(function () { getToken().catch(function () {}); }, 0); });
   function wait(ms) { return new Promise(function (resolve) { setTimeout(resolve, Math.max(0, ms)); }); }
 
-  /* Odeslání kontaktu na /api/lead: jen e-mail, souhlas, verze úvodu, token a skryté pole, záměrně bez ID návštěvy.
-     Při chybě vrátí { chyba }: email / souhlas / mx / jednorazovy / limit od serveru, jinak sit nebo server. */
+  // Kontakt záměrně bez ID návštěvy; chyba je { chyba: kód ze serveru | sit | server }
   function submitLead(lead, retried) {
     return getToken(retried).then(function () { return wait(MIN_FORM_MS - (Date.now() - tokenAt)); }).then(function () { return postLead(lead); })
       .catch(function (err) {
-        // propadlý token (stránka otevřená přes den): jednou vzít nový a zkusit znovu
+        // propadlý token (stránka otevřená přes den): jednou nový
         if (err && err.chyba === 'token' && !retried) return submitLead(lead, true);
         throw err;
       });
@@ -563,7 +557,6 @@ html{scroll-behavior:auto}
 
   track('prichod', qs.get('ref') === 'sdileni' ? 'sdileni' : qs.get('utm_source'));
 
-  /* Hloubka scrollu: 25, 50, 75 a 100 %, každá jednou. */
   var marks = [25, 50, 75, 100];
   var ticking = false;
   function onScroll() {
@@ -578,7 +571,7 @@ html{scroll-behavior:auto}
   }
   window.addEventListener('scroll', onScroll, { passive: true });
 
-  /* Spodní lišta: až když jsou lístky mimo obrazovku (nepřekrývá je) a není vidět výzva ani formulář. */
+  // Spodní lišta: až jsou lístky pryč a není vidět výzva ani formulář
   var bar = doc.getElementById('lista');
   var dialog = doc.getElementById('panel');
   var heroOut = false;
@@ -601,7 +594,6 @@ html{scroll-behavior:auto}
     io.observe(doc.getElementById('tahak'));
   }
 
-  /* Lístky: klepnutí otočí lístek (otočený je vždy jen jeden), pod nimi se ukáže výzva a podrobnosti. */
   var picker = doc.querySelector('.listky');
   var listky = picker.querySelectorAll('.listek[data-etf]');
   var cta = doc.getElementById('vyber-cta');
@@ -609,9 +601,7 @@ html{scroll-behavior:auto}
   var twins = result.querySelectorAll('.twin');
   picker.classList.add('peek');
 
-  /* Otočení: jedna rovina s perspektivou 0 → 90° (je vidět strana, ze které se otáčí). Když je lístek přesně
-     z boku (konec první půlky), vymění se strany a lístek dotočí −90 → 0°. Strany se mění podle konce animace,
-     ne podle času, takže se nemůžou rozejít. Při prefers-reduced-motion se jen vymění strany. */
+  // Otočení jedné roviny 0 → 90°, z boku (konec animace, ne čas) výměna stran, pak −90 → 0°
   var FLIP_MS = 450;
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   function turn(card, back) {
@@ -654,7 +644,7 @@ html{scroll-behavior:auto}
     card.addEventListener('keydown', function (e) { if (e.key === ' ') { e.preventDefault(); flip(card); } });
   });
 
-  /* Formuláře: jeden vzor v sekci Tahák, kopie se otevírají na místě (pod lístky, v panelu). */
+  // Formuláře: vzor v sekci Tahák, kopie na místě (pod lístky, v panelu)
   var MSG = {
     prazdny: 'Napiš svůj e-mail.',
     neplatny: 'Tenhle e-mail nevypadá správně. Zkontroluj ho.',
@@ -665,11 +655,11 @@ html{scroll-behavior:auto}
     jednorazovy: 'Jednorázové e-mailové adresy nebereme. Napiš prosím svůj běžný e-mail.',
     limit: 'Z tohohle připojení přišlo moc pokusů za sebou. Zkus to prosím za hodinu.'
   };
-  // stejné pravidlo jako na serveru (api/_lib.js): jen ASCII, platná doména
+  // stejné pravidlo jako api/_lib.js
   var EMAIL = /^(?![.+=-])[A-Za-z0-9._%+-]{1,64}@(?=.{4,253}$)(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+(?:[A-Za-z]{2,24}|xn--[A-Za-z0-9-]{2,59})$/;
   function validEmail(e) { return EMAIL.test(e) && e.indexOf('..') < 0 && !/\.@/.test(e); }
   var tpl = doc.querySelector('[data-slot="sekce"] .lead-form');
-  var pristine = tpl.cloneNode(true); // čistá kopie pro formuláře na místě (ne rozpracovaný stav sekce)
+  var pristine = tpl.cloneNode(true); // kopie bez rozpracovaného stavu sekce
 
   function showError(form, type) {
     var p = form.querySelector('.form-error');
@@ -697,7 +687,7 @@ html{scroll-behavior:auto}
       var err = !email ? 'prazdny' : !validEmail(email) ? 'neplatny' : !consent ? 'souhlas' : navigator.onLine === false ? 'offline' : '';
       if (err) return showError(form, err);
       form.querySelector('.form-error').hidden = true;
-      // skryté pole proti botům posíláme serveru, rozhodne on (v prohlížeči by vyplnění automatem tiše zahodilo kontakt)
+      // skryté pole posíláme, rozhodne server (automatické vyplnění by tu tiše zahodilo kontakt)
       var btn = form.querySelector('[type=submit]');
       var label = btn.textContent;
       btn.disabled = true;
@@ -738,11 +728,8 @@ html{scroll-behavior:auto}
     form.elements.email.focus();
   });
 
-  /* Klávesnice na iPhonu: iOS nezmenší layout viewport, jen visual viewport. Pevně umístěný panel
-     by zůstal pod klávesnicí a iOS by kvůli poli posouval stránku i panel. Proto:
-     - pozadí zamkneme přes position: fixed (dokument pak nejde posunout) a po zavření vrátíme pozici,
-     - spodek panelu posadíme na horní hranu klávesnice a výšku omezíme na viditelnou část,
-     - po otevření klávesnice posuneme panel nebo stránku tak, aby bylo vidět pole i tlačítko. */
+  /* Klávesnice na iPhonu zmenší jen visualViewport: pozadí zamkneme (position: fixed), panel posadíme
+     na klávesnici a posuneme panel nebo stránku, aby bylo vidět pole i tlačítko. */
   var vv = window.visualViewport;
   var coarse = window.matchMedia('(pointer: coarse)').matches;
   var baseH = vv ? vv.height : window.innerHeight;
@@ -777,9 +764,7 @@ html{scroll-behavior:auto}
     s.marginBottom = Math.max(0, window.innerHeight - vv.height - vv.offsetTop) + 'px';
     s.maxHeight = Math.round(kb ? vv.height - 8 : vv.height * 0.92) + 'px';
   }
-  /* Nad klávesnicí musí být vidět pole a tlačítko (je hned pod polem), a to s rezervou na lištu s návrhy
-     e-mailů: iOS ji do visualViewport nemusí započítat. Souhlas může být těsně pod nimi. Když se nevejde
-     ani pole s tlačítkem, má přednost pole. */
+  // Pole a tlačítko nad klávesnicí s rezervou na lištu návrhů e-mailů (iOS ji do visualViewport nepočítá); přednost má pole
   var SUGGEST_BAR = 50;
   function keepFormVisible() {
     var a = doc.activeElement;
@@ -829,13 +814,13 @@ html{scroll-behavior:auto}
     fitSheet();
     updateBar();
     track('formular_otevren', zdroj);
-    // Na dotykovém displeji fokus na nadpis: klávesnice nevyskočí během animace panelu. S myší rovnou do pole.
+    // na dotyku fokus na nadpis, ať klávesnice nevyskočí během animace panelu
     (coarse ? dialog.querySelector('h2') || form.elements.email : form.elements.email).focus({ preventScroll: true });
   }
   doc.querySelectorAll('[data-otevri="lista"], [data-otevri="karty"]').forEach(function (el) {
     el.addEventListener('click', function (e) { e.preventDefault(); openSheet(el.getAttribute('data-otevri'), el); });
   });
-  // Tab v panelu dokola: z posledního prvku na první (a se Shiftem obráceně), fokus neuteče do prohlížeče
+  // Tab v panelu dokola, fokus neuteče do prohlížeče
   dialog.addEventListener('keydown', function (e) {
     if (e.key !== 'Tab') return;
     var f = [].filter.call(dialog.querySelectorAll('button, a[href], input:not([tabindex="-1"])'), function (el) { return !el.disabled && el.getClientRects().length; });
@@ -855,8 +840,7 @@ html{scroll-behavior:auto}
     opener = null;
   });
 
-  /* Po odeslání: poděkování nahradí celý blok s formulářem. PDF se nestahuje samo: Safari na iPhonu
-     atribut download zpracuje jinak než Chrome, tak má každý stejné tlačítko „Otevřít tahák“. */
+  // Poděkování nahradí všechny formuláře; PDF se otevírá tlačítkem (download Safari zpracuje jinak)
   function finish(submitted) {
     if (done) return;
     done = true;
@@ -876,7 +860,7 @@ html{scroll-behavior:auto}
     if (focusTarget) focusTarget.focus();
   }
 
-  /* Sdílení: nativní nabídka telefonu, jinak zkopírovat odkaz. Každé sdílení je další možný kontakt, proto ho měříme. */
+  // Sdílení: nativní nabídka, jinak kopie odkazu
   var SHARE_URL = location.origin + location.pathname + '?ref=sdileni';
   function share(status) {
     if (navigator.share) {
@@ -896,7 +880,7 @@ html{scroll-behavior:auto}
       track('sdileni', 'kopie');
     }
     function manual() {
-      // bez schránky (např. stránka přes http v lokální síti): odkaz k ručnímu zkopírování
+      // bez schránky (http v lokální síti): odkaz k ručnímu zkopírování
       var input = status.parentNode.querySelector('.share-url') || doc.createElement('input');
       input.className = 'share-url';
       input.readOnly = true;
