@@ -1,9 +1,9 @@
 # ETF dvojčata – konverzní landing page (zadání B)
 
-- **Stránka:** [etf-dvojcata-demo.vercel.app](https://etf-dvojcata-demo.vercel.app/) · reklama A „Dvojče“: [?v=dvojce](https://etf-dvojcata-demo.vercel.app/?v=dvojce) · reklama B „Začátek“: [?v=zacatek](https://etf-dvojcata-demo.vercel.app/?v=zacatek)
+- **Živá stránka** (nasazeno 11. 10. 2026): [etf-dvojcata-demo.vercel.app](https://etf-dvojcata-demo.vercel.app/) · reklama A „Dvojče“: [?v=dvojce](https://etf-dvojcata-demo.vercel.app/?v=dvojce) · reklama B „Začátek“: [?v=zacatek](https://etf-dvojcata-demo.vercel.app/?v=zacatek)
 - **Myšlenka:** americká ETF ti broker v Česku často nenabídne. Stránka k 7 známým ETF z NYSE jedním klepnutím ukáže evropské „dvojče“, které koupíš, a za e-mail dá PDF tahák s postupem nákupu.
 - **Očekávaná konverze** (návštěva → odeslaný formulář): 2–13 %, nejspíš kolem 6 %. Je to odhad, [výpočet po krocích](#očekávaná-konverze).
-- **Do ostrého spuštění chybí:** posouzení právníkem, údaje a e-mailová služba od správce, hotové obrázky reklam a ověření pravidel Meta pro finanční reklamu ([seznam](#před-spuštěním-kampaně)).
+- **Do ostrého spuštění chybí:** posouzení právníkem, rozhodnutí o double opt-inu, údaje a e-mailová služba od správce, hotové obrázky reklam, ověření pravidel Meta pro finanční reklamu a vlastní doména ([seznam](#před-spuštěním-kampaně)).
 
 ## Jak to vyzkoušet za 2 minuty
 
@@ -16,7 +16,7 @@
 
 **Kde je vidět trychtýř:**
 
-- **Na nasazené stránce** v Supabase: SQL Editor → `select * from analytika.trychtyr;` (příchod → otočení lístku → otevření formuláře → odeslání, zvlášť pro každou verzi úvodu).
+- **Na živé stránce** v Supabase: SQL Editor → `select * from analytika.trychtyr;` (příchod → otočení lístku → otevření formuláře → odeslání, zvlášť pro každou verzi úvodu).
 - **Lokálně bez Supabase:** `./scripts/serve.sh`, projdi stránku na http://127.0.0.1:8737/ a otevři http://127.0.0.1:8737/__dev/trychtyr. Server používá stejné SQL nad Postgresem v paměti (PGlite).
 
 Exporty konverzací s AI jsou v [ai-log/](ai-log/), reklamy v [reklamy/](reklamy/).
@@ -395,7 +395,7 @@ Skripty a návod jsou ve [scripts/](scripts/README.md). Všechny vracejí nenulo
 
 ## Před spuštěním kampaně
 
-Co musí doplnit nebo rozhodnout někdo jiný než vývojář. V návrhu zásad jsou tato místa nenápadně označená „doplní správce“.
+Stránka je nasazená a funguje. Zbývá to, co musí doplnit nebo rozhodnout někdo jiný než vývojář; v návrhu zásad jsou tato místa nenápadně označená „doplní správce“.
 
 **Správce (Clientelo Czech s.r.o.):**
 
@@ -404,7 +404,9 @@ Co musí doplnit nebo rozhodnout někdo jiný než vývojář. V návrhu zásad 
 - nejdelší doba uložení e-mailu,
 - jak dlouho Vercel uchovává záznamy o přístupu (IP adresy) na zvoleném tarifu,
 - potvrdit, že e-maily neprodává ani nepředává dalším firmám (pak to doplnit do zásad),
-- přijmout smlouvy o zpracování osobních údajů (DPA) u Supabase a Vercelu.
+- přijmout smlouvy o zpracování osobních údajů (DPA) u Supabase a Vercelu,
+- rozhodnout o double opt-inu ([doporučení](#bezpečnost-a-ochrana-proti-spamu)),
+- vlastní doména místo `vercel.app`: přidat ji ve Vercelu a změnit kanonickou adresu, `og:url` a `og:image` v `public/index.html` (CSP i funkce s doménou počítají samy).
 
 **Právník:**
 
@@ -419,11 +421,10 @@ Co musí doplnit nebo rozhodnout někdo jiný než vývojář. V návrhu zásad 
 - ověřit u Meta, jestli kampaň nespadá do speciální kategorie „Finanční produkty a služby“ (ta může omezit cílení podle věku) a jestli pravidla pro finanční služby nevyžadují ověření inzerenta nebo upozornění přímo v reklamě,
 - ověřit rozměry obrázků a limity textů v Meta Ads Guide.
 
-**Vývojář (před ostrou kampaní):**
+**Vývojář:**
 
 - sledovat v logu Vercelu zamítnuté pokusy (`[lead] zamítnuto: …`). Kdyby spam prošel přes limity, přidat CAPTCHA (například Cloudflare Turnstile) a s právníkem probrat, co to znamená pro souhlas,
-- **riziko keep-alive:** Supabase uvádí jen, že bezplatný projekt se pozastaví po týdnu neaktivity ([ceník](https://supabase.com/pricing), stejně v celé dokumentaci). Co se jako aktivita počítá, nedefinuje, takže nevím jistě, jestli denní volání z cronu stačí. **Den před odevzdáním (15. 10. 2026) otevři projekt v Supabase a zkontroluj, že neběží jako „Paused“.** Pozastavený projekt jde podle [dokumentace](https://supabase.com/docs/guides/platform/upgrading) do roka obnovit jedním tlačítkem v Supabase Studiu, data zůstanou,
-- [nasadit podle návodu](#nasazení-na-supabase-a-vercel) a projít kontrolu po nasazení.
+- **riziko keep-alive:** Supabase uvádí jen, že bezplatný projekt se pozastaví po týdnu neaktivity ([ceník](https://supabase.com/pricing), stejně v celé dokumentaci). Co se jako aktivita počítá, nedefinuje, takže nevím jistě, jestli denní volání z cronu stačí. **Den před odevzdáním (15. 10. 2026) projekt v Supabase zkontroluju, že neběží jako „Paused“.** Pozastavený projekt jde podle [dokumentace](https://supabase.com/docs/guides/platform/upgrading) do roka obnovit jedním tlačítkem v Supabase Studiu, data zůstanou,
 
 **Až stránku Clientelo převezme:**
 
@@ -431,42 +432,43 @@ Co musí doplnit nebo rozhodnout někdo jiný než vývojář. V návrhu zásad 
 
 ## Nasazení na Supabase a Vercel
 
-Checklist krok po kroku. Klíče patří jen do Vercelu (a lokálně do `.env.local`, který je v `.gitignore`), nikdy do repa ani do chatu.
+**Nasazeno 11. 10. 2026** na https://etf-dvojcata-demo.vercel.app (Supabase ve Frankfurtu, funkce v `fra1`). Odškrtnuté je, co je hotové a ověřené; nezaškrtnuté zbývá. Klíče patří jen do Vercelu (a lokálně do `.env.local`, který je v `.gitignore`), nikdy do repa ani do chatu.
 
 **1. Supabase (databáze v EU)**
 
-- [ ] [supabase.com/dashboard](https://supabase.com/dashboard) → **New project**, název třeba `etf-dvojcata`, **Region: Central EU (Frankfurt)**, tedy `eu-central-1`. Heslo k databázi do správce hesel, stránka ho nepotřebuje. „Automatically expose new tables“ může být vypnuté a „Enable automatic RLS“ zapnuté: `schema.sql` dává roli `service_role` všechna potřebná práva výslovně (přístup ke schématu, tabulky, funkce; sekvence nejsou) a test to ověřuje na databázi bez automatických práv.
-- [ ] **SQL Editor → New query** → vlož celý [supabase/schema.sql](supabase/schema.sql) → **Run**. V **Table Editor** jsou pak tabulky `leads`, `events` a `limity`, všechny s RLS.
-- [ ] Znovu **SQL Editor → New query** → [supabase/funnel.sql](supabase/funnel.sql) → **Run** (až po `schema.sql`). Zkouška: `select * from analytika.trychtyr;` vrátí 12 řádků s nulami.
-- [ ] **Connect** (nebo **Project Settings → Data API**): **Project URL** (`https://….supabase.co`) je `SUPABASE_URL`.
-- [ ] **Project Settings → API Keys → Secret keys**: secret klíč (`sb_secret_…`) je `SUPABASE_SECRET_KEY`. Publishable klíč stránka nepotřebuje.
+- [x] [supabase.com/dashboard](https://supabase.com/dashboard) → **New project**, název třeba `etf-dvojcata`, **Region: Central EU (Frankfurt)**, tedy `eu-central-1`. Heslo k databázi do správce hesel, stránka ho nepotřebuje. „Automatically expose new tables“ může být vypnuté a „Enable automatic RLS“ zapnuté: `schema.sql` dává roli `service_role` všechna potřebná práva výslovně (přístup ke schématu, tabulky, funkce; sekvence nejsou) a test to ověřuje na databázi bez automatických práv.
+- [x] **SQL Editor → New query** → vlož celý [supabase/schema.sql](supabase/schema.sql) → **Run**. V **Table Editor** jsou pak tabulky `leads`, `events` a `limity`, všechny s RLS.
+- [x] Znovu **SQL Editor → New query** → [supabase/funnel.sql](supabase/funnel.sql) → **Run** (až po `schema.sql`). Zkouška: `select * from analytika.trychtyr;` vrátí 12 řádků s nulami.
+- [x] **Connect** (nebo **Project Settings → Data API**): **Project URL** (`https://….supabase.co`) je `SUPABASE_URL`.
+- [x] **Project Settings → API Keys → Secret keys**: secret klíč (`sb_secret_…`) je `SUPABASE_SECRET_KEY`. Publishable klíč stránka nepotřebuje.
 
 **2. Vercel (web a funkce)**
 
-- [ ] [vercel.com/new](https://vercel.com/new) → importuj repozitář z GitHubu.
-- [ ] **Project Name: `etf-dvojcata-demo`**, aby adresa byla `https://etf-dvojcata-demo.vercel.app` a seděla s kanonickou adresou, `og:url` a `og:image`. Stránka není oficiálně Clientela, proto bez jejich jména v adrese. 11. 10. 2026 byla adresa volná.
-- [ ] **Framework Preset: Other.** Build ani výstupní složku neměň, nastavuje je [vercel.json](vercel.json): web z `public/`, funkce z `api/` ve Frankfurtu (`fra1`), denní cron na `/api/keepalive` a bezpečnostní hlavičky.
-- [ ] **Environment Variables** pro Production (a Preview, pokud ho chceš zkoušet), všechny čtyři:
+- [x] [vercel.com/new](https://vercel.com/new) → importuj repozitář z GitHubu.
+- [x] **Project Name: `etf-dvojcata-demo`**, aby adresa byla `https://etf-dvojcata-demo.vercel.app` a seděla s kanonickou adresou, `og:url` a `og:image`. Stránka není oficiálně Clientela, proto bez jejich jména v adrese. 11. 10. 2026 byla adresa volná.
+- [x] **Framework Preset: Other.** Build ani výstupní složku neměň, nastavuje je [vercel.json](vercel.json): web z `public/`, funkce z `api/` ve Frankfurtu (`fra1`), denní cron na `/api/keepalive` a bezpečnostní hlavičky.
+- [x] **Environment Variables** pro Production (a Preview, pokud ho chceš zkoušet), všechny čtyři:
   - `SUPABASE_URL`: Project URL ze Supabase,
   - `SUPABASE_SECRET_KEY`: secret klíč `sb_secret_…`,
   - `CRON_SECRET`: náhodný řetězec aspoň 16 znaků (`openssl rand -hex 24`). Vercel ho posílá cronu v hlavičce, bez něj keep-alive nic neudělá,
   - `ANTISPAM_SECRET`: náhodný řetězec aspoň 32 znaků (`openssl rand -hex 32`). Podepisuje token formuláře a hashuje IP pro limit pokusů, bez něj formulář vrátí chybu.
-- [ ] **Deploy.** Když proměnné přidáš až po prvním nasazení, pusť **Redeploy**, jinak je funkce neuvidí.
+- [x] **Deploy.** Když proměnné přidáš až po prvním nasazení, pusť **Redeploy**, jinak je funkce neuvidí.
 
 **3. Kontrola na živé adrese**
 
-- [ ] Projekt dostal adresu `https://etf-dvojcata-demo.vercel.app`. Jinak změň kanonickou adresu, `og:url` a `og:image` v hlavičce `public/index.html` (hledej `etf-dvojcata-demo`).
-- [ ] `curl -sI https://etf-dvojcata-demo.vercel.app/` ukáže `content-security-policy`, `strict-transport-security` a `x-robots-tag: noindex`.
-- [ ] `curl -s https://etf-dvojcata-demo.vercel.app/api/token` vrátí `{"token":"…"}`. Odpověď 503 znamená chybějící `ANTISPAM_SECRET`.
-- [ ] `curl -s -o /dev/null -w "%{http_code}\n" https://etf-dvojcata-demo.vercel.app/api/keepalive` vrátí 401 (bez tajemství cron nikoho nepustí).
-- [ ] Na telefonu otevři `?v=dvojce`, otoč lístek a odešli svůj e-mail. Musí přijít poděkování a otevřít se tahák.
-- [ ] V Supabase → **Table Editor**: v `leads` je řádek s e-mailem a verzí `dvojce`, v `events` řádky z návštěvy a `odeslano` bez ID návštěvy. `select * from analytika.trychtyr;` ukáže u `dvojce` příchod, otočení, formulář a odeslání.
-- [ ] Ochrana formuláře: `x@mailinator.com` ukáže hlášku o jednorázové adrese, `test@neexistuje.invalid` hlášku, že na adresu nejde poslat e-mail.
+- [x] Projekt dostal adresu `https://etf-dvojcata-demo.vercel.app`. Jinak změň kanonickou adresu, `og:url` a `og:image` v hlavičce `public/index.html` (hledej `etf-dvojcata-demo`).
+- [x] `curl -sI https://etf-dvojcata-demo.vercel.app/` ukáže `content-security-policy`, `strict-transport-security` a `x-robots-tag: noindex`.
+- [x] `curl -s https://etf-dvojcata-demo.vercel.app/api/token` vrátí `{"token":"…"}`. Odpověď 503 znamená chybějící `ANTISPAM_SECRET`.
+- [x] `curl -s -o /dev/null -w "%{http_code}\n" https://etf-dvojcata-demo.vercel.app/api/keepalive` vrátí 401 (bez tajemství cron nikoho nepustí).
+- [x] Na telefonu otevři `?v=dvojce`, otoč lístek a odešli svůj e-mail. Musí přijít poděkování a otevřít se tahák.
+- [x] V Supabase → **Table Editor**: v `leads` je řádek s e-mailem a verzí `dvojce`. `select * from analytika.trychtyr;` ukáže u `dvojce` příchod, otočení, formulář a odeslání.
+- [ ] V `events` je `odeslano` bez ID návštěvy (na živé databázi nekontrolováno, lokálně to hlídají testy).
+- [ ] Ochrana formuláře: `x@mailinator.com` ukáže hlášku o jednorázové adrese, `test@neexistuje.invalid` hlášku, že na adresu nejde poslat e-mail. Na živé stránce zatím nezkoušeno, aby v měření nebyla testovací data; lokálně to hlídají testy.
 - [ ] Publishable klíč nic nepřečte: `curl -s "<SUPABASE_URL>/rest/v1/leads?select=email" -H "apikey: <publishable klíč>"` vrátí chybu oprávnění, ne data.
-- [ ] Vercel → **Settings → Cron Jobs**: `/api/keepalive` jednou denně. Tlačítkem **Run** ho pusť hned, v **Logs** musí být odpověď 200.
-- [ ] Vercel → **Settings → Functions**: region `fra1`.
-- [ ] [PageSpeed Insights](https://pagespeed.web.dev/) na živé adrese v mobilním režimu: výkon kolem 100, SEO nižší kvůli záměrnému `noindex`.
+- [x] Vercel → **Settings → Cron Jobs**: `/api/keepalive` jednou denně. Tlačítkem **Run** ho pusť hned, v **Logs** musí být odpověď 200.
+- [x] Vercel → **Settings → Functions**: region `fra1` (hlavička `x-vercel-id` u `/api/*` začíná `fra1::fra1`).
+- [x] Lighthouse na živé adrese v mobilním režimu: výkon 100, SEO 66 kvůli záměrnému `noindex` ([výsledky](#technická-rozhodnutí)). Hlavičky, token, keep-alive, soubory a nadpisy kontroluje jen čtením [scripts/check-live.mjs](scripts/check-live.mjs).
 - [ ] Odkaz vlož do [nástroje pro ladění sdílení od Facebooku](https://developers.facebook.com/tools/debug/), ať je vidět obrázek pro sdílení.
-- [ ] **15. 10. 2026** otevři projekt v Supabase a zkontroluj, že neběží jako „Paused“ ([riziko keep-alive](#před-spuštěním-kampaně)).
+- [ ] **15. 10. 2026** zkontroluju v Supabase, že projekt neběží jako „Paused“ ([riziko keep-alive](#před-spuštěním-kampaně)), a pustím `node scripts/check-live.mjs`.
 
 **Lokálně se skutečnou databází** (jinak lokální server běží s podvrženou databází v paměti): vytvoř `.env.local` podle [.env.example](.env.example) a spusť `node --env-file=.env.local scripts/server.mjs`. Obsah `.env.local` nikdy nevypisuj ani nesdílej.
