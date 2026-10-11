@@ -6,9 +6,9 @@ Skripty a návod jsou ve [scripts/](../scripts/README.md). Všechny vracejí nen
 
 **Automaticky:**
 
-- **Funkce v `api/`** s podvrženou databází a DNS ([test-api.mjs](../scripts/test-api.mjs), 127 kontrol): každá kontrola z cesty kontaktu, MX při chybě a timeoutu DNS, události s ID návštěvy a bez něj, hlavičky, nepřítomnost e-mailu, klíče a IP v logu.
-- **SQL** na skutečném Postgresu v PGlite ([test-db.mjs](../scripts/test-db.mjs), 68 kontrol): práva anonymní role, RLS, limity, duplicity, události bez ID návštěvy, čas na minuty, trychtýř a projekt bez automatických práv Supabase.
-- **Chrome** (headless, 375 px, dotyk, [test-page.mjs](../scripts/test-page.mjs), 127 kontrol): otočení všech lístků, chybové hlášky, odeslání, panel, lišta dole, měření (každá událost dorazí, e-mail nikdy s ID návštěvy, události od odeslání bez něj), CSP, velikost JS do 20 kB, `prefers-reduced-motion`.
+- **Funkce v `api/`** s podvrženou databází a DNS ([test-api.mjs](../scripts/test-api.mjs), 132 kontrol): každá kontrola z cesty kontaktu, verze textu souhlasu, UTM u příchodu, MX při chybě a timeoutu DNS, události s ID návštěvy a bez něj, hlavičky, nepřítomnost e-mailu, klíče a IP v logu.
+- **SQL** na skutečném Postgresu v PGlite ([test-db.mjs](../scripts/test-db.mjs), 80 kontrol): práva anonymní role, RLS, limity, duplicity, verze souhlasu, události bez ID návštěvy, čas na minuty, trychtýř od data, migrace starší databáze, trychtýř a projekt bez automatických práv Supabase.
+- **Chrome** (headless, 375 px, dotyk, [test-page.mjs](../scripts/test-page.mjs), 132 kontrol): text souhlasu proti `SOUHLAS` v `api/_lib.js`, řádek o taháku na první obrazovce, otočení všech lístků, chybové hlášky, odeslání, panel, lišta dole, měření (každá událost dorazí, e-mail nikdy s ID návštěvy, události od odeslání bez něj), CSP, velikost JS do 20 kB, `prefers-reduced-motion`.
 - **WebKit, tedy engine Safari** (Playwright, emulace iPhonu 13, iPhonu SE 3. generace a iPhonu SE 1. generace s šířkou 320 px, [test-webkit.mjs](../scripts/test-webkit.mjs), 81 kontrol): panel a formuláře na místě s otevřenou klávesnicí. Emulátor softwarovou klávesnici nemá, proto ji test simuluje dvěma způsoby:
   - jako iOS: layout viewport zůstane, zmenší se jen `visualViewport` a viditelná oblast se posune k poli,
   - jako Android: zmenší se celé okno.

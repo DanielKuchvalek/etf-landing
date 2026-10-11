@@ -183,3 +183,28 @@ Doplňuje exporty konverzací (`/export`), které nezachytí celý průběh prá
   - Na prvních obrázcích reklam byla šipka a kroužek vedle velkého písma moc tenké. Pootočení lístku v reklamě B navíc zvedalo tickery vpravo nad jejich řádek. Obojí ukázal náhled, opraveno.
   - Bezpečné zóny Stories a Reels se nepodařilo ověřit v oficiální dokumentaci Meta. Návody třetích stran se rozcházejí (dole 250–670 px). AI zvolila 270/450 px a v README nechala kontrolu v náhledu Ads Manageru, místo aby čísla vydávala za ověřená.
   - Popis reklamy B chtěl „modrou propisku“, ale modrá ze vzhledu stránky vypadla. Obrázek drží styl stránky a popis je opravený.
+
+### 2026-10-11 – po nezávislé kontrole: správce údajů, slib taháku, reklama B, brokeři, README, měření
+
+- **Zadání pro AI:** opravit výtky ze dvou nezávislých AI kontrol (ChatGPT a nový chat Claude). Třetí kontrola (Gemini) byla vymyšlená a člověk ji zahodil. Body:
+  - správce údajů na demu,
+  - slib taháku,
+  - první obrazovka,
+  - reklama B,
+  - formulace o brokerech,
+  - README na 5 minut,
+  - UTM a trychtýř od data,
+  - poznámka o veřejném PDF,
+  - SQL pro migraci a pro smazání testovacích dat.
+- **Kontrola výstupu:**
+  - migrace testovaná na schématu z commitu 3ad8636 (stará databáze → nový `schema.sql` a `funnel.sql`),
+  - test hlídá, že text souhlasu na stránce sedí s `SOUHLAS` v `api/_lib.js`,
+  - bezpečné zóny reklam ověřil skript,
+  - odkazy v README a `docs/` ověřil skript,
+  - kontrola formulací grepem (žádné „koupíš u“, „Ověřili jsme“, „doplní správce“, Clientelo na stránce),
+  - výsledky: data 183, API 132, databáze 80, Chrome 132, WebKit 81, Lighthouse 100/100/100.
+- **Kde se AI spletla a jak se na to přišlo:**
+  - **Clientelo jako správce na živém demu, slib „všech 7 dvojčat“, schovaná dvojčata v reklamě B a „koupíš u …“** byly návrhy AI z dřívějších kol. Prošly všemi testy, protože testy hlídaly, že texty sedí s daty, ne že dávají smysl vůči sobě a vůči skutečnosti. Odhalily je až nezávislé kontroly.
+  - **Po změnách textu u brokerů selhal Chrome test**, protože na portu běžel starý lokální server se starými hlavičkami (CSP). Nový se kvůli obsazenému portu nespustil. Nebyla to chyba stránky; před spuštěním testů se teď vždy ukončí starý server.
+  - **Delší nabídka a text na lístku v reklamách nejdřív vytekly z bezpečné zóny.** Zachytila to kontrola ve skriptu, ne oko.
+  - **Navržené „7 nejznámějších“ v reklamě B AI nepoužila:** nejvyšší stupeň neumíme doložit (už dříve zapsáno v `b-zacatek.md`).

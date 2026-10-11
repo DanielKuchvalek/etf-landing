@@ -24,6 +24,12 @@
   - `ANTISPAM_SECRET`: náhodný řetězec aspoň 32 znaků (`openssl rand -hex 32`). Podepisuje token formuláře a hashuje IP pro limit pokusů, bez něj formulář vrátí chybu.
 - [x] **Deploy.** Když proměnné přidáš až po prvním nasazení, pusť **Redeploy**, jinak je funkce neuvidí.
 
+**2b. Aktualizace databáze po kole 11. 10. 2026 (verze souhlasu, UTM, trychtýř od data)**
+
+- [ ] SQL Editor → vlož celý aktuální [supabase/schema.sql](../supabase/schema.sql) → **Run** (nic nesmaže: doplní sloupec `leads.souhlas_verze`, vymění funkci `uloz_kontakt` a limit detailu událostí na 80 znaků).
+- [ ] SQL Editor → vlož celý aktuální [supabase/funnel.sql](../supabase/funnel.sql) → **Run** (přidá `analytika.trychtyr_od` a pohled `trychtyr` postaví nad ní).
+- [ ] Kontrola: `select column_name from information_schema.columns where table_name = 'leads';` obsahuje `souhlas_verze` a `select * from analytika.trychtyr_od(now() - interval '1 day');` vrátí 12 řádků.
+
 **3. Kontrola na živé adrese**
 
 - [x] Projekt dostal adresu `https://etf-dvojcata-demo.vercel.app`. Jinak změň kanonickou adresu, `og:url` a `og:image` v hlavičce `public/index.html` (hledej `etf-dvojcata-demo`).

@@ -279,7 +279,7 @@ Vlastní události místo GA4, bez cookies a bez cookie lišty. Stránka je pos�
 
 **Stack:** čisté HTML, CSS a JavaScript bez frameworku a bez build kroku, Vercel (statika a serverless funkce) a Supabase (Postgres v EU). Proč: stránka pro návštěvníka z mobilní reklamy musí být hlavně rychlá a malá a tohle je nejkratší cesta k webu, funkcím a databázi zdarma, v EU a bez závislostí, které by se musely instalovat a aktualizovat.
 
-- **Celá stránka je jeden soubor `public/index.html`** s inline CSS a JS a systémovým písmem. Bez externích skriptů a písem: 61,0 kB, po gzipu 17,8 kB, z toho JS 19,4 kB (oba vložené skripty, po gzipu 7,1 kB, limit 20 kB hlídá test). Jediný obrázek je náhled taháku (WebP, 24 kB), který se načte až u formuláře.
+- **Celá stránka je jeden soubor `public/index.html`** s inline CSS a JS a systémovým písmem. Bez externích skriptů a písem: 62,0 kB, po gzipu 18,1 kB, z toho JS 19,7 kB (oba vložené skripty, po gzipu 7,2 kB, limit 20 kB hlídá test). Jediný obrázek je náhled taháku (WebP, 24 kB), který se načte až u formuláře.
 - **Lighthouse na živé adrese** (mobil, 11. 10. 2026, Lighthouse 13.5, [scripts/lighthouse.mjs](scripts/lighthouse.mjs) s blokovanými požadavky na `/api/`, aby měření nezapsalo do databáze příchody):
 
   | Verze úvodu | Výkon | Přístupnost | Osvědčené postupy | SEO | LCP | CLS | TBT | Přeneseno |
@@ -288,7 +288,7 @@ Vlastní události místo GA4, bez cookies a bez cookie lišty. Stránka je pos�
   | `?v=dvojce` | 100 | 100 | 100 | 66 | 1,1 s | 0 | 0 ms | 44 KiB |
   | `?v=zacatek` | 100 | 100 | 100 | 66 | 1,0 s | 0 | 0 ms | 44 KiB |
 
-  SEO 66 jen proto, že stránka má záměrně `noindex` (jediný neúspěšný audit je „stránka je blokovaná pro indexování“). V konzoli žádné chyby. Lokálně bez komprese (stejný den) vychází totéž, jen 87 KiB a LCP 1,2 s.
+  SEO 66 jen proto, že stránka má záměrně `noindex` (jediný neúspěšný audit je „stránka je blokovaná pro indexování“). V konzoli žádné chyby. Lokálně bez komprese (stejný den, po posledních úpravách) vychází totéž, jen 88 KiB a LCP 1,2 s.
 - **„Ručně kreslené“ prvky bez písma navíc.** Fix, šipky, kroužky a fajfky jsou malá inline SVG. Rukou psané písmo by přidalo desítky kB a probliknutí textu. Lístky se otáčejí bez 3D kontextu a bez `backface-visibility`: JS (Web Animations API, bez knihovny) otočí jednu rovinu s perspektivou o 90°, když je lístek z boku, vymění strany a dotočí. WebKit to kreslí stejně s grafickým čipem i bez něj. Při `prefers-reduced-motion` se jen vymění strany.
 - **Ikony a obrázek pro sdílení generuje skript** ([scripts/obrazky.mjs](scripts/obrazky.mjs)) ve stylu stránky a s čísly z `data/etf.json`: favicon (SVG a ICO), ikona pro iOS a `og.png` 1200×630 pro náhled odkazu na Facebooku a v Messengeru. Stránka si je nenačítá, takže nezdržují.
 - **Jen světlé barvy** (`color-scheme: only light`). Tmavý režim iOS ani automatické ztmavení v Chromu stránku nepřebarví, „sešit“ zůstane papírový.
