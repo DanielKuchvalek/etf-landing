@@ -267,6 +267,7 @@ check('vercel.json: denní cron na existující /api/keepalive (Hobby: nejvýš 
 const all = (vercel.headers.find((h) => h.source === '/(.*)') || { headers: [] }).headers;
 const hv = (k) => (all.find((h) => h.key === k) || {}).value || '';
 check('hlavičky: HSTS aspoň rok', /max-age=(\d+)/.test(hv('Strict-Transport-Security')) && Number(hv('Strict-Transport-Security').match(/max-age=(\d+)/)[1]) >= 31536000);
+check('hlavičky: celý web noindex (X-Robots-Tag), dokud ho Clientelo nepřevezme', hv('X-Robots-Tag') === 'noindex');
 check('hlavičky: nosniff, Referrer-Policy, X-Frame-Options, COOP', hv('X-Content-Type-Options') === 'nosniff' && hv('Referrer-Policy') === 'strict-origin-when-cross-origin' && hv('X-Frame-Options') === 'DENY' && hv('Cross-Origin-Opener-Policy') === 'same-origin');
 check('hlavičky: Permissions-Policy vypíná kameru, mikrofon, polohu; sdílení a schránku nechává', /camera=\(\)/.test(hv('Permissions-Policy')) && !/web-share|clipboard/.test(hv('Permissions-Policy')));
 let cspOk = true;

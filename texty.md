@@ -298,6 +298,7 @@ U „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnost ověř
 - Data: weby správců fondů a brokerů, ověřeno 10. 10. 2026. `[d: meta.overeno_dne]`
 - Nejde o investiční doporučení ani nabídku investičního nástroje. Investování nese riziko.
 - Provozovatel: Clientelo Czech s.r.o. · Zásady ochrany osobních údajů (odkaz na návrh)
+- Nenápadně, menším písmem: Ukázkové řešení do výběrového řízení. (Spolu s `noindex` zůstane, dokud stránku Clientelo nepřevezme.)
 
 ---
 

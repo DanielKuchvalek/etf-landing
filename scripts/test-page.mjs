@@ -303,6 +303,11 @@ try {
     check('favicon, ikona pro iOS a obrázek pro sdílení existují', head.files.every((f) => / 200 (image|text)/.test(f)), head.files.join(' | '));
     check('og:image: absolutní https adresa, 1200×630', /^https:\/\/[^/]+\/og\.png$/.test(head.ogImage) && head.ogSize === '1200×630', `${head.ogImage} ${head.ogSize}`);
     check('panel má aria-modal', head.modal === 'true');
+    const robots = await page.$eval('meta[name=robots]', (m) => m.content).catch(() => null);
+    const res = await page.evaluate(() => fetch('/').then((r) => r.headers.get('x-robots-tag')));
+    check('celá stránka noindex (meta i hlavička X-Robots-Tag)', robots === 'noindex' && res === 'noindex', `${robots} | ${res}`);
+    const demo = await page.$eval('footer .demo', (p) => `${p.textContent}|${getComputedStyle(p).fontSize}`).catch(() => null);
+    check('patička: nenápadná poznámka „Ukázkové řešení do výběrového řízení.“', demo === 'Ukázkové řešení do výběrového řízení.|13px', String(demo));
     const csp = await page.evaluate(() => {
       const s = document.createElement('script');
       s.textContent = 'window.__xss = 1';

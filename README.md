@@ -313,6 +313,10 @@ Co musí doplnit nebo rozhodnout někdo jiný než vývojář. V návrhu zásad 
 - ověřit, že denní dotaz z keep-alive Supabase opravdu počítá jako aktivitu (předpoklad, z dokumentace neověřený),
 - [nasadit podle návodu](#nasazení-na-supabase-a-vercel) a projít kontrolu po nasazení.
 
+**Až stránku Clientelo převezme:**
+
+- odebrat `noindex`: meta tag v `public/index.html` a hlavičku `X-Robots-Tag` ve `vercel.json`, a poznámku „Ukázkové řešení do výběrového řízení“ v patičce. Do té doby ji vyhledávače neindexují (Lighthouse proto v kategorii SEO hlásí „stránka je blokovaná pro indexování“, to je záměr).
+
 **Po nasazení (vývojář):**
 
 - sladit adresu v `og:image` v `public/index.html` se skutečnou doménou. Je tam `https://etf-dvojcata-clientelo.vercel.app/og.png`, protože `etf-dvojcata.vercel.app` už používá cizí projekt. Pak odkaz zkontrolovat v [nástroji pro ladění sdílení od Facebooku](https://developers.facebook.com/tools/debug/).
