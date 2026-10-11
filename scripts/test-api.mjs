@@ -36,16 +36,25 @@ const { default: event } = await import('../api/event.js');
 const { default: token } = await import('../api/token.js');
 const { default: keepalive } = await import('../api/keepalive.js');
 
-// Podvržené DNS: podle domény vrátí MX, žádný záznam, null MX nebo výpadek.
+// Podvržené DNS: podle domény vrátí MX, žádný záznam, null MX, chybu nebo nic (timeout).
+// chyba-<kód>.cz vyhodí chybu s tím kódem; bez-mx* nemají MX a dotaz jde na adresu domény (implicitní MX).
 let dnsCalls = 0;
+const dnsChyba = (code) => Object.assign(new Error('x'), { code });
 lib.zavislosti.resolveMx = async (d) => {
   dnsCalls++;
-  if (d === 'neexistuje.cz') throw Object.assign(new Error('x'), { code: 'ENOTFOUND' });
-  if (d === 'bez-mx.cz') throw Object.assign(new Error('x'), { code: 'ENODATA' });
+  if (d === 'neexistuje.cz') throw dnsChyba('ENOTFOUND');
+  if (d.startsWith('bez-mx')) throw dnsChyba('ENODATA');
   if (d === 'null-mx.cz') return [{ exchange: '', priority: 0 }];
-  if (d === 'vypadek-dns.cz') throw Object.assign(new Error('x'), { code: 'ESERVFAIL' });
+  if (d.startsWith('chyba-')) throw dnsChyba(d.slice(6, -3).toUpperCase());
   if (d === 'pomale-dns.cz') return new Promise(() => {});
   return [{ exchange: 'mx1.' + d, priority: 10 }];
+};
+lib.zavislosti.resolveAdresy = async (d) => {
+  dnsCalls++;
+  if (d === 'bez-mx-s-adresou.cz') return ['192.0.2.10'];
+  if (d === 'bez-mx-pomale.cz') return new Promise(() => {});
+  if (d === 'bez-mx-vypadek.cz') throw new AggregateError([dnsChyba('ENODATA'), dnsChyba('ESERVFAIL')]);
+  throw new AggregateError([dnsChyba('ENODATA'), dnsChyba('ENODATA')]);
 };
 
 const HOST = 'etf-dvojcata.example';
@@ -131,15 +140,31 @@ for (const email of ['x@mailinator.com', 'x@10minutemail.com', 'x@sub.mailinator
   check(`lead: jednorázová doména (${email.split('@')[1]}) → 422, bez dotazu do DNS`, r.status === 422 && r.json.chyba === 'jednorazovy' && r.calls.length === 0 && dnsCalls === 0);
 }
 for (const domena of ['seznam.cz', 'email.cz', 'centrum.cz', 'gmail.com']) check(`běžná doména ${domena} není na seznamu jednorázových`, !lib.jednorazovaDomena(domena));
-for (const [name, domena] of [['doména neexistuje', 'neexistuje.cz'], ['doména bez MX', 'bez-mx.cz'], ['„null MX“ (poštu nepřijímá)', 'null-mx.cz']]) {
+for (const [name, domena, dotazu] of [['doména neexistuje', 'neexistuje.cz', 1], ['„null MX“ (poštu nepřijímá)', 'null-mx.cz', 1], ['doména bez MX i bez adresy', 'bez-mx.cz', 2]]) {
   r = await run(lead, req('/api/lead', { body: lead1({ email: `x@${domena}` }) }));
-  check(`lead: ${name} → 422 mx, nic se neuloží`, r.status === 422 && r.json.chyba === 'mx' && r.calls.length === 0 && dnsCalls === 1);
+  check(`lead: ${name} → 422 mx, nic se neuloží`, r.status === 422 && r.json.chyba === 'mx' && r.calls.length === 0 && dnsCalls === dotazu, `${r.status} ${dnsCalls} dotazů`);
 }
-r = await run(lead, req('/api/lead', { body: lead1({ email: 'x@vypadek-dns.cz' }) }));
-check('lead: výpadek DNS → kontakt se uloží (skutečného člověka kvůli DNS neodmítneme)', r.status === 200 && r.calls.length === 1);
-const t0 = Date.now();
-r = await run(lead, req('/api/lead', { body: lead1({ email: 'x@pomale-dns.cz' }) }));
-check('lead: DNS bez odpovědi → po 2,5 s se pokračuje a kontakt se uloží', r.status === 200 && r.calls.length === 1 && Date.now() - t0 < 4000, `${Date.now() - t0} ms`);
+r = await run(lead, req('/api/lead', { body: lead1({ email: 'x@bez-mx-s-adresou.cz' }) }));
+check('lead: doména bez MX, ale s adresou (implicitní MX, RFC 5321) → kontakt se uloží', r.status === 200 && r.calls.length === 1);
+// Fail-open: při chybě nebo timeoutu DNS kontakt projde, skutečného člověka kvůli DNS neodmítneme.
+check(`MX: timeout DNS je krátký (${lib.MX_TIMEOUT_MS} ms, nejvýš 1,5 s)`, lib.MX_TIMEOUT_MS > 0 && lib.MX_TIMEOUT_MS <= 1500);
+for (const code of ['ESERVFAIL', 'ETIMEOUT', 'ECONNREFUSED', 'EREFUSED', 'EBADRESP', 'ECANCELLED']) {
+  r = await run(lead, req('/api/lead', { body: lead1({ email: `x@chyba-${code.toLowerCase()}.cz` }) }));
+  check(`lead: chyba DNS ${code} → kontakt se uloží`, r.status === 200 && r.calls.length === 1, `${r.status}`);
+}
+r = await run(lead, req('/api/lead', { body: lead1({ email: 'x@bez-mx-vypadek.cz' }) }));
+check('lead: bez MX a dotaz na adresu skončí výpadkem → kontakt se uloží', r.status === 200 && r.calls.length === 1);
+for (const [name, domena] of [['DNS neodpoví na MX', 'pomale-dns.cz'], ['DNS neodpoví na adresu domény bez MX', 'bez-mx-pomale.cz']]) {
+  const t0 = Date.now();
+  r = await run(lead, req('/api/lead', { body: lead1({ email: `x@${domena}` }) }));
+  const ms = Date.now() - t0;
+  check(`lead: ${name} → po ${lib.MX_TIMEOUT_MS} ms se pokračuje a kontakt se uloží`, r.status === 200 && r.calls.length === 1 && ms >= lib.MX_TIMEOUT_MS - 20 && ms < lib.MX_TIMEOUT_MS + 300, `${ms} ms`);
+}
+{
+  const t0 = Date.now();
+  const vysledek = await lib.maPostu('example.cz');
+  check('MX: běžná doména odpoví hned, časovač timeoutu se zruší', vysledek === true && Date.now() - t0 < 50 && process.getActiveResourcesInfo().filter((x) => x === 'Timeout').length === 0, `${Date.now() - t0} ms, ${process.getActiveResourcesInfo().join(',')}`);
+}
 
 // ---------- pole navíc, velikost, typ, metoda, původ ----------
 for (const [name, body, status, chyba] of [

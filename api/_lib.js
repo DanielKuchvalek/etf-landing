@@ -76,20 +76,39 @@ export function jednorazovaDomena(domena) {
   return false;
 }
 
-// DNS jde v testech a v lokálním serveru podvrhnout přes zavislosti.resolveMx.
-export const zavislosti = { resolveMx: (domena) => dns.resolveMx(domena) };
-// Má doména záznam MX, který přijímá poštu? „Null MX“ (RFC 7505, prázdný cíl) znamená, že ne.
-// Když DNS neodpoví (výpadek, timeout), skutečného člověka neodmítneme: vrátí null = nevíme.
+// Celá kontrola v DNS nejvýš 1 s, pak kontakt pustíme: odeslání nezdrží a výpadek DNS neodmítne člověka.
+export const MX_TIMEOUT_MS = 1000;
+const resolver = new dns.Resolver({ timeout: MX_TIMEOUT_MS, tries: 1 });
+// DNS jde v testech a v lokálním serveru podvrhnout přes zavislosti.
+export const zavislosti = {
+  resolveMx: (domena) => resolver.resolveMx(domena),
+  resolveAdresy: (domena) => Promise.any([resolver.resolve4(domena), resolver.resolve6(domena)]),
+};
+
+// Přijímá doména poštu? true: má MX (ne „null MX“ z RFC 7505), nebo bez MX aspoň adresu (pošta jde na ni,
+// implicitní MX z RFC 5321, 5.1). false: doména neexistuje, má „null MX“, nebo nemá ani MX, ani adresu.
+// null: nevíme (výpadek, chyba nebo timeout DNS), kontakt projde.
 export async function maPostu(domena) {
+  let casovac;
+  const limit = new Promise((resolve) => { casovac = setTimeout(() => resolve(null), MX_TIMEOUT_MS); });
   try {
-    const mx = await Promise.race([
-      zavislosti.resolveMx(domena),
-      new Promise((_, reject) => setTimeout(() => reject(Object.assign(new Error('timeout'), { code: 'ETIMEOUT' })), 2500)),
-    ]);
-    return mx.some((r) => r.exchange && r.exchange !== '.');
+    return await Promise.race([zjistiPostu(domena), limit]);
+  } finally {
+    clearTimeout(casovac);
+  }
+}
+async function zjistiPostu(domena) {
+  try {
+    const mx = await zavislosti.resolveMx(domena);
+    if (mx.length) return mx.some((r) => r.exchange && r.exchange !== '.');
   } catch (e) {
-    if (e.code === 'ENOTFOUND' || e.code === 'ENODATA') return false;
-    return null;
+    if (e.code === 'ENOTFOUND') return false;
+    if (e.code !== 'ENODATA') return null;
+  }
+  try {
+    return (await zavislosti.resolveAdresy(domena)).length > 0;
+  } catch (e) {
+    return (e.errors || [e]).every((x) => x.code === 'ENODATA' || x.code === 'ENOTFOUND') ? false : null;
   }
 }
 
