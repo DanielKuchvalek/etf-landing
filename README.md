@@ -37,7 +37,7 @@ Exporty konverzací s AI jsou v [ai-log/](ai-log/), reklamy v [reklamy/](reklamy
 - Jsou blízko k akci. Nepotřebují vysvětlovat, proč investovat, jen co koupit a jak.
 - Začátečníky, kteří fondy teprve poznávají, oslovuje reklama B. Testujeme tak druhou motivaci: nejistotu místo zklamání z brokera.
 
-**Stavíme na ověřeném faktu:** americká ETF ti broker v Česku často nenabídne, evropská obdoba ano. Například u Trading 212 je pro evropské klienty vyloučeno 1 137 z 1 151 amerických ETF (viz [data/README.md](data/README.md)). Tuhle informaci návštěvník jinde snadno nenajde a je to hlavní důvod, proč na stránce zůstat.
+**Stavíme na ověřeném zjištění:** americká ETF ti broker v Česku často nenabídne, evropská obdoba ano. Například ve veřejném seznamu nástrojů Trading 212 je 1 151 ETF s americkým ISINem a 1 137 z nich je označených jako nedostupné pro evropské pobočky Trading 212 (VOO, VT, VGT, SDY a AGG mezi nimi). Jestli to platí pro každý účet, z veřejných dat nepoznáme ([data/README.md](data/README.md)). Tuhle informaci návštěvník jinde snadno nenajde a je to hlavní důvod, proč na stránce zůstat.
 
 ## Lead magnet a moment žádosti o kontakt
 
@@ -139,7 +139,7 @@ Výpočet střední varianty: 10 Kč ÷ (0,85 × 0,06) = 10 Kč ÷ 0,051 ≈ **1
 | 10 Kč | 588 Kč | **196 Kč** | 89 Kč |
 | 20 Kč | 1 176 Kč | 392 Kč | 178 Kč |
 
-Rozsah je široký, protože oba vstupy jsou odhady. Po pár dnech kampaně se dosadí skutečná cena za klik z Meta a konverze z trychtýře. Kontakt se vyplatí, když z něj klient v průměru vydělá víc, než stojí. To záleží na jeho byznysu, který zadání neuvádí, takže to nehádám. S double opt-inem (viz [Bezpečnost](#bezpečnost-a-ochrana-proti-spamu)) by se cena počítala na potvrzený kontakt a byla by vyšší.
+Rozsah je široký, protože oba vstupy jsou odhady. Po pár dnech kampaně se dosadí skutečná cena za klik z Meta a konverze z trychtýře. Kontakt se vyplatí, když z něj klient v průměru vydělá víc, než stojí. To záleží na jeho byznysu, který zadání neuvádí, takže to nehádám. S double opt-inem (viz [Bezpečnost](docs/bezpecnost.md#bezpečnost-a-ochrana-proti-spamu)) by se cena počítala na potvrzený kontakt a byla by vyšší.
 
 **Proč jen e-mail a nic dalšího:**
 - **E-mail stačí k tomu, co slibujeme.** Tahák se ukáže hned a další e-maily jdou na adresu. Jméno ani telefon k tomu nejsou potřeba.
@@ -190,7 +190,7 @@ Seřazené podle očekávaného dopadu na konverzi návštěva → odeslání. H
 
 **Jak jsem výstupy kontroloval:**
 
-- **Testy**, které vrací chybu, když něco neprojde: funkce s podvrženou databází a DNS, SQL na skutečném Postgresu, stránka v Chromu, WebKit s emulovanými iPhony a simulovanou klávesnicí, data proti zdrojům, čísla na stránce a v PDF proti datům, Lighthouse ([přehled a počty](#testování-co-automaticky-a-co-jen-na-telefonu)).
+- **Testy**, které vrací chybu, když něco neprojde: funkce s podvrženou databází a DNS, SQL na skutečném Postgresu, stránka v Chromu, WebKit s emulovanými iPhony a simulovanou klávesnicí, data proti zdrojům, čísla na stránce a v PDF proti datům, Lighthouse ([přehled a počty](docs/testovani.md#testování-co-automaticky-a-co-jen-na-telefonu)).
 - **Na skutečném iPhonu**, třikrát (Safari a Chrome na iOS). Tam se našly chyby, které žádná simulace neukázala.
 - **Proti zadání:** cílová skupina, hodnota viditelná před formulářem, dvě reklamy, měření celé cesty, skutečná data se zdrojem, pořadí sekcí, konverze, hypotézy, nasazení.
 - **Čtením:** texty, README a diff před každým commitem (klíče, skutečné e-maily).
@@ -217,7 +217,7 @@ Další drobnější chyby (odhadnutá adresa produktové stránky Vanguardu, n�
 
    <img src="docs/screenshots/webkit-otoceni-listku.png" width="640" alt="Průběh otočení lístku VTI po 100 ms: líc se zužuje, ve 224 ms je lístek z boku, pak se rozšiřuje rub s dvojčetem SXR4">
 
-Snímky před úpravami a po nich a snímky s klávesnicí ve WebKitu jsou v sekci [Testování](#testování-co-automaticky-a-co-jen-na-telefonu).
+Snímky před úpravami a po nich a snímky s klávesnicí ve WebKitu jsou v sekci [Testování](docs/testovani.md#testování-co-automaticky-a-co-jen-na-telefonu).
 
 ## Nejasnosti v zadání a moje rozhodnutí
 
@@ -285,133 +285,25 @@ Vlastní události místo GA4, bez cookies a bez cookie lišty. Stránka je pos�
 - **Ikony a obrázek pro sdílení generuje skript** ([scripts/obrazky.mjs](scripts/obrazky.mjs)) ve stylu stránky a s čísly z `data/etf.json`: favicon (SVG a ICO), ikona pro iOS a `og.png` 1200×630 pro náhled odkazu na Facebooku a v Messengeru. Stránka si je nenačítá, takže nezdržují.
 - **Jen světlé barvy** (`color-scheme: only light`). Tmavý režim iOS ani automatické ztmavení v Chromu stránku nepřebarví, „sešit“ zůstane papírový.
 - **Panel s formulářem je přístupný z klávesnice.** Je to nativní modální `<dialog>` s `aria-modal`: Tab a Shift+Tab zůstávají v panelu, Esc ho zavře a fokus se vrátí na tlačítko, které ho otevřelo.
-- **Obsah funguje i bez JavaScriptu.** Text i data jsou v HTML a lístky jsou odkazy na karty párů. JS přidává otočení, formulář na místě a lištu dole. Formulář bez JS nefunguje (token proti botům, viz [Bezpečnost](#bezpečnost-a-ochrana-proti-spamu)).
+- **Obsah funguje i bez JavaScriptu.** Text i data jsou v HTML a lístky jsou odkazy na karty párů. JS přidává otočení, formulář na místě a lištu dole. Formulář bez JS nefunguje (token proti botům, viz [Bezpečnost](docs/bezpecnost.md#bezpečnost-a-ochrana-proti-spamu)).
 - **Úvod podle reklamy:** malý inline skript hned za nadpisem přepíše nadpis podle `?v=` dřív, než se stránka vykreslí, takže se layout neposune (CLS 0 i u varianty s poznámkou navíc).
-- **Zpracování formuláře a měření: čtyři malé funkce bez závislostí** ([api/](api/)): `lead`, `event`, `token` a `keepalive`, společný kód je v [api/_lib.js](api/_lib.js). Soubory s podtržítkem Vercel jako funkce nenasadí (ověřeno ve zdrojovém kódu Vercelu, `packages/fs-detectors/src/detect-builders.ts`). Supabase volají přímo přes REST (`fetch`), bez knihovny `supabase-js`, takže se nic neinstaluje. Každá funkce sama ověří vstup a nespoléhá na formulář. Co přesně kontrolují, je v sekci [Bezpečnost a ochrana proti spamu](#bezpečnost-a-ochrana-proti-spamu).
+- **Zpracování formuláře a měření: čtyři malé funkce bez závislostí** ([api/](api/)): `lead`, `event`, `token` a `keepalive`, společný kód je v [api/_lib.js](api/_lib.js). Soubory s podtržítkem Vercel jako funkce nenasadí (ověřeno ve zdrojovém kódu Vercelu, `packages/fs-detectors/src/detect-builders.ts`). Supabase volají přímo přes REST (`fetch`), bez knihovny `supabase-js`, takže se nic neinstaluje. Každá funkce sama ověří vstup a nespoléhá na formulář. Co přesně kontrolují, je v sekci [Bezpečnost a ochrana proti spamu](docs/bezpecnost.md#bezpečnost-a-ochrana-proti-spamu).
 - **Secret klíč Supabase (`sb_secret_…`) jen na serveru.** Funkce ho posílá v hlavičce `apikey`, jak chce [dokumentace Supabase](https://supabase.com/docs/guides/api/api-keys) (nové klíče nejsou JWT, do `Authorization: Bearer` nepatří). Starý klíč `service_role` Supabase do konce roku 2026 ruší. Tabulky mají zapnuté RLS bez jediné politiky a odebraná práva pro `anon` a `authenticated`, takže publishable klíčem nejde nic přečíst ani zapsat.
 - **Lokální server se stejnými funkcemi** ([scripts/server.mjs](scripts/server.mjs)): servíruje `public/` a funkce z `api/` jako Vercel. Bez klíčů běží s podvrženou databází v paměti, takže formulář jde vyzkoušet i na telefonu ve stejné Wi-Fi a testy můžou ověřit, co se opravdu uložilo.
 - **Supabase projekt v EU regionu.** Ukládáme e-maily českých návštěvníků a databáze má být blízko serverless funkcím ve Frankfurtu.
 - **Denní keep-alive přes Vercel cron.** Bezplatný Supabase projekt se po čase bez aktivity pozastaví a formulář musí fungovat, i když stránku někdo otevře až za dva týdny. Cron volá [`/api/keepalive`](api/keepalive.js) jednou denně (víc bezplatný tarif Vercelu nedovolí). Ta přes API Supabase spustí v databázi funkci `uklid`, která smaže staré záznamy limitů, takže jde o požadavek na API i o příkaz v databázi. Supabase ale nedefinuje, co přesně je „aktivita“ (riziko a doporučení jsou v sekci [Před spuštěním kampaně](#před-spuštěním-kampaně)). Funkce chce hlavičku s `CRON_SECRET`, cizí volání odmítne.
 - **Serverless funkce v regionu `fra1` (Frankfurt).** Kratší odezva pro české návštěvníky i k databázi v EU.
 
-## Bezpečnost a ochrana proti spamu
+## Podrobnosti v docs/
 
-Formulář je veřejný, takže počítám s tím, že ho budou zkoušet boti a že ho někdo bude chtít zneužít. Projekt prošly dva review skilly Claude Code (`security-review` a `code-review`) a vlastní kontrola. Všechno je pokryté testy: funkce s podvrženou databází a DNS ([test-api.mjs](scripts/test-api.mjs)), `schema.sql` na skutečném Postgresu v PGlite ([test-db.mjs](scripts/test-db.mjs)) a celá cesta v prohlížeči proti lokálnímu serveru se stejnou databází ([test-page.mjs](scripts/test-page.mjs)). Počty kontrol jsou v sekci [Testování](#testování-co-automaticky-a-co-jen-na-telefonu).
-
-**Cesta kontaktu přes `/api/lead`, v tomhle pořadí:**
-
-1. Jen povolená pole (`email`, `souhlas`, `varianta`, `token`, skryté pole). Kontakt s ID návštěvy nebo s čímkoli navíc funkce odmítne. Tělo nejvýš 1 kB, i když klient délku neuvede. Požadavek z cizí stránky (`Origin`) odmítne.
-2. **Skryté pole** `poznamka`: když ho bot vyplní, funkce odpoví jako při úspěchu, ale nic neuloží.
-3. **Rychlost odeslání:** stránka si po načtení vezme z `/api/token` podepsaný čas vydání (HMAC, `ANTISPAM_SECRET`). Kontakt bez platného tokenu funkce odmítne. Kontakt odeslaný dřív než 3 s po vydání potichu zahodí, protože tak rychle formulář vyplní jen bot. Rychlejší člověk o kontakt nepřijde: stránka ten zbytek počká na „Odesílám…“.
-4. **Formát e-mailu:** jen ASCII, platná doména s koncovkou, bez `< > " '`, bez `=`, `+` nebo `-` na začátku (vzorec při exportu do tabulky). Stejné pravidlo hlídá i databáze.
-5. **Souhlas** musí být `true`.
-6. **Jednorázové domény:** 9 222 domén ze seznamu [disposable-email-domains](https://github.com/disposable-email-domains/disposable-email-domains) (licence CC0, commit `81a8976` z 9. 10. 2026). Aktualizuje se skriptem [scripts/jednorazove-domeny.mjs](scripts/jednorazove-domeny.mjs). Kontroluje se i subdoména (`x.mailinator.com`).
-7. **MX záznam:** doména musí přijímat poštu. Neprojde doména, která neexistuje, má „null MX“ (RFC 7505), nebo nemá ani MX, ani adresu. Doména bez MX, ale s adresou projde, protože pošta jde i na ni (implicitní MX podle RFC 5321). **Při chybě DNS nebo timeoutu kontakt projde** (fail-open), aby skutečný člověk nedoplatil na výpadek DNS. Celá kontrola trvá nejvýš 1 s, skutečné dotazy trvají kolem 20 ms. Test ověřuje šest druhů chyb DNS, nezodpovězený dotaz (pokračuje se po 1 s) a že se časovač po odpovědi zruší.
-8. **Limit pokusů:** nejvýš 30 kontaktů za hodinu z jedné IP adresy. Počítá to databáze (funkce `uloz_kontakt`) podle HMAC z IP, hodiny a tajné soli. IP adresa se nikam neukládá a klíče z různých hodin nejdou spojit. Záznamy starší než 2 dny maže denní cron.
-   **Proč 30, a ne méně:** mobilní operátoři pouštějí mnoho zákazníků přes jednu veřejnou IPv4 adresu (CGNAT, adresní rozsah pro něj vyhrazuje [RFC 6598](https://www.rfc-editor.org/rfc/rfc6598)). Reklama míří na mobily, takže přísnější limit by při kampani odmítal skutečné lidi. Bot z jedné adresy i tak pošle nejvýš 30 kontaktů za hodinu a každý musí projít tokenem, kontrolou MX a seznamem jednorázových domén. Každé odmítnutí limitem se zapíše do logu Vercelu (`[lead] zamítnuto: limit pokusů z jedné IP`, bez IP).
-9. **Duplicita:** stejný e-mail se podruhé neuloží (`on conflict do nothing`), ale návštěvník dostane stejnou odpověď a tahák. Formulář tak neprozradí, kdo už v databázi je.
-
-**Nálezy a co s nimi:**
-
-| Nález | Závažnost | Stav |
-|---|---|---|
-| Spam a cizí e-maily přes API: skript bez hlavičky `Origin` mohl posílat kontakty donekonečna, proti tomu bylo jen skryté pole. | střední | **Opraveno** body 3 až 8 výše. Zůstává jedna věc: kdo zná cizí existující adresu, může ji zapsat. To žádná kontrola na stránce nepozná, pomůže jen double opt-in (níže). |
-| Zahlcení `/api/event` nebo ukládání libovolných dat přes měření. | střední | **Opraveno:** detail události jen z pevného seznamu hodnot pro každou událost (např. `scroll` jen 25/50/75/100), nejvýš 600 událostí za hodinu z jedné IP a 100 na návštěvu (počítá databáze), tělo nejvýš 512 B. |
-| Spárování e-mailu s návštěvou podle pořadí zápisu: tabulky měly pořadová čísla, takže k-tý kontakt odpovídal k-té události `odeslano`. README přitom tvrdilo, že spárovat nejdou. | střední (soukromí, jen pro toho, kdo má přístup do databáze) | **Opraveno:** klíče jsou náhodná UUID, události od odeslání dál nemají ID návštěvy, verze úvodu je u kontaktu a trychtýř počítá odeslání z kontaktů, čas událostí je na minuty. Nepravdivé tvrzení je opravené. Co zůstává při malém provozu, je popsané v sekci [Měření](#měření-cesty-návštěvníka). |
-| Skryté pole kontrolované v prohlížeči tiše zahodilo kontakt, když ho vyplnilo automatické vyplňování formulářů. | nízká (ztracené kontakty) | **Opraveno:** rozhoduje jen server a pole se jmenuje `poznamka`, což automatické vyplňování nezná. |
-| Chybějící bezpečnostní hlavičky. | nízká (obrana do hloubky) | **Opraveno ve [vercel.json](vercel.json):** Content-Security-Policy s hashi obou vložených skriptů (bez `unsafe-inline` pro skripty, test ověřuje, že podstrčený skript se nespustí; hashe hlídá [scripts/csp.mjs](scripts/csp.mjs)), HSTS, `nosniff`, Referrer-Policy, Permissions-Policy, COOP a zákaz vkládání do rámu. Lighthouse ani stránku to nerozbilo, lokální server posílá stejné hlavičky. |
-| Výchozí práva Supabase dávají anonymní roli přístup ke každé nové tabulce a funkci v `public`. | nízká (obrana do hloubky) | **Opraveno:** schéma výchozí práva odebere a test v PGlite ověřuje, že anonymní ani přihlášená role nic nepřečte, nezapíše ani nezavolá. |
-| E-maily s ne-ASCII znaky: `toLowerCase()` v JS a `lower()` v Postgresu se liší, uživatel by dostal „Něco se pokazilo“. | nízká | **Opraveno:** e-mail jen ASCII. |
-| Kopie formuláře mohla převzít zablokované tlačítko „Odesílám…“ z formuláře v sekci. | nízká (funkční) | **Opraveno:** kopie vznikají z čisté šablony. |
-| `?v=constructor` vypsal v nadpisu „undefined“. | nízká (kosmetika, ne XSS) | **Opraveno:** jen vlastní klíče objektu. |
-| `/__dev/db` lokálního serveru byl dostupný z Wi-Fi. | nízká (jen lokálně, falešná data) | **Opraveno:** jen z localhost. |
-| V [ai-log/](ai-log/) (deník, exporty 03 a 04) zůstaly vymyšlené testovací adresy na skutečných doménách, které mohly patřit skutečným lidem. | nízká | **Opraveno v souborech** (nahrazené `@example.com`). V historii commitů zůstává, historii podle pravidel projektu nepřepisuji. |
-
-**Zkontrolované bez nálezu:**
-- XSS: žádné `innerHTML` s daty z adresy nebo ze serveru,
-- CORS: žádné `Access-Control-Allow-Origin`, preflight z cizí stránky skončí 405,
-- klíče: jen v proměnných prostředí a v hlavičce `apikey`, nikdy v odpovědi ani v logu, test hlídá i nepřítomnost e-mailu a IP v logu,
-- RLS: zapnuté bez politik,
-- lokální server: žádný path traversal,
-- keep-alive: bez `CRON_SECRET` nepustí nikoho.
-
-Falešný poplach z review: „chybějící nezlomitelné mezery“ v textech z JS. Texty je mají, jen jako znak, ne `&nbsp;`.
-
-**Co jsem vědomě neudělal:**
-- **CAPTCHA (např. Turnstile):** přidala by skript třetí strany a otázku souhlasu. Má smysl, až by spam prošel přes limity.
-- **Limit z jedné IP může i při 30 za hodinu zastavit skutečné lidi** za stejnou sdílenou adresou operátora. Kolik lidí sdílí jednu adresu, nevím. Kdyby během kampaně v logu přibývalo odmítnutí limitem, stačí zvednout jedno číslo ve funkci `uloz_kontakt` v [supabase/schema.sql](supabase/schema.sql). Botnet s mnoha adresami limit obejde, proto jsou za ním další kontroly.
-- **Formulář bez JavaScriptu nefunguje** (chybí token). Obsah stránky bez JS funguje dál.
-
-**Double opt-in (doporučení, zatím nestavěno).** Po odeslání by přišel e-mail s potvrzovacím odkazem a do marketingových e-mailů by se kontakt zařadil až po kliknutí.
-- **Proč:**
-  - je to jediná ochrana proti tomu, že někdo zadá cizí existující adresu,
-  - dává doklad, kdo a kdy souhlas potvrdil,
-  - seznam bez neplatných adres zlepšuje doručitelnost e-mailů.
-- **Dopad na konverzi:** konverze stránky (návštěva → odeslaný formulář) se nezmění, tahák se ukáže hned jako teď. Klesne podíl kontaktů, kterým se smí psát, protože část lidí potvrzovací e-mail neotevře. Kolik, bez ověřeného zdroje neodhaduji. Změří se jako podíl potvrzených z odeslaných.
-- **Co je potřeba:**
-  - e-mailová služba (další zpracovatel),
-  - sloupec s časem potvrzení a jednorázový odkaz,
-  - endpoint pro potvrzení,
-  - text e-mailu.
-  
-  Rozhodne správce s právníkem.
-
-## Testování: co automaticky a co jen na telefonu
-
-Skripty a návod jsou ve [scripts/](scripts/README.md). Všechny vracejí nenulový kód, když něco neprojde.
-
-**Automaticky:**
-
-- **Funkce v `api/`** s podvrženou databází a DNS ([test-api.mjs](scripts/test-api.mjs), 127 kontrol): každá kontrola z cesty kontaktu, MX při chybě a timeoutu DNS, události s ID návštěvy a bez něj, hlavičky, nepřítomnost e-mailu, klíče a IP v logu.
-- **SQL** na skutečném Postgresu v PGlite ([test-db.mjs](scripts/test-db.mjs), 68 kontrol): práva anonymní role, RLS, limity, duplicity, události bez ID návštěvy, čas na minuty, trychtýř a projekt bez automatických práv Supabase.
-- **Chrome** (headless, 375 px, dotyk, [test-page.mjs](scripts/test-page.mjs), 127 kontrol): otočení všech lístků, chybové hlášky, odeslání, panel, lišta dole, měření (každá událost dorazí, e-mail nikdy s ID návštěvy, události od odeslání bez něj), CSP, velikost JS do 20 kB, `prefers-reduced-motion`.
-- **WebKit, tedy engine Safari** (Playwright, emulace iPhonu 13, iPhonu SE 3. generace a iPhonu SE 1. generace s šířkou 320 px, [test-webkit.mjs](scripts/test-webkit.mjs), 81 kontrol): panel a formuláře na místě s otevřenou klávesnicí. Emulátor softwarovou klávesnici nemá, proto ji test simuluje dvěma způsoby:
-  - jako iOS: layout viewport zůstane, zmenší se jen `visualViewport` a viditelná oblast se posune k poli,
-  - jako Android: zmenší se celé okno.
-
-  Kontroluje, že:
-  - nad klávesnicí (s rezervou 50 px na lištu návrhů e-mailů) je vidět pole a tlačítko a souhlas začíná těsně pod nimi; na 375 a 390 px i nadpis panelu. Na 320 px se nadpis vejít nemusí, přednost má pole a tlačítko,
-  - pozadí se pod panelem nepohne,
-  - po zavření se stránka vrátí na stejné místo a fokus na tlačítko, které panel otevřelo,
-  - nic nepřetéká do šířky.
-
-  Viditelnou výšku nad klávesnicí (328 px na iPhonu 13, 343 px na SE, 244 px na 320 px) jsme odhadli pesimisticky, nenaměřili. Nad klávesnicí navíc počítá s 50px lištou s návrhy e-mailů, kterou iOS do `visualViewport` nemusí započítat: pole a tlačítko musí být celé nad ní.
-- **WebKit, průběh otočení lístku:** animaci zastaví po 100 ms a kontroluje úhel, šířku a viditelnou stranu (nikdy zrcadlově, nikdy prázdný lístek), z výřezů skládá [snímek](docs/screenshots/webkit-otoceni-listku.png).
-- **Lighthouse (mobil), data proti zdrojům, čísla na stránce proti datům, text PDF proti datům.**
-
-**Jen na skutečném telefonu:**
-
-- skutečná klávesnice iOS: její výška, lišta nad ní (šipky, Hotovo, návrhy e-mailů) a to, jak Safari sám posouvá stránku k poli. **Lištu s návrhy e-mailů simulace nezachytila, našel ji až test na skutečném telefonu** ([víc](#jak-jsem-pracoval-s-ai)),
-- plynulost otočení lístků na skutečném displeji (průběh po 100 ms kontroluje WebKit),
-- otevření a uložení PDF v Safari,
-- nativní sdílení a kopírování odkazu,
-- výřez displeje a domovský indikátor (safe area), tmavý režim iOS,
-- dotyková odezva a gumové dotažení stránky,
-- **Android vůbec:** skutečné zařízení nemám, co je ověřené jen v emulaci, je v [Co v řešení chybí](#co-v-řešení-chybí).
-
-**Snímky před úpravami a po nich** jsou v [docs/screenshots/](docs/screenshots/) (375 px, generuje `scripts/screenshots.mjs`):
-
-| | Před | Po |
-|---|---|---|
-| Úvod | <img src="docs/screenshots/pred-1-uvod.png" width="220" alt="Úvod před"> | <img src="docs/screenshots/po-1-uvod.png" width="220" alt="Úvod po"> |
-| Výběr ETF | <img src="docs/screenshots/pred-2-vysledek-voo.png" width="220" alt="Výsledek VOO před"> | <img src="docs/screenshots/po-2-otoceny-listek.png" width="220" alt="Otočený lístek VOO po"> |
-| Karty párů | <img src="docs/screenshots/pred-3-karty-paru.png" width="220" alt="Karty párů před"> | <img src="docs/screenshots/po-3-karty-paru.png" width="220" alt="Karty párů po"> |
-| Formulář | <img src="docs/screenshots/pred-4-formular.png" width="220" alt="Formulář před"> | <img src="docs/screenshots/po-4-formular.png" width="220" alt="Formulář s náhledem taháku po"> |
-| Poděkování | <img src="docs/screenshots/pred-5-podekovani.png" width="220" alt="Rozbité poděkování před"> | <img src="docs/screenshots/po-5-podekovani.png" width="220" alt="Poděkování po"> |
-
-Varianty úvodu po: [?v=dvojce](docs/screenshots/po-1b-uvod-dvojce.png), [?v=zacatek](docs/screenshots/po-1c-uvod-zacatek.png).
-
-Panel a formulář na místě s otevřenou klávesnicí ve WebKitu (simulace, viz [scripts/test-webkit.mjs](scripts/test-webkit.mjs)):
-
-| | iPhone SE 1. gen. (320 px) | iPhone SE 3. gen. (375 px) | iPhone 13 (390 px) |
-|---|---|---|---|
-| Panel ze spodní lišty | <img src="docs/screenshots/webkit-panel-klavesnice-320.png" width="180" alt="Panel s klávesnicí, 320 px"> | <img src="docs/screenshots/webkit-panel-klavesnice-375.png" width="180" alt="Panel s klávesnicí, 375 px"> | <img src="docs/screenshots/webkit-panel-klavesnice-390.png" width="180" alt="Panel s klávesnicí, 390 px"> |
-| Formulář pod lístky | <img src="docs/screenshots/webkit-na-miste-klavesnice-320.png" width="180" alt="Formulář na místě s klávesnicí, 320 px"> | <img src="docs/screenshots/webkit-na-miste-klavesnice-375.png" width="180" alt="Formulář na místě s klávesnicí, 375 px"> | <img src="docs/screenshots/webkit-na-miste-klavesnice-390.png" width="180" alt="Formulář na místě s klávesnicí, 390 px"> |
+- **[Bezpečnost a ochrana proti spamu](docs/bezpecnost.md):** jak formulář odolá botům (token, MX, jednorázové domény, limit z jedné IP s hashem), RLS a bezpečnostní hlavičky, nálezy z review se závažností a co jsem vědomě neudělal.
+- **[Testování](docs/testovani.md):** co hlídají automatické testy (funkce, SQL, Chrome, WebKit s klávesnicí, data, Lighthouse) s počty kontrol a co jde ověřit jen na skutečném telefonu.
+- **[Nasazení a checklist](docs/nasazeni.md):** Supabase a Vercel krok po kroku, proměnné prostředí a kontrola na živé adrese.
 
 ## Co v řešení chybí
 
 - **E-maily po odeslání.** Tahák se ukáže hned, ale e-mailová služba a první e-maily nejsou. Vybere je správce, je to další zpracovatel do zásad.
-- **Double opt-in:** doporučení a co je k němu potřeba, je v [Bezpečnosti](#bezpečnost-a-ochrana-proti-spamu). Postavený není.
+- **Double opt-in:** doporučení a co je k němu potřeba, je v [Bezpečnosti](docs/bezpecnost.md#bezpečnost-a-ochrana-proti-spamu). Postavený není.
 - **Rozdělení návštěv pro A/B test na stránce:** hypotézy jsou připravené, přepínač verzí a jeho ukládání ne ([Hypotézy](#hypotézy-na-ab-test)).
 - **Formulář bez JavaScriptu** nefunguje kvůli tokenu proti botům. Obsah stránky bez JS funguje.
 - **Dostupnost u brokerů jen částečně:** u Degira jsou ověřené 3 ze 7 dvojčat, u Fia žádné ([data/README.md](data/README.md)). Stránka jmenuje jen ověřené brokery.
@@ -437,7 +329,7 @@ Celý návrh zásad s místy k doplnění (kontakt, doba uložení, e-mailová s
 - potvrdit, že e-maily neprodává ani nepředává dalším firmám (pak to doplnit do zásad),
 - převzít projekty Supabase a Vercel (teď jsou na účtu autora),
 - přijmout smlouvy o zpracování osobních údajů (DPA) u Supabase a Vercelu,
-- rozhodnout o double opt-inu ([doporučení](#bezpečnost-a-ochrana-proti-spamu)),
+- rozhodnout o double opt-inu ([doporučení](docs/bezpecnost.md#bezpečnost-a-ochrana-proti-spamu)),
 - vlastní doména místo `vercel.app`: přidat ji ve Vercelu a změnit kanonickou adresu, `og:url` a `og:image` v `public/index.html` (CSP i funkce s doménou počítají samy).
 
 **Právník:**
@@ -461,46 +353,3 @@ Celý návrh zásad s místy k doplnění (kontakt, doba uložení, e-mailová s
 **Až stránku Clientelo převezme:**
 
 - odebrat `noindex`: meta tag v `public/index.html` a hlavičku `X-Robots-Tag` ve `vercel.json`, a poznámku „Ukázkové řešení do výběrového řízení“ v patičce. Do té doby ji vyhledávače neindexují (Lighthouse proto v kategorii SEO hlásí „stránka je blokovaná pro indexování“, to je záměr).
-
-## Nasazení na Supabase a Vercel
-
-**Nasazeno 11. 10. 2026** na https://etf-dvojcata-demo.vercel.app (Supabase ve Frankfurtu, funkce v `fra1`). Odškrtnuté je, co je hotové a ověřené; nezaškrtnuté zbývá. Klíče patří jen do Vercelu (a lokálně do `.env.local`, který je v `.gitignore`), nikdy do repa ani do chatu.
-
-**1. Supabase (databáze v EU)**
-
-- [x] [supabase.com/dashboard](https://supabase.com/dashboard) → **New project**, název třeba `etf-dvojcata`, **Region: Central EU (Frankfurt)**, tedy `eu-central-1`. Heslo k databázi do správce hesel, stránka ho nepotřebuje. „Automatically expose new tables“ může být vypnuté a „Enable automatic RLS“ zapnuté: `schema.sql` dává roli `service_role` všechna potřebná práva výslovně (přístup ke schématu, tabulky, funkce; sekvence nejsou) a test to ověřuje na databázi bez automatických práv.
-- [x] **SQL Editor → New query** → vlož celý [supabase/schema.sql](supabase/schema.sql) → **Run**. V **Table Editor** jsou pak tabulky `leads`, `events` a `limity`, všechny s RLS.
-- [x] Znovu **SQL Editor → New query** → [supabase/funnel.sql](supabase/funnel.sql) → **Run** (až po `schema.sql`). Zkouška: `select * from analytika.trychtyr;` vrátí 12 řádků s nulami.
-- [x] **Connect** (nebo **Project Settings → Data API**): **Project URL** (`https://….supabase.co`) je `SUPABASE_URL`.
-- [x] **Project Settings → API Keys → Secret keys**: secret klíč (`sb_secret_…`) je `SUPABASE_SECRET_KEY`. Publishable klíč stránka nepotřebuje.
-
-**2. Vercel (web a funkce)**
-
-- [x] [vercel.com/new](https://vercel.com/new) → importuj repozitář z GitHubu.
-- [x] **Project Name: `etf-dvojcata-demo`**, aby adresa byla `https://etf-dvojcata-demo.vercel.app` a seděla s kanonickou adresou, `og:url` a `og:image`. Stránka není oficiálně Clientela, proto bez jejich jména v adrese. 11. 10. 2026 byla adresa volná.
-- [x] **Framework Preset: Other.** Build ani výstupní složku neměň, nastavuje je [vercel.json](vercel.json): web z `public/`, funkce z `api/` ve Frankfurtu (`fra1`), denní cron na `/api/keepalive` a bezpečnostní hlavičky.
-- [x] **Environment Variables** pro Production (a Preview, pokud ho chceš zkoušet), všechny čtyři:
-  - `SUPABASE_URL`: Project URL ze Supabase,
-  - `SUPABASE_SECRET_KEY`: secret klíč `sb_secret_…`,
-  - `CRON_SECRET`: náhodný řetězec aspoň 16 znaků (`openssl rand -hex 24`). Vercel ho posílá cronu v hlavičce, bez něj keep-alive nic neudělá,
-  - `ANTISPAM_SECRET`: náhodný řetězec aspoň 32 znaků (`openssl rand -hex 32`). Podepisuje token formuláře a hashuje IP pro limit pokusů, bez něj formulář vrátí chybu.
-- [x] **Deploy.** Když proměnné přidáš až po prvním nasazení, pusť **Redeploy**, jinak je funkce neuvidí.
-
-**3. Kontrola na živé adrese**
-
-- [x] Projekt dostal adresu `https://etf-dvojcata-demo.vercel.app`. Jinak změň kanonickou adresu, `og:url` a `og:image` v hlavičce `public/index.html` (hledej `etf-dvojcata-demo`).
-- [x] `curl -sI https://etf-dvojcata-demo.vercel.app/` ukáže `content-security-policy`, `strict-transport-security` a `x-robots-tag: noindex`.
-- [x] `curl -s https://etf-dvojcata-demo.vercel.app/api/token` vrátí `{"token":"…"}`. Odpověď 503 znamená chybějící `ANTISPAM_SECRET`.
-- [x] `curl -s -o /dev/null -w "%{http_code}\n" https://etf-dvojcata-demo.vercel.app/api/keepalive` vrátí 401 (bez tajemství cron nikoho nepustí).
-- [x] Na telefonu otevři `?v=dvojce`, otoč lístek a odešli svůj e-mail. Musí přijít poděkování a otevřít se tahák.
-- [x] V Supabase → **Table Editor**: v `leads` je řádek s e-mailem a verzí `dvojce`. `select * from analytika.trychtyr;` ukáže u `dvojce` příchod, otočení, formulář a odeslání.
-- [x] V `events` jsou `odeslano`, `odeslani_pokus` i `odeslani_chyba` bez ID návštěvy (ověřeno ručně na živé databázi).
-- [x] Ochrana formuláře: `x@mailinator.com` ukáže hlášku o jednorázových adresách a nic se neuloží (ověřeno ručně na živé stránce). Hlášku pro `test@neexistuje.invalid` hlídají lokální testy.
-- [ ] Publishable klíč nic nepřečte: `curl -s "<SUPABASE_URL>/rest/v1/leads?select=email" -H "apikey: <publishable klíč>"` vrátí chybu oprávnění, ne data.
-- [x] Vercel → **Settings → Cron Jobs**: `/api/keepalive` jednou denně. Tlačítkem **Run** ho pusť hned, v **Logs** musí být odpověď 200.
-- [x] Vercel → **Settings → Functions**: region `fra1` (hlavička `x-vercel-id` u `/api/*` začíná `fra1::fra1`).
-- [x] Lighthouse na živé adrese v mobilním režimu: výkon 100, SEO 66 kvůli záměrnému `noindex` ([výsledky](#technická-rozhodnutí)). Hlavičky, token, keep-alive, soubory a nadpisy kontroluje jen čtením [scripts/check-live.mjs](scripts/check-live.mjs).
-- [ ] Odkaz vlož do [nástroje pro ladění sdílení od Facebooku](https://developers.facebook.com/tools/debug/), ať je vidět obrázek pro sdílení.
-- [ ] **15. 10. 2026** zkontroluju v Supabase, že projekt neběží jako „Paused“ ([riziko keep-alive](#před-spuštěním-kampaně)), a pustím `node scripts/check-live.mjs`.
-
-**Lokálně se skutečnou databází** (jinak lokální server běží s podvrženou databází v paměti): vytvoř `.env.local` podle [.env.example](.env.example) a spusť `node --env-file=.env.local scripts/server.mjs`. Obsah `.env.local` nikdy nevypisuj ani nesdílej.

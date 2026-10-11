@@ -28,7 +28,7 @@ create table if not exists public.leads (
 alter table public.leads add column if not exists souhlas_verze text not null default 'bez-verze'
   check (souhlas_verze ~ '^[a-z0-9-]{1,40}$');
 
--- Anonymní události z cesty návštěvníka. Bez e-mailu; ID návštěvy žije jen v paměti jednoho načtení stránky.
+-- Pseudonymní události z cesty návštěvníka (ID návštěvy je náhodné UUID, ne anonymní údaj). Bez e-mailu; ID návštěvy žije jen v paměti jednoho načtení stránky.
 -- Události od odeslání formuláře dál (pokus, chyba, odeslání, otevření taháku, sdílení) jsou vždy bez ID návštěvy,
 -- aby nešlo poznat, která návštěva kontakt odeslala. Čas jen na celé minuty a klíč náhodný (viz README, Měření).
 create table if not exists public.events (

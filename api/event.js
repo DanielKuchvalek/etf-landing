@@ -1,4 +1,4 @@
-// POST /api/event – uloží anonymní událost z cesty návštěvníka (funkce uloz_udalost, tabulka events).
+// POST /api/event – uloží pseudonymní událost z cesty návštěvníka (ID návštěvy je náhodné, ale ne anonymní) (funkce uloz_udalost, tabulka events).
 // Přijímá jen ID návštěvy (náhodné UUID z paměti stránky), název události, verzi úvodu a detail z pevného
 // seznamu pro každou událost (_lib.js, DETAILY), takže se přes měření nedají ukládat libovolná data.
 // Události od odeslání formuláře dál (BEZ_NAVSTEVY) musí přijít bez ID návštěvy, ostatní s ním.
