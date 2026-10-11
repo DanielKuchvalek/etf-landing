@@ -85,7 +85,7 @@ r = await run(lead, req('/api/lead', { body: lead1() }));
 check('lead: e-mail už v databázi (duplicita) → stejná odpověď jako nový, tahák se ukáže', r.status === 200 && r.json.ok === true);
 reply = () => Response.json('limit');
 r = await run(lead, req('/api/lead', { body: lead1() }));
-check('lead: překročený limit pokusů z jedné IP → 429', r.status === 429 && r.json.chyba === 'limit');
+check('lead: překročený limit pokusů z jedné IP → 429 a záznam v logu (bez IP)', r.status === 429 && r.json.chyba === 'limit' && logs.at(-1) === '[lead] zamítnuto: limit pokusů z jedné IP');
 reply = () => Response.json('novy');
 r = await run(lead, req('/api/lead', { body: lead1({ varianta: 'neco-jineho' }) }));
 check('lead: neznámá verze úvodu se uloží jako vychozi', r.calls[0] && r.calls[0].body.p_varianta === 'vychozi');

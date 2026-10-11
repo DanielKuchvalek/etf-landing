@@ -66,9 +66,11 @@ check('uloz_kontakt: nový kontakt', (await one('service_role', `select public.u
 check('uloz_kontakt: stejný e-mail podruhé = duplicita, neuloží se znovu', (await one('service_role', `select public.uloz_kontakt('${KLIC(2)}', 'jana@example.com', 'zacatek')`)) === 'duplicita'
   && (await one('service_role', "select count(*)::int from public.leads where email = 'jana@example.com'")) === 1
   && (await one('service_role', "select varianta from public.leads where email = 'jana@example.com'")) === 'dvojce');
-let last = '';
-for (let i = 0; i < 11; i++) last = await one('service_role', `select public.uloz_kontakt('${KLIC(3)}', 'novy${i}@example.com', 'vychozi')`);
-check('uloz_kontakt: 11. pokus z jedné IP za hodinu = limit', last === 'limit' && (await one('service_role', "select count(*)::int from public.leads where email like 'novy%'")) === 10, last);
+const LIMIT_KONTAKTU = 30;
+const pokusy = [];
+for (let i = 0; i <= LIMIT_KONTAKTU; i++) pokusy.push(await one('service_role', `select public.uloz_kontakt('${KLIC(3)}', 'novy${i}@example.com', 'vychozi')`));
+check(`uloz_kontakt: ${LIMIT_KONTAKTU} pokusů z jedné IP za hodinu projde, ${LIMIT_KONTAKTU + 1}. = limit`, pokusy.slice(0, -1).every((r) => r === 'novy') && pokusy.at(-1) === 'limit'
+  && (await one('service_role', "select count(*)::int from public.leads where email like 'novy%'")) === LIMIT_KONTAKTU, pokusy.at(-1));
 check('uloz_kontakt: jiná IP limit nemá', (await one('service_role', `select public.uloz_kontakt('${KLIC(4)}', 'jina@example.com', 'vychozi')`)) === 'novy');
 for (const [what, email] of [['velká písmena', 'Jana@Example.com'], ['diakritika', 'jána@example.com'], ['bez zavináče', 'jana.example.com'], ['znak <', 'ja<na@example.com']]) {
   const r = await one('service_role', `select public.uloz_kontakt('${KLIC(5)}', $1, 'vychozi')`, [email]);

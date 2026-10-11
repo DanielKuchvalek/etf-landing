@@ -62,12 +62,12 @@ returns boolean language sql security invoker set search_path = '' as $$
   returning l.pocet <= p_max;
 $$;
 
--- Kontakt: nejvýš 10 pokusů za hodinu z jedné IP. Vrací 'novy', 'duplicita' (e-mail už je, nic se nemění)
+-- Kontakt: nejvýš 30 pokusů za hodinu z jedné IP (sdílená IP mobilních operátorů, viz README). Vrací 'novy', 'duplicita' (e-mail už je, nic se nemění)
 -- nebo 'limit'.
 create or replace function public.uloz_kontakt(p_klic text, p_email text, p_varianta text)
 returns text language plpgsql security invoker set search_path = '' as $$
 begin
-  if not public.zapocitej(p_klic, 10) then return 'limit'; end if;
+  if not public.zapocitej(p_klic, 30) then return 'limit'; end if;
   insert into public.leads (email, souhlas, varianta) values (p_email, true, p_varianta)
   on conflict (email) do nothing;
   if found then return 'novy'; end if;

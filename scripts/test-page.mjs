@@ -247,7 +247,7 @@ try {
     kopie: () => { delete Navigator.prototype.share; Object.defineProperty(navigator, 'clipboard', { value: { writeText: () => Promise.resolve() } }); },
     rucne: () => { delete Navigator.prototype.share; Object.defineProperty(navigator, 'clipboard', { value: undefined }); },
   };
-  await devDb('?smazat=1'); // limit 10 kontaktů za hodinu z jedné IP: testy jich odešlou víc
+  await devDb('?smazat=1'); // limit 30 kontaktů za hodinu z jedné IP: testy jich odešlou víc
   for (const [mode, before] of Object.entries(SHARE)) {
     const { page, logs } = await open('', before);
     const F = '[data-slot="sekce"] .lead-form';

@@ -46,7 +46,10 @@ export default {
     try {
       // limit pokusů a uložení v jedné transakci; opakovaný e-mail se neuloží znovu, odpověď je stejná
       const vysledek = await rpc('uloz_kontakt', { p_klic: klicIp(request, 'lead'), p_email: email, p_varianta: varianta });
-      if (vysledek === 'limit') return odpoved(429, { ok: false, chyba: 'limit' });
+      if (vysledek === 'limit') {
+        console.warn('[lead] zamítnuto: limit pokusů z jedné IP'); // bez IP; kdyby přibývalo během kampaně, zvednout limit
+        return odpoved(429, { ok: false, chyba: 'limit' });
+      }
     } catch (e) {
       console.error(`[lead] databáze: ${e.status ? `Supabase vrátil ${e.status}` : `nedostupná (${e.name})`}`);
       return odpoved(502, { ok: false, chyba: 'databaze' });

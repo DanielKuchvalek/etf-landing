@@ -25,7 +25,7 @@ export const DETAILY = {
   sdileni: /^(nativni|zruseno|kopie|rucne)$/,
 };
 
-// Limity (počítá je databáze, viz supabase/schema.sql): kontakty 10 za hodinu z jedné IP,
+// Limity (počítá je databáze, viz supabase/schema.sql): kontakty 30 za hodinu z jedné IP,
 // události 600 za hodinu z jedné IP a nejvýš 100 na jednu návštěvu.
 export const MIN_FORM_MS = 3000; // formulář odeslaný dřív než 3 s po načtení stránky odešle bot
 export const MAX_TOKEN_MS = 24 * 3600 * 1000;

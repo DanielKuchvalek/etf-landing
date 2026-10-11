@@ -96,7 +96,8 @@ Formulář je veřejný, takže počítám s tím, že ho budou zkoušet boti a 
 5. **Souhlas** musí být `true`.
 6. **Jednorázové domény:** 9 222 domén ze seznamu [disposable-email-domains](https://github.com/disposable-email-domains/disposable-email-domains) (licence CC0, commit `81a8976` z 9. 10. 2026). Aktualizuje se skriptem [scripts/jednorazove-domeny.mjs](scripts/jednorazove-domeny.mjs). Kontroluje se i subdoména (`x.mailinator.com`).
 7. **MX záznam:** doména musí přijímat poštu. Doména bez MX nebo s „null MX“ (RFC 7505) neprojde. Když DNS neodpoví do 2,5 s, kontakt projde, aby skutečný člověk nedoplatil na výpadek DNS.
-8. **Limit pokusů:** nejvýš 10 kontaktů za hodinu z jedné IP adresy. Počítá to databáze (funkce `uloz_kontakt`) podle HMAC z IP, hodiny a tajné soli. IP adresa se nikam neukládá a klíče z různých hodin nejdou spojit. Záznamy starší než 2 dny maže denní cron.
+8. **Limit pokusů:** nejvýš 30 kontaktů za hodinu z jedné IP adresy. Počítá to databáze (funkce `uloz_kontakt`) podle HMAC z IP, hodiny a tajné soli. IP adresa se nikam neukládá a klíče z různých hodin nejdou spojit. Záznamy starší než 2 dny maže denní cron.
+   **Proč 30, a ne méně:** mobilní operátoři pouštějí mnoho zákazníků přes jednu veřejnou IPv4 adresu (CGNAT, adresní rozsah pro něj vyhrazuje [RFC 6598](https://www.rfc-editor.org/rfc/rfc6598)). Reklama míří na mobily, takže přísnější limit by při kampani odmítal skutečné lidi. Bot z jedné adresy i tak pošle nejvýš 30 kontaktů za hodinu a každý musí projít tokenem, kontrolou MX a seznamem jednorázových domén. Každé odmítnutí limitem se zapíše do logu Vercelu (`[lead] zamítnuto: limit pokusů z jedné IP`, bez IP).
 9. **Duplicita:** stejný e-mail se podruhé neuloží (`on conflict do nothing`), ale návštěvník dostane stejnou odpověď a tahák. Formulář tak neprozradí, kdo už v databázi je.
 
 **Nálezy a co s nimi:**
@@ -127,7 +128,7 @@ Falešný poplach z review: „chybějící nezlomitelné mezery“ v textech z 
 
 **Co jsem vědomě neudělal:**
 - **CAPTCHA (např. Turnstile):** přidala by skript třetí strany a otázku souhlasu. Má smysl, až by spam prošel přes limity.
-- **Limit z jedné IP může omylem zastavit skutečné lidi** za stejnou sdílenou adresou mobilního operátora. Při 10 kontaktech za hodinu je to málo pravděpodobné. Botnet s mnoha adresami limit obejde, proto jsou za ním další kontroly.
+- **Limit z jedné IP může i při 30 za hodinu zastavit skutečné lidi** za stejnou sdílenou adresou operátora. Kolik lidí sdílí jednu adresu, nevím. Kdyby během kampaně v logu přibývalo odmítnutí limitem, stačí zvednout jedno číslo ve funkci `uloz_kontakt` v [supabase/schema.sql](supabase/schema.sql). Botnet s mnoha adresami limit obejde, proto jsou za ním další kontroly.
 - **Formulář bez JavaScriptu nefunguje** (chybí token). Obsah stránky bez JS funguje dál.
 
 **Double opt-in (doporučení, zatím nestavěno).** Po odeslání by přišel e-mail s potvrzovacím odkazem a do marketingových e-mailů by se kontakt zařadil až po kliknutí.
