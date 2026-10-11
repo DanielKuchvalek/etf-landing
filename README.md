@@ -14,6 +14,12 @@
 3. Klepni na „Chci tahák se všemi 7 dvojčaty“, zadej e-mail, zaškrtni souhlas a odešli. Přijde poděkování s tlačítkem „Otevřít tahák“ (PDF) a sdílením. Když stránku posuneš dál, objeví se dole lišta, která formulář otevře jako panel.
 4. Ochrana formuláře: zkus `x@mailinator.com` (jednorázová adresa) nebo `test@neexistuje.invalid` (doména nepřijímá poštu).
 
+Takhle to vypadá na iPhonu 13 (390 × 844). Úvod, lístek a formulář jsou z živé stránky (11. 10. 2026, požadavky na `/api/` zablokované, nic se neodeslalo), poděkování z lokálního serveru s podvrženou databází:
+
+| Úvod (`?v=dvojce`) | Otočený lístek | Formulář pod lístky | Poděkování |
+|---|---|---|---|
+| <img src="docs/screenshots/zive-1-uvod.png" width="180" alt="Úvod podle reklamy A"> | <img src="docs/screenshots/zive-2-otoceny-listek.png" width="180" alt="Otočený lístek VOO s dvojčetem VUAA"> | <img src="docs/screenshots/zive-3-formular.png" width="180" alt="Formulář pod lístky"> | <img src="docs/screenshots/zive-4-podekovani.png" width="180" alt="Poděkování s tlačítkem Otevřít tahák"> |
+
 **Kde je vidět trychtýř:**
 
 - **Na živé stránce** v Supabase: SQL Editor → `select * from analytika.trychtyr;` (příchod → otočení lístku → otevření formuláře → odeslání, zvlášť pro každou verzi úvodu).
