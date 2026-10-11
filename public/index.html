@@ -133,7 +133,13 @@ details>div p:last-child{margin:0}
 .thanks:focus{outline:none}
 .thanks .velka{width:56px;height:56px;color:var(--ok);margin:0 auto 6px;display:block}
 .thanks h3{font-size:1.25rem}
-.thanks p:last-child{margin:0}
+.thanks .btn{width:100%}
+.krok{margin:14px 0 0;padding:12px 14px;border:1.5px dashed var(--ink-2);border-radius:6px;font-size:.9375rem;text-align:left}
+.share{margin-top:18px;padding-top:16px;border-top:1px dashed var(--line)}
+.share p{margin:0 0 10px}
+.share .small{margin:8px 0 0}
+.share .small:empty{display:none}
+.share-url{width:100%;min-height:44px;margin-top:8px;padding:8px 10px;border:1.5px solid var(--ink);border-radius:8px;background:#fff;color:var(--ink);font:inherit;font-size:16px}
 /* lišta dole a panel */
 .bar{position:fixed;right:0;bottom:0;left:0;z-index:10;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));border-top:1.5px solid var(--ink);background:var(--card);animation:up .2s var(--ease)}
 .bar-in{display:flex;align-items:center;gap:12px;max-width:40rem;margin:0 auto}
@@ -451,11 +457,12 @@ html{scroll-behavior:auto}
   <div class="thanks" tabindex="-1">
     <svg class="velka" viewBox="0 0 20 20" aria-hidden="true"><use href="#fajfka"/></svg>
     <h3>Hotovo, tahák je tvůj.</h3>
-    <p><a href="/tahak.pdf" target="_blank" rel="noopener">Otevřít tahák (PDF)</a></p>
-    <p>Co dál: otevři tahák a&nbsp;začni krokem 1.</p>
-    <div class="share" hidden>
-      <p class="small">Znáš někoho, kdo taky marně hledá VOO? Pošli odkaz dál.</p>
-      <button class="btn btn-yellow" type="button" data-sdilej>Sdílet odkaz</button>
+    <a class="btn" href="/tahak.pdf" target="_blank" rel="noopener" data-tahak>Otevřít tahák</a>
+    <p class="krok"><b>První krok:</b> v&nbsp;taháku najdi dvojče fondu, který tě zajímá, a&nbsp;na straně „Jak koupit“ projdi kroky pro svého brokera.</p>
+    <div class="share">
+      <p><b>Znáš někoho, kdo taky marně hledá VOO?</b> Pošli mu odkaz na tuhle stránku.</p>
+      <button class="btn btn-yellow" type="button" data-sdilej>Poslat odkaz kamarádovi</button>
+      <p class="small" role="status" data-sdileni-stav></p>
     </div>
   </div>
 </template>
@@ -487,7 +494,7 @@ html{scroll-behavior:auto}
     return new Promise(function (resolve) { setTimeout(resolve, 400); });
   }
 
-  track('prichod', { sirka: window.innerWidth });
+  track('prichod', { sirka: window.innerWidth, ref: qs.get('ref') === 'sdileni' ? 'sdileni' : '' });
 
   /* Hloubka scrollu: 25, 50, 75 a 100 %, každá jednou. */
   var marks = [25, 50, 75, 100];
@@ -750,19 +757,50 @@ html{scroll-behavior:auto}
     var focusTarget;
     doc.querySelectorAll('[data-host]').forEach(function (host) {
       var t = thanksTpl.content.firstElementChild.cloneNode(true);
-      var share = t.querySelector('.share');
-      if (navigator.share) {
-        share.hidden = false;
-        share.querySelector('button').addEventListener('click', function () {
-          track('sdileni', {});
-          navigator.share({ title: doc.title, url: location.origin + location.pathname }).catch(function () {});
-        });
-      }
+      var kde = dialog.contains(host) ? 'panel' : host.id === 'vyber-cta' ? 'listky' : 'sekce';
+      if (kde === 'panel') t.querySelector('h3').id = 'panel-nadpis'; // dialog má aria-labelledby
+      t.querySelector('[data-tahak]').addEventListener('click', function () { track('tahak_otevren', { zdroj: kde }); });
+      t.querySelector('[data-sdilej]').addEventListener('click', function () { share(t.querySelector('[data-sdileni-stav]')); });
       host.replaceChildren(t);
       if (host === submittedHost) focusTarget = t;
     });
     updateBar();
     if (focusTarget) focusTarget.focus();
+  }
+
+  /* Sdílení: nativní nabídka telefonu, jinak zkopírovat odkaz. Každé sdílení je další možný kontakt, proto ho měříme. */
+  var SHARE_URL = location.origin + location.pathname + '?ref=sdileni';
+  function share(status) {
+    if (navigator.share) {
+      navigator.share({ title: 'ETF dvojčata', text: 'Americká ETF ti broker v Česku často nenabídne. Tady jsou jejich evropská dvojčata.', url: SHARE_URL }).then(function () {
+        track('sdileni', { zpusob: 'nativni' });
+      }, function (e) {
+        if (e && e.name === 'AbortError') return track('sdileni', { zpusob: 'zruseno' });
+        copyLink(status);
+      });
+      return;
+    }
+    copyLink(status);
+  }
+  function copyLink(status) {
+    function copied() {
+      status.textContent = 'Odkaz je zkopírovaný. Vlož ho kamarádovi do zprávy.';
+      track('sdileni', { zpusob: 'kopie' });
+    }
+    function manual() {
+      // bez schránky (např. stránka přes http v lokální síti): odkaz k ručnímu zkopírování
+      var input = status.parentNode.querySelector('.share-url') || doc.createElement('input');
+      input.className = 'share-url';
+      input.readOnly = true;
+      input.value = SHARE_URL;
+      input.setAttribute('aria-label', 'Odkaz na stránku');
+      status.textContent = 'Zkopíruj si odkaz:';
+      status.after(input);
+      input.select();
+      track('sdileni', { zpusob: 'rucne' });
+    }
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(SHARE_URL).then(copied, manual);
+    else manual();
   }
 })();
 </script>

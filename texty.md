@@ -238,11 +238,15 @@ U „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnost ověř
 
 - **Nahoře velká zelená fajfka**
 - **H2:** Hotovo, tahák je tvůj.
-- **Odkaz:** Otevřít tahák (PDF). PDF se samo nestahuje: Safari na iPhonu zpracuje stažení jinak než Chrome (dialog, nebo otevření místo stránky), tak má každý stejné tlačítko a text nic neslibuje.
-- **Text:** Co dál: otevři tahák a začni krokem 1.
-- **Volitelné sdílení:**
-  - text: Znáš někoho, kdo taky marně hledá VOO? Pošli odkaz dál.
-  - tlačítko: Sdílet odkaz
+- **Tlačítko (černé, přes celou šířku):** Otevřít tahák. Otevře PDF v nové kartě, poděkování zůstane. PDF se samo nestahuje: Safari na iPhonu zpracuje stažení jinak než Chrome (dialog, nebo otevření místo stránky), tak má každý stejné tlačítko a text nic neslibuje.
+- **První krok (rámeček):** **První krok:** v taháku najdi dvojče fondu, který tě zajímá, a na straně „Jak koupit“ projdi kroky pro svého brokera. (Strana „Jak koupit“ je v PDF, viz tahak.md.)
+- **Sdílení:**
+  - text: **Znáš někoho, kdo taky marně hledá VOO?** Pošli mu odkaz na tuhle stránku.
+  - tlačítko (žluté): Poslat odkaz kamarádovi. Otevře nativní sdílení telefonu (Web Share API).
+  - bez nativního sdílení se odkaz zkopíruje: „Odkaz je zkopírovaný. Vlož ho kamarádovi do zprávy.“
+  - bez schránky (např. stránka přes http) se ukáže pole s odkazem: „Zkopíruj si odkaz:“
+  - sdílený odkaz má `?ref=sdileni`, takže příchody od kamarádů jdou v měření poznat
+  - text sdílení: Americká ETF ti broker v Česku často nenabídne. Tady jsou jejich evropská dvojčata.
 
 ---
 

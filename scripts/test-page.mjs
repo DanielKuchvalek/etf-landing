@@ -9,8 +9,9 @@ const check = (name, cond, extra = '') => { if (!cond) fails++; console.log(`${c
 
 const browser = await launch();
 
-async function open(query = '') {
+async function open(query = '', before = null) {
   const page = await mobilePage(browser);
+  if (before) await page.evaluateOnNewDocument(before);
   const logs = [];
   page.on('console', async (m) => {
     const args = await Promise.all(m.args().map((a) => a.jsonValue().catch(() => null)));
@@ -196,6 +197,50 @@ try {
     await sleep(800);
     const img = await page.$eval('.nahled img', (i) => ({ ok: i.complete && i.naturalWidth > 0, w: i.naturalWidth, h: i.naturalHeight, attr: `${i.getAttribute('width')}×${i.getAttribute('height')}`, lazy: i.loading }));
     check('náhled taháku se načte a má správné rozměry', img.ok && `${img.w}×${img.h}` === img.attr && img.lazy === 'lazy', JSON.stringify(img));
+    await page.close();
+  }
+
+  // 8) Poděkování: tlačítko na tahák, první krok, sdílení (nativní, zrušené, kopie, ruční kopie)
+  const SHARE = {
+    nativni: () => { navigator.share = () => Promise.resolve(); },
+    zruseno: () => { navigator.share = () => Promise.reject(new DOMException('zrušeno', 'AbortError')); },
+    kopie: () => { delete Navigator.prototype.share; Object.defineProperty(navigator, 'clipboard', { value: { writeText: () => Promise.resolve() } }); },
+    rucne: () => { delete Navigator.prototype.share; Object.defineProperty(navigator, 'clipboard', { value: undefined }); },
+  };
+  for (const [mode, before] of Object.entries(SHARE)) {
+    const { page, logs } = await open('', before);
+    const F = '[data-slot="sekce"] .lead-form';
+    await page.type(`${F} input[name=email]`, 'eva@example.com');
+    await page.tap(`${F} input[name=consent]`);
+    await page.tap(`${F} [type=submit]`);
+    await sleep(700);
+    const T = '#tahak .thanks';
+    if (mode === 'nativni') {
+      const btn = await page.$eval(`${T} [data-tahak]`, (a) => `${a.textContent}|${a.className}|${a.getAttribute('href')}|${a.target}`).catch(() => null);
+      check('poděkování: tlačítko „Otevřít tahák“', btn === 'Otevřít tahák|btn|/tahak.pdf|_blank', String(btn));
+      check('poděkování: věta s prvním krokem', ((await text(page, `${T} .krok`)) || '').startsWith('První krok:'));
+      await page.evaluate(() => document.addEventListener('click', (e) => { if (e.target.closest('[data-tahak]')) e.preventDefault(); }));
+      await page.tap(`${T} [data-tahak]`);
+      await sleep(100);
+      const op = events(logs).filter((e) => e.udalost === 'tahak_otevren');
+      check('měření: otevření taháku', op.length === 1 && op[0].zdroj === 'sekce', JSON.stringify(op));
+    }
+    await page.tap(`${T} [data-sdilej]`);
+    await sleep(300);
+    const sh = events(logs).filter((e) => e.udalost === 'sdileni').map((e) => e.zpusob);
+    check(`měření: sdílení (${mode})`, sh.join() === mode, sh.join());
+    if (mode === 'kopie') check('sdílení bez nativní nabídky: odkaz zkopírovaný', ((await text(page, `${T} [data-sdileni-stav]`)) || '').startsWith('Odkaz je zkopírovaný'));
+    if (mode === 'rucne') {
+      const url = await page.$eval(`${T} .share-url`, (i) => i.value).catch(() => null);
+      check('sdílení bez schránky: odkaz k ručnímu zkopírování', !!url && url.endsWith('/?ref=sdileni'), String(url));
+    }
+    check(`sdílení (${mode}): bez chyb v konzoli`, !realErrors(logs).length, realErrors(logs).map((l) => l.text).join(' | '));
+    await page.close();
+  }
+  {
+    const { page, logs } = await open('?ref=sdileni');
+    const ev = events(logs).find((e) => e.udalost === 'prichod');
+    check('měření: příchod přes sdílený odkaz', ev && ev.ref === 'sdileni', JSON.stringify(ev));
     await page.close();
   }
 
