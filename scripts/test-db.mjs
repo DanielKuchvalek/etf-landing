@@ -119,5 +119,59 @@ check('trychtýř: kroky, postupně, formulář v sekci Tahák a odeslání z ko
 check('trychtýř: verze bez návštěv se ukáže s nulami, kontakty se neztratí', radky('zacatek') === '1:0/0/null/null 2:0/0/null/null 3:0/0/null/null 4:1/null/null/null' && radky('vychozi').startsWith('1:0/0/'), radky('zacatek'));
 
 await db.close();
+
+// --- Supabase s vypnutým „Automatically expose new tables“ a zapnutým automatickým RLS ---
+// Nová tabulka ani funkce v public nedostane žádná práva (ani execute pro PUBLIC) a přísněji než Supabase nemá
+// service_role ani přístup ke schématu public (Postgres ho jinak dává všem). Všechno, co funkce v api/ potřebují,
+// musí schema.sql udělit výslovně.
+{
+  const db2 = new PGlite();
+  await db2.exec(`
+    create role anon nologin; create role authenticated nologin; create role service_role nologin bypassrls;
+    revoke all on schema public from public;
+    grant usage on schema public to anon, authenticated;
+    alter default privileges in schema public revoke all on tables from public, anon, authenticated, service_role;
+    alter default privileges in schema public revoke all on sequences from public, anon, authenticated, service_role;
+    alter default privileges in schema public revoke execute on functions from public, anon, authenticated, service_role;
+  `);
+  // automatické RLS jako v Supabase: event trigger zapne RLS u každé nové tabulky
+  let autoRls = '';
+  try {
+    await db2.exec(`
+      create function public.auto_rls() returns event_trigger language plpgsql as $f$
+      declare o record; begin
+        for o in select * from pg_event_trigger_ddl_commands() where command_tag = 'CREATE TABLE' loop
+          execute format('alter table %s enable row level security', o.object_identity);
+        end loop; end $f$;
+      create event trigger auto_rls on ddl_command_end when tag in ('CREATE TABLE') execute function public.auto_rls();`);
+  } catch (e) { autoRls = e.message; }
+  let err = '';
+  try { await db2.exec(schema); await db2.exec(funnel); } catch (e) { err = e.message; }
+  check('bez automatických práv: schema.sql a funnel.sql proběhnou', !err, err);
+  if (!autoRls) check('bez automatických práv: automatické RLS je zapnuté a schéma s ním počítá', (await db2.query("select bool_and(relrowsecurity) r from pg_class where relname in ('leads','events','limity')")).rows[0].r === true);
+  else console.log(`INFO  automatické RLS v PGlite nejde nasimulovat (${autoRls}), RLS zapíná schema.sql samo`);
+  const run = async (sql) => { await db2.exec('set role service_role'); try { return Object.values((await db2.query(sql)).rows[0])[0]; } catch (e) { return `CHYBA: ${e.message}`; } finally { await db2.exec('reset role'); } };
+  const K = (n) => n.toString(16).padStart(32, 'a');
+  const v = '6cea79d5-7dbd-47ef-a402-37cd1ae34015';
+  const vysledky = {
+    'uloz_kontakt (nový)': [await run(`select public.uloz_kontakt('${K(1)}', 'a@example.com', 'dvojce')`), 'novy'],
+    'uloz_kontakt (duplicita)': [await run(`select public.uloz_kontakt('${K(1)}', 'a@example.com', 'dvojce')`), 'duplicita'],
+    'uloz_udalost (s ID návštěvy)': [await run(`select public.uloz_udalost('${K(2)}', '${v}', 'prichod', 'dvojce', null)`), 'ok'],
+    'uloz_udalost (bez ID návštěvy)': [await run(`select public.uloz_udalost('${K(2)}', null, 'odeslano', 'dvojce', 'sekce')`), 'ok'],
+    'uklid': [await run('select public.uklid()'), 0],
+  };
+  for (const [co, [dostal, cekal]] of Object.entries(vysledky)) check(`bez automatických práv: service_role zavolá ${co}`, dostal === cekal, String(dostal));
+  await db2.exec(`insert into public.limity (klic, okno, pocet) values ('${K(3)}', now() - interval '3 days', 1)`);
+  check('bez automatických práv: uklid smaže staré počítadlo (delete na limity)', (await run('select public.uklid()')) === 1);
+  const pocty = await db2.query("select (select count(*) from public.leads)::int l, (select count(*) from public.events)::int e, (select count(*) from public.limity)::int m");
+  check('bez automatických práv: kontakt, události a počítadla se opravdu uložily', JSON.stringify(pocty.rows[0]) === '{"l":1,"e":2,"m":2}', JSON.stringify(pocty.rows[0]));
+  check('bez automatických práv: v public nejsou sekvence, které by potřebovaly práva', (await db2.query("select count(*)::int n from pg_sequences where schemaname = 'public'")).rows[0].n === 0);
+  await db2.exec('set role anon');
+  let anon = '';
+  try { await db2.query('select public.uloz_kontakt($1, $2, $3)', [K(4), 'b@example.com', 'dvojce']); } catch (e) { anon = e.message; } finally { await db2.exec('reset role'); }
+  check('bez automatických práv: anon dál nic nezavolá', /permission denied/.test(anon), anon || 'prošlo!');
+  await db2.close();
+}
+
 console.log(fails ? `\nCELKEM CHYB: ${fails}` : '\nVŠE OK');
 process.exit(fails ? 1 : 0);

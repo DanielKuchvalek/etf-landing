@@ -54,6 +54,9 @@ alter table public.leads  enable row level security;
 alter table public.events enable row level security;
 alter table public.limity enable row level security;
 revoke all on table public.leads, public.events, public.limity from anon, authenticated;
+-- Práva pro service_role výslovně, nespoléhají na automatická práva Supabase (projekt s vypnutým
+-- „Automatically expose new tables“ je nedává). Přesně to, co potřebují funkce níž; sekvence nejsou (klíče jsou uuid).
+grant usage on schema public to service_role;
 grant select, insert on table public.leads, public.events to service_role;
 grant select, insert, update, delete on table public.limity to service_role;
 
