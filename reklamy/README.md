@@ -5,7 +5,7 @@ Dvě verze pro Meta (Facebook a Instagram), mobil. Testují dva úhly:
 | | A „Dvojče“ | B „Začátek“ |
 |---|---|---|
 | Soubor | [a-dvojce.md](a-dvojce.md) | [b-zacatek.md](b-zacatek.md) |
-| Háček | broker ti nenabídl VOO, není to chyba | nevíš, kterým ETF začít |
+| Háček | broker ti nenabídl VOO, není to chyba | začínáš s ETF? 7 známých fondů z USA a jejich evropské verze |
 | Motivace | zklamání z brokera | nejistota |
 | Pro koho | lidi, kteří už o ETF slyšeli a možná je zkoušeli koupit | začátečníci, kteří konkrétní fond zatím nehledají |
 | Parametr pro úvod stránky | `?v=dvojce` | `?v=zacatek` |

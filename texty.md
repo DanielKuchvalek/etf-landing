@@ -53,9 +53,10 @@ Nadpis a podnadpis se mění podle parametru v URL (viz `reklamy/README.md`). Zb
 
 ### Verze B „Začátek“ (`?v=zacatek`)
 
-- **H1:** Nevíš, kterým ETF začít?
-- **Podnadpis (jedna věta):** 7 známých fondů z USA a co v nich je.
-- **Fixem přetažené v H1:** začít
+- **H1:** Začínáš s ETF?
+- **Podnadpis:** 7 známých fondů z USA a jejich evropské verze. Klepni na lístek a uvidíš dvojče.
+- **Fixem přetažené v H1:** ETF
+- Navazuje na reklamu B, která dvojčata ukazuje přímo (dřív „Nevíš, kterým ETF začít?“ s dvojčaty schovanými v reklamě; stránka je přitom ukáže zdarma).
   `[d: * › typ]` `[d: * › ter]` `[d: * › ucits_obdoba.kde_koupit]`
 - **Drobně pod podnadpisem:** Nic ti nedoporučujeme, jen ukazujeme, co existuje.
 - „7 známých“ místo „7 nejznámějších“: nejvyšší stupeň neumíme doložit (SDY je výrazně menší než ostatní, `[d: SDY › velikost_fondu]`).

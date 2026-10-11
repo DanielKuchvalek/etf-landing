@@ -64,7 +64,7 @@ try {
   const H1 = {
     '': 'Najdi evropské dvojče k VOO, VT a dalším ETF z USA',
     '?v=dvojce': 'Broker ti nenabídl VOO? Není to chyba.',
-    '?v=zacatek': 'Nevíš, kterým ETF začít?',
+    '?v=zacatek': 'Začínáš s ETF?',
     '?v=neznama': 'Najdi evropské dvojče k VOO, VT a dalším ETF z USA',
   };
   for (const [q, exp] of Object.entries(H1)) {

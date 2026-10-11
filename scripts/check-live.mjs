@@ -42,7 +42,7 @@ for (const [path, type] of [['tahak.pdf', 'application/pdf'], ['og.png', 'image/
 const NADPISY = {
   '': 'Najdi evropské dvojče k VOO, VT a dalším ETF z USA',
   '?v=dvojce': 'Broker ti nenabídl VOO? Není to chyba.',
-  '?v=zacatek': 'Nevíš, kterým ETF začít?',
+  '?v=zacatek': 'Začínáš s ETF?',
 };
 const browser = await launch();
 let api = 0;

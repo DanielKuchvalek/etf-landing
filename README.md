@@ -35,7 +35,7 @@ Exporty konverzací s AI jsou v [ai-log/](ai-log/), reklamy v [reklamy/](reklamy
 
 - Vědí, co je ETF, a mají konkrétní problém: fond, o kterém slyšeli, u brokera nenajdou. Stránka jim ten problém vyřeší jedním klepnutím, takže hodnotu vidí okamžitě.
 - Jsou blízko k akci. Nepotřebují vysvětlovat, proč investovat, jen co koupit a jak.
-- Začátečníky, kteří nevědí, kterým ETF začít, oslovuje reklama B. Testujeme tak druhou motivaci: nejistotu místo zklamání z brokera.
+- Začátečníky, kteří fondy teprve poznávají, oslovuje reklama B. Testujeme tak druhou motivaci: nejistotu místo zklamání z brokera.
 
 **Stavíme na ověřeném faktu:** americká ETF ti broker v Česku často nenabídne, evropská obdoba ano. Například u Trading 212 je pro evropské klienty vyloučeno 1 137 z 1 151 amerických ETF (viz [data/README.md](data/README.md)). Tuhle informaci návštěvník jinde snadno nenajde a je to hlavní důvod, proč na stránce zůstat.
 
@@ -76,19 +76,19 @@ Texty všech částí jsou v [texty.md](texty.md).
 
 ## Dvě verze reklamy
 
-Obě pro Meta (Facebook a Instagram) na mobilu: statický obrázek 4 : 5 do feedu a 9 : 16 do Stories a Reels, tlačítko „Zjistit víc“. Texty jsou v [reklamy/](reklamy/README.md). Obrázky generuje [scripts/reklamy.mjs](scripts/reklamy.mjs) z HTML ve stylu stránky (sešit, fix, lístky), takže jdou upravit a přegenerovat. Každá má nahoře hook z primárního textu, dole nabídku „Tahák zdarma: všech 7 dvojčat v PDF →“ (stejný slib jako výzva na stránce) a drobně „Není investiční doporučení.“ A ukazuje dvojče VOO, B dvojčata záměrně neukazuje („→ ?“ u tickerů), odpověď je v taháku. U Stories a Reels je text mimo horních 270 px a dolních 450 px, kde je ovládání aplikace.
+Obě pro Meta (Facebook a Instagram) na mobilu: statický obrázek 4 : 5 do feedu a 9 : 16 do Stories a Reels, tlačítko „Zjistit víc“. Texty jsou v [reklamy/](reklamy/README.md). Obrázky generuje [scripts/reklamy.mjs](scripts/reklamy.mjs) z HTML ve stylu stránky (sešit, fix, lístky), takže jdou upravit a přegenerovat. Každá má nahoře hook z primárního textu, dole nabídku „Tahák zdarma: všech 7 dvojčat v PDF →“ (stejný slib jako výzva na stránce) a drobně „Není investiční doporučení.“ A ukazuje dvojče VOO, B všech 7 fondů s jejich evropskými verzemi, stejně jako stránka zdarma. U Stories a Reels je text mimo horních 270 px a dolních 450 px, kde je ovládání aplikace.
 
 | | Feed 1080 × 1350 | Stories a Reels 1080 × 1920 |
 |---|---|---|
 | **A „Dvojče“** | <img src="reklamy/a-dvojce-feed.png" width="240" alt="Reklama A do feedu: Broker ti nenabídl VOO? Není to chyba. VOO přeškrtnuté, šipka, VUAA v kroužku, nabídka taháku zdarma"> | <img src="reklamy/a-dvojce-stories.png" width="190" alt="Reklama A do Stories"> |
-| **B „Začátek“** | <img src="reklamy/b-zacatek-feed.png" width="240" alt="Reklama B do feedu: Kterým ETF začít? Seznam 7 typů ETF s tickery a otazníkem, nabídka taháku zdarma"> | <img src="reklamy/b-zacatek-stories.png" width="190" alt="Reklama B do Stories"> |
+| **B „Začátek“** | <img src="reklamy/b-zacatek-feed.png" width="240" alt="Reklama B do feedu: Začínáš s ETF? 7 známých fondů z USA a jejich evropské verze, nabídka taháku zdarma"> | <img src="reklamy/b-zacatek-stories.png" width="190" alt="Reklama B do Stories"> |
 
 | | A „Dvojče“ ([a-dvojce.md](reklamy/a-dvojce.md)) | B „Začátek“ ([b-zacatek.md](reklamy/b-zacatek.md)) |
 |---|---|---|
-| Úhel | zklamání: broker nenabízí VOO, o kterém slyšeli | nejistota: nevědí, kterým ETF začít |
-| Primární text začíná | „Broker ti nenabídl VOO? Není to chyba.“ | „Nevíš, kterým ETF začít?“ |
+| Úhel | zklamání: broker nenabízí VOO, o kterém slyšeli | nejistota: fondy teprve poznávají |
+| Primární text začíná | „Broker ti nenabídl VOO? Není to chyba.“ | „Začínáš s ETF? Tady je 7 známých fondů z USA…“ |
 | Obrázek | VOO → VUAA, „evropské dvojče · koupíš z Česka“ | sešit se 7 typy ETF a tickery, nic nezakroužkované |
-| Nadpis první obrazovky | Broker ti nenabídl VOO? Není to chyba. | Nevíš, kterým ETF začít? |
+| Nadpis první obrazovky | Broker ti nenabídl VOO? Není to chyba. | Začínáš s ETF? |
 | Pro koho | 25–40 let, o ETF už slyšeli a VOO možná zkoušeli koupit | 25–40 let, s ETF teprve začínají a konkrétní fond nehledají |
 | Kam vede | [etf-dvojcata-demo.vercel.app/?v=dvojce](https://etf-dvojcata-demo.vercel.app/?v=dvojce) | [etf-dvojcata-demo.vercel.app/?v=zacatek](https://etf-dvojcata-demo.vercel.app/?v=zacatek) |
 | Co od ní čekáme | Lidé přijdou s konkrétním problémem a hned otočí VOO. Čekám vyšší podíl otočení i odeslání než u B, protože slib reklamy vyřeší první lístek. | Lidé si spíš projdou víc lístků, než se rozhodnou. Čekám nižší konverzi než u A (nehledají konkrétní fond), ale možná víc otočených lístků na návštěvu. |

@@ -88,23 +88,27 @@ h1{font-size:${s.h1}px}
   <div class="group offer-group">${OFFER}</div>
 </div></body></html>`;
 
-// B „Začátek“: „Kterým ETF začít?“, seznam 7 typů a tickerů s „→ ?“ (dvojčata záměrně neukazujeme, odpověď je
-// v taháku, nic zakroužkované), řádek z reklamy a nabídka
+// B „Začátek“: „Začínáš s ETF?“, 7 známých fondů z USA a jejich evropské verze (stejně jako stránka, která je ukáže
+// zdarma), řádek o tom, co na stránce najdeš, nabídka taháku. Nic zakroužkované, nic nedoporučujeme.
+const dvojce = Object.fromEntries(data.etf.map((e) => [e.ticker, e.ucits_obdoba.burza.hodnota.ticker]));
 const adB = (w, h, area, s) => `<!doctype html><html lang="cs"><head><meta charset="utf-8"><style>${BASE}
 ${COMMON(w, h, area, s)}
 h1{font-size:${s.h1}px}
+.sub{font-size:${s.sub}px;font-weight:700;margin-top:-${s.gap * 0.5}px;text-wrap:balance}
 .list-card{width:100%;font-size:${s.row}px;transform:rotate(-.4deg)}
-.row .q{margin-left:.35em;font-weight:800;color:#4A4A4A}
-.row .q .fix{color:#141414}
+.row .pair{white-space:nowrap}
+.row .orig2{color:#4A4A4A;font-weight:700}
+.row .arr{margin:0 .3em;color:#4A4A4A}
 .bottom{font-size:${s.line}px;font-weight:700}
 </style></head><body><div class="page">
   <div class="group">
     <div class="logo">ETF <span class="fix">dvojčata</span></div>
-    <h1>Kterým ETF <span class="fix">začít</span>?</h1>
+    <h1>Začínáš s&nbsp;<span class="fix">ETF</span>?</h1>
+    <div class="sub">7&nbsp;známých fondů z&nbsp;USA a&nbsp;jejich evropské verze</div>
   </div>
-  <div class="card list-card"><div class="list">${lístky.map(([co, tk]) => `<div class="row"><span>${co}</span><span><b>${tk}</b><span class="q">→ <span class="fix">?</span></span></span></div>`).join('')}</div></div>
+  <div class="card list-card"><div class="list">${lístky.map(([co, tk]) => `<div class="row"><span>${co}</span><span class="pair"><span class="orig2">${tk}</span><span class="arr">→</span><b>${dvojce[tk]}</b></span></div>`).join('')}</div></div>
   <div class="group">
-    <div class="bottom">Co v&nbsp;nich je a&nbsp;kde je koupíš z&nbsp;Česka</div>
+    <div class="bottom">Co v&nbsp;nich je a&nbsp;u&nbsp;kterých brokerů je najdeš</div>
     ${OFFER}
   </div>
 </div></body></html>`;
@@ -114,8 +118,8 @@ const STORY = { w: 1080, h: 1920, area: { t: 270, b: 450, l: 65, r: 65 } }; // b
 const OUT = [
   ['a-dvojce-feed.png', adA, FEED, { gap: 22, logo: 34, h1: 80, sub: 54, orig: 78, arrow: 76, tk: 176, pad: 24, line: 40, small: 34, offer: 42, disc: 26 }],
   ['a-dvojce-stories.png', adA, STORY, { spread: true, gap: 22, logo: 38, h1: 86, sub: 60, orig: 88, arrow: 84, tk: 196, pad: 26, line: 44, small: 38, offer: 46, disc: 28 }],
-  ['b-zacatek-feed.png', adB, FEED, { gap: 26, logo: 34, h1: 96, row: 42, line: 40, offer: 42, disc: 26 }],
-  ['b-zacatek-stories.png', adB, STORY, { spread: true, gap: 22, logo: 38, h1: 104, row: 44, line: 42, offer: 46, disc: 28 }],
+  ['b-zacatek-feed.png', adB, FEED, { gap: 18, logo: 32, h1: 86, sub: 42, row: 38, line: 36, offer: 40, disc: 24 }],
+  ['b-zacatek-stories.png', adB, STORY, { spread: true, gap: 16, logo: 36, h1: 96, sub: 44, row: 40, line: 38, offer: 42, disc: 26 }],
 ];
 
 const browser = await launch();
