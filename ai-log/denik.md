@@ -164,3 +164,22 @@ Doplňuje exporty konverzací (`/export`), které nezachytí celý průběh prá
   - **Razítko pod lístky tvrdilo „Data přímo od správců fondů“,** ale lístky ukazují i dostupnost u brokerů, a ta je z webů brokerů. Opraveno spolu s doplněním „Není to investiční doporučení“.
   - **`reklamy/README.md` tvrdilo, že se `utm_content` ukládá k událostem.** Neukládá, verzi nese `?v=`. Přišlo se na to při revizi README.
   - **V nesledovaném exportu `03` bylo 11 testovacích adres na skutečných doménách** z minulého kola (adresy, které AI dřív nahradila v kódu). Před commitem nahrazené za `@example.com`. V historii gitu na GitHubu zůstávají dvě podobné adresy (deník a test), historie se nepřepisuje.
+
+### 2026-10-11 – nasazení, kontrola živé stránky, obrázky reklam
+
+- **Zadání pro AI:**
+  - ověřit živou stránku jen čtením, bez formuláře a bez zápisu do databáze,
+  - Lighthouse proti živé adrese, README ve stavu „nasazeno“,
+  - snímky z iPhonu 13, revize README očima hodnotitele,
+  - obrázky obou reklam (feed a Stories/Reels) generované z HTML,
+  - Android jako známé omezení.
+- **Kontrola výstupu:**
+  - `scripts/check-live.mjs`: 22 kontrol na živé adrese, v prohlížeči blokuje všechny požadavky na `/api/`, takže se neuložila ani událost příchodu (ověřeno počtem zablokovaných požadavků),
+  - Lighthouse s `--blocked-url-patterns=*/api/*` ze stejného důvodu,
+  - snímky a obrázky reklam prohlédnuté očima, u Stories skript ověřuje, že text je v bezpečné zóně,
+  - odkazy a obrázky v README a v `reklamy/` ověřené skriptem.
+- **Kde se AI spletla nebo co musela opravit:**
+  - První snímek otočeného lístku měl nahoře useknutý řádek textu. Přišlo se na to při prohlížení, snímek je přefocený.
+  - Na prvních obrázcích reklam byla šipka a kroužek vedle velkého písma moc tenké. Pootočení lístku v reklamě B navíc zvedalo tickery vpravo nad jejich řádek. Obojí ukázal náhled, opraveno.
+  - Bezpečné zóny Stories a Reels se nepodařilo ověřit v oficiální dokumentaci Meta. Návody třetích stran se rozcházejí (dole 250–670 px). AI zvolila 270/450 px a v README nechala kontrolu v náhledu Ads Manageru, místo aby čísla vydávala za ověřená.
+  - Popis reklamy B chtěl „modrou propisku“, ale modrá ze vzhledu stránky vypadla. Obrázek drží styl stránky a popis je opravený.
