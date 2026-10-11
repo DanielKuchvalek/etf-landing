@@ -342,14 +342,41 @@ Skripty a návod jsou ve [scripts/](scripts/README.md). Všechny vracejí nenulo
 
 ## Jak jsem pracoval s AI
 
-_TODO: jaké pokyny dostali agenti (viz [CLAUDE.md](CLAUDE.md)), jak probíhala kontrola jejich výstupu, kde se spletli a jak se na to přišlo. Exporty konverzací jsou v [ai-log/](ai-log/), průběžné poznámky v [ai-log/denik.md](ai-log/denik.md)._
+**Nástroje a role:**
 
-**Test na skutečném telefonu udělal člověk, ne AI** (iPhone, Safari, 10. 10. 2026). AI testovala jen v headless Chrome ([scripts/](scripts/)). Výsledek:
+- **Plánovací chat (claude.ai):** v samostatném chatu jsem si připravoval a ladil zadání pro Claude Code: co chci, v jakém pořadí, co ověřit a co se nesmí stát. Do Claude Code šlo až hotové zadání. Exporty v [ai-log/](ai-log/) jsou z Claude Code.
+- **Claude Code** (ve VS Code) dělal výzkum dat z primárních zdrojů, stránku, PDF, funkce, SQL, testy a dokumentaci. Pravidla pro každou session i pro subagenty jsou v [CLAUDE.md](CLAUDE.md): žádná vymyšlená data (zdroj, nebo TODO), klíče jen v proměnných prostředí, nic absolutního v textech, tykání bez rodu, česká typografie, malé commity a push jen na pokyn.
+- **Agenti:** většina práce běžela v jedné konverzaci. Subagenty spouštěly skilly `security-review` (hledání zranitelností a ověření každého nálezu zvlášť) a `code-review`. Co dostaly za zadání, jak se kontroloval jejich výstup a kde se spletly, je v [ai-log/denik.md](ai-log/denik.md).
+- **Postup u chyb:** AI nejdřív napsala příčinu a teprve potom opravovala. U nové kontroly ověřila, že na staré verzi selže.
 
-- Stránka funguje, je rychlá a obsahově sedí.
-- Design působil příliš „bezpečně“: bílé zaoblené karty a modré tlačítko vypadaly jako typický web od AI a ze „sešitu“ zbyla jen mřížka.
-- Stav po odeslání byl rozbitý: nad „Hotovo, tahák se ti stahuje“ zůstávaly odrážky z formuláře.
-- Stránka slibovala PDF, které neexistovalo.
+**Jak jsem výstupy kontroloval:**
+
+- **Testy**, které vrací chybu, když něco neprojde ([scripts/](scripts/README.md)): funkce s podvrženou databází a DNS (127 kontrol), SQL na skutečném Postgresu v PGlite (57), stránka v Chromu (127), WebKit s emulovanými iPhony a simulovanou klávesnicí (81), data proti zdrojům, čísla na stránce a v PDF proti datům, Lighthouse.
+- **Na skutečném iPhonu**, třikrát (Safari a Chrome na iOS). Tam se našly chyby, které žádná simulace neukázala.
+- **Proti zadání:** cílová skupina, hodnota viditelná před formulářem, dvě reklamy, měření celé cesty, skutečná data se zdrojem, pořadí sekcí, konverze, hypotézy, nasazení.
+- **Čtením:** texty, README a diff před každým commitem (klíče, skutečné e-maily).
+
+**Kde AI chybovala a jak se to odhalilo:**
+
+| Chyba AI | Jak se na ni přišlo | Oprava |
+|---|---|---|
+| V návrhu podnadpisu absolutní tvrzení „Americké ti broker nenabídne, evropské ano.“, proti pravidlu nic netvrdit absolutně. | Člověk při čtení plánu. | „Americká ti broker často nenabídne, evropská ano.“ |
+| „Pojistka“ u otočení lístku přepínala líc a rub podle času, ne podle úhlu. Lístek byl z boku dřív, než se strany vyměnily, takže na iPhonu jen blikl. Test kontroloval jen konečný stav. | Člověk na iPhonu (Chrome na iOS, s videem). Příčinu AI změřila ve WebKitu po 100 ms. | Strany se mění na konci první půlky animace. Test kontroluje každý snímek průběhu. |
+| Kontrola skrytého pole proti botům v prohlížeči tiše zahazovala skutečné kontakty, když pole vyplnilo automatické vyplňování. Návštěvník viděl poděkování, ale kontakt se neuložil. | Skill `code-review` při bezpečnostní kontrole. | Rozhoduje jen server a pole má název, který automatické vyplňování nezná. |
+| V README tvrdila, že kontakt nejde spárovat s návštěvou. Nebyla to pravda: řádky měly pořadová čísla a databáze zná pořadí zápisu. | Review při bezpečnostní kontrole. | Náhodná UUID, odeslání a všechno po něm bez ID návštěvy, čas na minuty a pravdivý popis toho, co zůstává. |
+| Panel s formulářem po klepnutí do pole odskočil pod klávesnici. Po opravě tlačítko zakryla lišta s návrhy e-mailů nad klávesnicí. Headless Chrome ani simulace ve WebKitu klávesnici a lištu neukázaly. | Dva testy na skutečném iPhonu (člověk). | Panel podle `visualViewport`, tlačítko hned pod polem a rezerva 50 px na lištu. Test ve WebKitu lištu teď kreslí. |
+| Limit 10 kontaktů za hodinu z jedné IP brala jako bezpečný pro skutečné lidi. | Člověk upozornil na sdílené IP mobilních operátorů (CGNAT). | 30 za hodinu, odmítnutí se zapisují do logu. |
+| Kontrola MX odmítala doménu bez MX záznamu, i když pošta jde i na adresu domény (RFC 5321). | AI při ověřování, o které člověk požádal (fail-open při chybě DNS). | Bez MX se ověří adresa domény, timeout 1 s. |
+
+Další drobnější chyby (odhadnutá adresa produktové stránky Vanguardu, nápověda XTB pro klienty mimo EU, test, který klepal během plynulého posunu stránky) jsou v [deníku](ai-log/denik.md).
+
+**Testy na skutečném iPhonu dělal člověk, ne AI:**
+
+1. **10. 10. 2026, Safari:** design působil jako typický web od AI, poděkování bylo rozbité a stránka slibovala PDF, které neexistovalo. Design se předělal na „sešit“ s lístky.
+2. **10. 10. 2026, Safari:** panel s formulářem odskakoval pod klávesnici, Safari PDF místo stažení otevřelo (poděkování teď nabízí „Otevřít tahák“), poděkování bylo prázdné.
+3. **11. 10. 2026, Chrome na iOS, s videem:** lístek se neotáčel, jen blikl, a tlačítko zakrývala lišta s návrhy e-mailů. Průběh otočení po opravě (WebKit, snímky po 100 ms):
+
+   <img src="docs/screenshots/webkit-otoceni-listku.png" width="640" alt="Průběh otočení lístku VTI po 100 ms: líc se zužuje, ve 224 ms je lístek z boku, pak se rozšiřuje rub s dvojčetem SXR4">
 
 Snímky před úpravami a po nich jsou v [docs/screenshots/](docs/screenshots/) (375 px, generuje `scripts/screenshots.mjs`):
 
@@ -362,22 +389,6 @@ Snímky před úpravami a po nich jsou v [docs/screenshots/](docs/screenshots/) 
 | Poděkování | <img src="docs/screenshots/pred-5-podekovani.png" width="220" alt="Rozbité poděkování před"> | <img src="docs/screenshots/po-5-podekovani.png" width="220" alt="Poděkování po"> |
 
 Varianty úvodu po: [?v=dvojce](docs/screenshots/po-1b-uvod-dvojce.png), [?v=zacatek](docs/screenshots/po-1c-uvod-zacatek.png).
-
-**Druhý test na skutečném iPhonu, zase člověk** (Safari, 10. 10. 2026). Design a lístky fungovaly, ale objevily se chyby, které headless Chrome neukázal:
-
-- Po klepnutí do pole e-mail v panelu ze spodní lišty panel odskočil nahoru, nadpis zajel pod horní lištu telefonu, pole zmizelo pod klávesnicí a pod panelem prosvítala stránka. Příčina: iOS při klávesnici zmenší jen visual viewport, pevně umístěný panel nechá pod klávesnicí a posouvá stránku i panel. Navíc fokus šel do pole ještě během animace panelu. Oprava a test ve WebKitu jsou popsané v sekci [Testování](#testování-co-automaticky-a-co-jen-na-telefonu).
-- V logu serveru bylo `GET /tahak.pdf` s 404 hned po úspěšném HEAD. Zopakovat se to nepodařilo a přegenerováním PDF to nebylo (PDF se naposledy zapsalo o 22 minut dřív). Generování teď zapisuje přes dočasný soubor a lokální server u každé 404 vypíše, kde soubor hledal.
-- Safari PDF místo stažení otevřelo v prohlížeči, takže poděkování „tahák se ti stahuje“ neplatilo. Teď je tam tlačítko „Otevřít tahák“.
-- Poděkování bylo prázdné, zásady měly moc žlutých TODO, chyběla favicona.
-
-**Třetí test na skutečném iPhonu, zase člověk** (Chrome na iOS, tedy WebKit, 11. 10. 2026, s videem). Oprava panelu pomohla, ale našly se dvě chyby, které simulace nezachytila:
-
-- **Lístek se neotáčel, jen blikl:** během animace zmizel (zůstala páska) a rub nebylo vidět. Příčinu zavedla AI v předchozí opravě: viditelnost líce a rubu přepínala v půlce *času* (220 ms), ale lístek byl kvůli křivce animace z boku už po ~50 ms. Mezitím byl otočený zády se skrytým rubem a GPU v iPhonu odvrácený líc nekreslí. Původní test kontroloval jen konečný stav, ne průběh. Teď se otáčí jedna rovina bez 3D kontextu, strany se vymění přesně ve chvíli, kdy je lístek z boku, a test ve WebKitu kontroluje snímky po 100 ms:
-
-  <img src="docs/screenshots/webkit-otoceni-listku.png" width="640" alt="Průběh otočení lístku VTI po 100 ms: líc se zužuje, ve 224 ms je lístek z boku, pak se rozšiřuje rub s dvojčetem SXR4">
-- **Tlačítko pod klávesnicí:** nad klávesnici vyskočila lišta s návrhy e-mailů, zakryla souhlas a tlačítko „Získat tahák“ skončilo pod klávesnicí. Tuhle lištu simulace nezachytila. Tlačítko je teď hned pod polem, souhlas pod ním a formulář nechává rezervu 50 px.
-
-AI navíc při kontrole na 320 px našla, že zadní strana lístku se třemi brokery přetékala přes další řadu, a že headless WebKit nerespektuje `backface-visibility` (rub prosvítal). Obojí je opravené a hlídané testem.
 
 Panel a formulář na místě s otevřenou klávesnicí ve WebKitu (simulace, viz [scripts/test-webkit.mjs](scripts/test-webkit.mjs)):
 
