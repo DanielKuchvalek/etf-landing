@@ -29,3 +29,6 @@ Thumbs.db
 
 # Výstupy testovacích skriptů (Lighthouse JSON apod.)
 scripts/out/
+
+# dočasné soubory při generování PDF a náhledu (scripts/pdf.mjs)
+public/**/.*.tmp-*

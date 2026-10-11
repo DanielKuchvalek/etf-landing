@@ -218,9 +218,9 @@ U „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnost ověř
 - **Souhlas (zaškrtávací pole):** Souhlasím, že mi Clientelo Czech s.r.o. bude posílat e-maily o investování do ETF. Odhlásit se můžu kdykoli.
   - odkaz: Jak nakládáme s osobními údaji → `public/ochrana-osobnich-udaju.html` (návrh, musí schválit právník)
   - `[ROZHODNOUT + právník: smí být stažení taháku podmíněné souhlasem s marketingovými e-maily? Pokud ne, souhlas bude dobrovolný a tahák dostane každý, kdo vyplní e-mail.]`
-- **Tlačítko:** Stáhnout tahák
+- **Tlačítko:** Získat tahák
 - **Tlačítko při odesílání:** Odesílám…
-- **Pod tlačítkem:** PDF se stáhne hned. Na e-mail čekat nemusíš.
+- **Pod tlačítkem:** Tahák otevřeš hned po odeslání, na e-mail čekat nemusíš.
 - **Skryté pole proti botům:** popisek jen pro čtečky obrazovky: „Toto pole nech prázdné“
 
 ### Chybové hlášky
@@ -232,13 +232,13 @@ U „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnost ověř
 | nezaškrtnutý souhlas | Zaškrtni prosím souhlas. (Závisí na rozhodnutí výše.) |
 | chyba serveru | Něco se pokazilo u nás. Zkus to prosím za chvíli znovu. |
 | bez internetu | Vypadá to, že nejde internet. Zkontroluj připojení a zkus to znovu. |
-| e-mail už máme (není chyba) | Tenhle e-mail už u nás máme. Tahák se ti stahuje. |
+| e-mail už máme (není chyba) | Žádná hláška, stejné poděkování jako u nového e-mailu. Jinak by formulář prozradil, kdo už je v databázi. |
 
 ### Poděkování (nahradí celý blok s formulářem: kartu v sekci, výzvu pod lístky i obsah panelu)
 
 - **Nahoře velká zelená fajfka**
-- **H2:** Hotovo, tahák se ti stahuje.
-- **Text:** Nestahuje se? Stáhni ho tady. (odkaz na PDF)
+- **H2:** Hotovo, tahák je tvůj.
+- **Odkaz:** Otevřít tahák (PDF). PDF se samo nestahuje: Safari na iPhonu zpracuje stažení jinak než Chrome (dialog, nebo otevření místo stránky), tak má každý stejné tlačítko a text nic neslibuje.
 - **Text:** Co dál: otevři tahák a začni krokem 1.
 - **Volitelné sdílení:**
   - text: Znáš někoho, kdo taky marně hledá VOO? Pošli odkaz dál.

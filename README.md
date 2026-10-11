@@ -33,7 +33,7 @@ Formulář se nikdy neotevírá odkazem dolů na sekci 6. Přeskočení přes t�
 
 **Formulář:** jen e-mail a souhlas se zpracováním. Žádné jméno ani telefon.
 
-**Po odeslání:** poděkování a okamžité stažení PDF, nikdo nečeká na e-mail. Rozeslání taháku e-mailem doplníme, jen pokud zbude čas.
+**Po odeslání:** poděkování s tlačítkem „Otevřít tahák“, nikdo nečeká na e-mail. PDF se samo nestahuje: Safari na iPhonu zpracuje stažení jinak než Chrome (při testu na iPhonu se PDF otevřelo v prohlížeči místo stránky), takže by poděkování slibovalo něco, co se nestane, a návštěvník by odešel ze stránky dřív, než uvidí sdílení. Rozeslání taháku e-mailem doplníme, jen pokud zbude čas.
 
 Texty všech částí jsou v [texty.md](texty.md).
 

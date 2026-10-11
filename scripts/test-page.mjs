@@ -18,6 +18,7 @@ async function open(query = '') {
   });
   page.on('pageerror', (e) => logs.push({ type: 'pageerror', text: e.message, args: [] }));
   page.on('response', (r) => { if (r.status() >= 400) logs.push({ type: 'http', text: `${r.status()} ${new URL(r.url()).pathname}`, args: [] }); });
+  page.on('request', (r) => logs.push({ type: 'req', text: `${r.method()} ${new URL(r.url()).pathname}`, args: [] }));
   await page.goto(BASE + query, { waitUntil: 'networkidle0' });
   return { page, logs };
 }
@@ -110,7 +111,7 @@ try {
     const busy = await text(page, `${F} [type=submit]`);
     check('tlačítko při odesílání', busy === 'Odesílám…', busy);
     await sleep(900);
-    check('poděkování po odeslání', ((await text(page, '#vyber-cta .thanks h3')) || '') === 'Hotovo, tahák se ti stahuje.');
+    check('poděkování po odeslání', ((await text(page, '#vyber-cta .thanks h3')) || '') === 'Hotovo, tahák je tvůj.');
     check('všechny formuláře nahrazené poděkováním', (await page.$$('.lead-form')).length === 0);
     check('poděkování nahradilo celou kartu v sekci (žádné odrážky)', (await page.$$('#tahak .form-card ul, #tahak .form-card .lead-form')).length === 0 && !!(await page.$('#tahak .form-card .thanks')));
     check('poděkování nahradilo výzvu pod lístky', (await page.$$('#vyber-cta [data-otevri], #vyber-cta > .small, #vyber-cta .lead-form')).length === 0);
@@ -124,9 +125,11 @@ try {
     check('měření: nikde e-mail', !JSON.stringify(evs).includes('@'));
     const names = evs.map((e) => e.udalost);
     for (const n of ['prichod', 'otoceni_listku', 'vyzva_zobrazena', 'cta', 'formular_otevren', 'formular_zacatek', 'odeslani_pokus', 'odeslani_chyba', 'odeslano']) check(`měření: událost ${n}`, names.includes(n));
+    check('po odeslání se PDF samo nestahuje', !logs.some((l) => l.type === 'req' && l.text.endsWith('/tahak.pdf')));
+    const link = await page.$eval('#vyber-cta .thanks a[href$="tahak.pdf"]', (a) => `${a.getAttribute('href')} ${a.target}`).catch(() => null);
+    check('poděkování: odkaz „Otevřít tahák“ do nové karty', link === '/tahak.pdf _blank', String(link));
     const pdf = await page.evaluate(() => fetch('/tahak.pdf', { method: 'HEAD' }).then((r) => `${r.status} ${r.headers.get('content-type')}`));
     check('tahák PDF je dostupný', pdf.startsWith('200') && pdf.includes('pdf'), pdf);
-    check('žádné varování o chybějícím PDF', !logs.some((l) => l.type === 'warn' && l.text.includes('PDF zatím neexistuje')));
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     check('bez vodorovného přetečení (s výsledkem)', overflow === 0, `${overflow}px`);
     check('bez chyb v konzoli', !realErrors(logs).length, realErrors(logs).map((l) => l.text).join(' | '));
@@ -159,7 +162,7 @@ try {
     await page.tap(`${F} input[name=consent]`);
     await page.tap(`${F} [type=submit]`);
     await sleep(900);
-    check('odeslání z panelu → poděkování', ((await text(page, '#panel .thanks h3')) || '') === 'Hotovo, tahák se ti stahuje.');
+    check('odeslání z panelu → poděkování', ((await text(page, '#panel .thanks h3')) || '') === 'Hotovo, tahák je tvůj.');
     const ev = events(logs).filter((e) => e.udalost === 'odeslano');
     check('měření: odeslano se zdrojem karty', ev.length === 1 && ev[0].zdroj === 'karty', JSON.stringify(ev));
     await page.keyboard.press('Escape');
@@ -205,7 +208,7 @@ try {
     await page.evaluate((F) => { document.querySelector(`${F} input[name=consent]`).checked = true; }, F);
     await page.evaluate((F) => document.querySelector(F).requestSubmit(), F);
     await sleep(300);
-    check('bot: poděkování se ukáže', ((await text(page, '#tahak .form-card .thanks h3')) || '') === 'Hotovo, tahák se ti stahuje.');
+    check('bot: poděkování se ukáže', ((await text(page, '#tahak .form-card .thanks h3')) || '') === 'Hotovo, tahák je tvůj.');
     check('bot: kontakt se neodeslal', !logs.some((l) => l.text.startsWith('[formulář]')));
     await page.close();
   }

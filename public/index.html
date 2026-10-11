@@ -406,8 +406,8 @@ html{scroll-behavior:auto}
         </label>
         <div class="hp" aria-hidden="true"><label>Toto pole nech prázdné <input type="text" name="web" tabindex="-1" autocomplete="off"></label></div>
         <p class="form-error" role="alert" hidden></p>
-        <button class="btn" type="submit">Stáhnout tahák</button>
-        <p class="small">PDF se stáhne hned. Na e-mail čekat nemusíš.</p>
+        <button class="btn" type="submit">Získat tahák</button>
+        <p class="small">Tahák otevřeš hned po odeslání, na e-mail čekat nemusíš.</p>
       </form>
     </div>
   </div>
@@ -450,8 +450,8 @@ html{scroll-behavior:auto}
 <template id="dekujeme">
   <div class="thanks" tabindex="-1">
     <svg class="velka" viewBox="0 0 20 20" aria-hidden="true"><use href="#fajfka"/></svg>
-    <h3>Hotovo, tahák se ti stahuje.</h3>
-    <p>Nestahuje se? <a href="/tahak.pdf" download="tahak-etf-dvojcata.pdf">Stáhni ho tady.</a></p>
+    <h3>Hotovo, tahák je tvůj.</h3>
+    <p><a href="/tahak.pdf" target="_blank" rel="noopener">Otevřít tahák (PDF)</a></p>
     <p>Co dál: otevři tahák a&nbsp;začni krokem 1.</p>
     <div class="share" hidden>
       <p class="small">Znáš někoho, kdo taky marně hledá VOO? Pošli odkaz dál.</p>
@@ -469,7 +469,6 @@ html{scroll-behavior:auto}
   var utm = {};
   ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'].forEach(function (k) { if (qs.get(k)) utm[k] = qs.get(k); });
   var visitId = window.crypto && crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2);
-  var PDF = '/tahak.pdf';
 
   /* Měření: zatím jen do konzole, později navigator.sendBeacon na /api/udalost.
      ID návštěvy žije jen v paměti tohoto načtení stránky a nikdy se neposílá s e-mailem. */
@@ -741,7 +740,8 @@ html{scroll-behavior:auto}
     opener = null;
   });
 
-  /* Po odeslání: poděkování nahradí celý blok s formulářem a stáhne se PDF. */
+  /* Po odeslání: poděkování nahradí celý blok s formulářem. PDF se nestahuje samo: Safari na iPhonu
+     atribut download zpracuje jinak než Chrome, tak má každý stejné tlačítko „Otevřít tahák“. */
   function finish(submitted) {
     if (done) return;
     done = true;
@@ -763,15 +763,6 @@ html{scroll-behavior:auto}
     });
     updateBar();
     if (focusTarget) focusTarget.focus();
-    fetch(PDF, { method: 'HEAD' }).then(function (r) {
-      if (!r.ok) throw new Error(r.status);
-      var a = doc.createElement('a');
-      a.href = PDF;
-      a.download = 'tahak-etf-dvojcata.pdf';
-      doc.body.appendChild(a);
-      a.click();
-      a.remove();
-    }).catch(function () { console.warn('[tahák] PDF zatím neexistuje: ' + PDF); });
   }
 })();
 </script>

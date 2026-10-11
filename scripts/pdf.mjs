@@ -1,11 +1,11 @@
 // Vygeneruje public/tahak.pdf ze zdroje tahak/tahak.html a dat data/etf.json (headless Chrome)
 // a náhled první strany public/img/tahak-nahled.webp pro formulář (potřebuje macOS kvůli PDFKit).
 // Použití: node pdf.mjs   (po každé změně dat nebo taháku)
-import { readFileSync, statSync, writeFileSync, mkdirSync, mkdtempSync, rmSync } from 'node:fs';
+import { readFileSync, statSync, writeFileSync, renameSync, mkdirSync, mkdtempSync, rmSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { dirname, join } from 'node:path';
+import { basename, dirname, join } from 'node:path';
 import { launch } from './lib/browser.mjs';
 
 const PREVIEW_W = 480;
@@ -15,6 +15,18 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const data = JSON.parse(readFileSync(join(root, 'data', 'etf.json'), 'utf8'));
 const out = join(root, 'public', 'tahak.pdf');
 
+// Zápis přes dočasný soubor ve stejné složce a přejmenování (na stejném disku atomické):
+// běžící server tak nikdy neuvidí chybějící ani napůl zapsaný soubor.
+function writeAtomic(path, data) {
+  const tmp = join(dirname(path), `.${basename(path)}.tmp-${process.pid}`);
+  try {
+    writeFileSync(tmp, data);
+    renameSync(tmp, path);
+  } finally {
+    rmSync(tmp, { force: true });
+  }
+}
+
 const browser = await launch();
 try {
   const page = await browser.newPage();
@@ -22,8 +34,7 @@ try {
   await page.evaluateOnNewDocument((d) => { window.ETF_DATA = d; }, data);
   await page.goto(pathToFileURL(join(root, 'tahak', 'tahak.html')).href, { waitUntil: 'load' });
   await page.waitForSelector('body[data-ready="1"]', { timeout: 10000 });
-  await page.pdf({
-    path: out,
+  const pdf = await page.pdf({
     format: 'A5',
     printBackground: true,
     preferCSSPageSize: true,
@@ -33,6 +44,7 @@ try {
       + '<span>ETF dvojčata · tahák · data ověřena ' + data.meta.overeno_dne.split('-').reverse().map(Number).join('. ') + '</span>'
       + '<span><span class="pageNumber"></span>/<span class="totalPages"></span></span></div>',
   });
+  writeAtomic(out, pdf);
   console.log(`hotovo: ${out} (${Math.round(statSync(out).size / 1024)} kB)`);
 
   // Náhled první strany pro formulář: PDFKit vyrenderuje stranu 1, Chrome ji ořízne na horní část a uloží jako WebP.
@@ -53,7 +65,7 @@ try {
   }, `data:image/png;base64,${png}`, PREVIEW_W, PREVIEW_H);
   const previewPath = join(root, 'public', 'img', 'tahak-nahled.webp');
   mkdirSync(dirname(previewPath), { recursive: true });
-  writeFileSync(previewPath, Buffer.from(webp.split(',')[1], 'base64'));
+  writeAtomic(previewPath, Buffer.from(webp.split(',')[1], 'base64'));
   rmSync(tmp, { recursive: true, force: true });
   console.log(`náhled: ${previewPath} (${PREVIEW_W}×${PREVIEW_H}, ${Math.round(statSync(previewPath).size / 1024)} kB)`);
 } finally {
