@@ -130,3 +130,37 @@ Doplňuje exporty konverzací (`/export`), které nezachytí celý průběh prá
   - AI ve svém předchozím počtu uvedla 45 kontrol databáze, skutečně jich je 44. Přišlo se na to při kontrole výstupu před commitem.
   - Klepnutí v testech míjela tlačítka, protože fokus stránku ještě plynule posouval. Šlo o chybu testu, ne stránky; test teď čeká na doběhnutí posunu.
   - Review hlásil chybějící nezlomitelné mezery v textech z JS. Kontrola znaků ukázala, že tam jsou (jako znak, ne `&nbsp;`), takže falešný poplach.
+
+### 2026-10-11 – dotažení před nasazením: JS, limity, MX, párování, README, kontrola repa
+
+- **Zadání pro AI** (připravené v plánovacím chatu na claude.ai):
+  - JS pod limit 20 kB bez ztráty funkcí,
+  - limit kontaktů z jedné IP na 30 za hodinu (CGNAT),
+  - ověřit fail-open a krátký timeout u kontroly MX a přidat test,
+  - podle rozhodnutí člověka: odeslání bez ID návštěvy, varianta u kontaktu, čas událostí na minuty, trychtýř odeslání z kontaktů, pravdivý popis v README i zásadách,
+  - zdroj, datum a „Není to investiční doporučení“ u lístků,
+  - README pro hodnotitele: shrnutí, vyzkoušení za 2 minuty, konverze po krocích, obchodní pohled, tři A/B hypotézy s počtem návštěv, práce s AI, revize celého textu,
+  - kontrola historie gitu a ai-log, checklist nasazení, commit po každém bodu, push na konci.
+- **Kontrola výstupu:**
+  - každý bod commitnutý zvlášť až po testech: API 127, databáze 57, Chrome 127 a WebKit 81 kontrol,
+  - nové kontroly:
+    - velikost JS,
+    - záložní UUID bez `crypto.randomUUID`,
+    - 30. a 31. pokus,
+    - šest druhů chyb DNS, timeout 1 s a zrušený časovač,
+    - události bez ID návštěvy (funkce, databáze i prohlížeč),
+    - trychtýř z kontaktů,
+    - razítko u lístků,
+  - kontrola MX ověřená i proti skutečnému DNS (20 ms, `example.com` s null MX správně odmítnutá),
+  - benchmarky jen z ověřených stránek (Unbounce, LocaliQ). WordStream vrátil 403, proto čísla z LocaliQ (stejná firma),
+  - v README skript ověřil všechny odkazy na nadpisy a soubory a že nezůstalo TODO,
+  - celá historie gitu prohledaná na klíče, `.env` a `ZADANI.md` (nic) a ai-log na e-maily. Výstup byl jen maskovaný, aby se adresy nedostaly do exportu.
+- **Kde se AI spletla a jak se na to přišlo:**
+  - **Kontrola MX odmítala doménu bez MX záznamu,** i když pošta jde podle RFC 5321 na adresu domény (implicitní MX). Navíc časovač timeoutu zůstával běžet. AI to našla, když ověřovala fail-open, o který člověk požádal.
+  - **Limit 10 kontaktů za hodinu AI v README označila za „málo pravděpodobný“ problém** pro skutečné lidi. Člověk upozornil na sdílené IP mobilních operátorů (CGNAT).
+  - **Chrome test po zkrácení JS selhal na klepnutí na souhlas.** AI nejdřív pustila test se starou verzí stránky: selhal taky, takže chyba nebyla ve změně. Příčinu našla záznamem událostí: puppeteer před klepnutím posouval stránku a se `scroll-behavior: smooth` klepl vedle. Test teď prvek nejdřív okamžitě vystředí.
+  - **Rozhodnutí „odeslání bez ID návštěvy“ by samo nestačilo:** pokus bez chyby nebo otevřený tahák s ID návštěvy prozradí totéž. AI proto bez ID posílá i pokus, chybu, otevření taháku a sdílení a v reportu to řekla člověku.
+  - **Automatická bezpečnostní kontrola commitu označila riziko deanonymizace v `schema.sql`.** Šlo o zbytkové párování při malém provozu (pořadí zápisu, minuta), které README popisuje. AI k němu doplnila i zúžení podle místa formuláře v události odeslání.
+  - **Razítko pod lístky tvrdilo „Data přímo od správců fondů“,** ale lístky ukazují i dostupnost u brokerů, a ta je z webů brokerů. Opraveno spolu s doplněním „Není to investiční doporučení“.
+  - **`reklamy/README.md` tvrdilo, že se `utm_content` ukládá k událostem.** Neukládá, verzi nese `?v=`. Přišlo se na to při revizi README.
+  - **V nesledovaném exportu `03` bylo 11 testovacích adres na skutečných doménách** z minulého kola (adresy, které AI dřív nahradila v kódu). Před commitem nahrazené za `@example.com`. V historii gitu na GitHubu zůstávají dvě podobné adresy (deník a test), historie se nepřepisuje.
