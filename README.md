@@ -22,7 +22,7 @@ Takhle to vypadá na iPhonu 13 (390 × 844). Úvod, lístek a formulář jsou z 
 
 **Kde je vidět trychtýř:**
 
-- **Na živé stránce** v Supabase: SQL Editor → `select * from analytika.trychtyr;` (příchod → otočení lístku → otevření formuláře → odeslání, zvlášť pro každou verzi úvodu).
+- **Na živé stránce** v Supabase: SQL Editor → `select * from analytika.trychtyr;` (příchod → otočení lístku → otevření formuláře → odeslání, zvlášť pro každou verzi úvodu). Projekt je na mém účtu, výstup rád ukážu nebo přidám přístup.
 - **Lokálně bez Supabase:** `./scripts/serve.sh`, projdi stránku na http://127.0.0.1:8737/ a otevři http://127.0.0.1:8737/__dev/trychtyr. Server používá stejné SQL nad Postgresem v paměti (PGlite).
 
 Exporty konverzací s AI jsou v [ai-log/](ai-log/), reklamy v [reklamy/](reklamy/).
@@ -143,14 +143,14 @@ Seřazené podle očekávaného dopadu na konverzi návštěva → odeslání. H
 - **Co měníme:** pod lístky se místo tlačítka „Chci tahák se všemi 7 dvojčaty“, které formulář teprve rozbalí, ukáže rovnou formulář (pole, „Získat tahák“, souhlas). Zbytek stránky zůstane stejný.
 - **Metrika:** návštěva → odeslání. Kontrolní: návštěva → otočení lístku (formulář pod lístky nesmí odradit od dalšího otáčení).
 - **Minimum:** z 6 % na 7,5 % (+25 %) → 4 388 návštěv na verzi, **asi 8 800 celkem**.
-- **Proč první:** míří na krok s největším odhadovaným úbytkem (z těch, kdo otočí lístek, formulář neotevře 70 %) a mění jen jeden prvek. Čekám od ní největší dopad.
+- **Proč první:** míří na krok s největším odhadovaným úbytkem v procentech (z těch, kdo otočí lístek, formulář neotevře 70 %) a mění jen jeden prvek. Čekám od ní největší dopad.
 
 **2. Jeden lístek otočený hned po načtení**
 - **Hypotéza:** část lidí nepozná, že se na lístek dá klepnout, nebo to nezkusí. Když lístek VOO ukáže dvojče sám, hodnota je vidět bez jediné akce a víc lidí dojde k výzvě.
 - **Co měníme:** lístek VOO se chvíli po načtení sám otočí na VUAA, ostatní zůstanou lícem nahoru.
 - **Metrika:** návštěva → odeslání. Vedlejší: návštěva → otočení lístku, které by se mělo zvednout nejvíc.
 - **Minimum:** z 6 % na 7,2 % (+20 %) → 6 717 návštěv na verzi, **asi 13 400 celkem**.
-- **Proč druhá:** míří na krok 2, kde odejde odhadem nejvíc lidí, ale na odeslání působí jen nepřímo. Kdo uvidí dvojče bez klepnutí, nemusí o tahák stát. Proto čekám menší dopad než u první.
+- **Proč druhá:** míří na krok 2, kde v absolutních číslech odejde odhadem nejvíc lidí (600 z 1 000), ale na odeslání působí jen nepřímo. Kdo uvidí dvojče bez klepnutí, nemusí o tahák stát. Proto čekám menší dopad než u první.
 
 **3. Výzva slibuje „jak koupit“ místo „všech 7 dvojčat“**
 - **Hypotéza:** kdo otočil lístek, už ví, co koupit, ale neví jak. Výzva, která slibuje postup nákupu, je pro něj konkrétnější než seznam, jehož část už viděl.
@@ -201,24 +201,7 @@ Další drobnější chyby (odhadnutá adresa produktové stránky Vanguardu, n�
 
    <img src="docs/screenshots/webkit-otoceni-listku.png" width="640" alt="Průběh otočení lístku VTI po 100 ms: líc se zužuje, ve 224 ms je lístek z boku, pak se rozšiřuje rub s dvojčetem SXR4">
 
-Snímky před úpravami a po nich jsou v [docs/screenshots/](docs/screenshots/) (375 px, generuje `scripts/screenshots.mjs`):
-
-| | Před | Po |
-|---|---|---|
-| Úvod | <img src="docs/screenshots/pred-1-uvod.png" width="220" alt="Úvod před"> | <img src="docs/screenshots/po-1-uvod.png" width="220" alt="Úvod po"> |
-| Výběr ETF | <img src="docs/screenshots/pred-2-vysledek-voo.png" width="220" alt="Výsledek VOO před"> | <img src="docs/screenshots/po-2-otoceny-listek.png" width="220" alt="Otočený lístek VOO po"> |
-| Karty párů | <img src="docs/screenshots/pred-3-karty-paru.png" width="220" alt="Karty párů před"> | <img src="docs/screenshots/po-3-karty-paru.png" width="220" alt="Karty párů po"> |
-| Formulář | <img src="docs/screenshots/pred-4-formular.png" width="220" alt="Formulář před"> | <img src="docs/screenshots/po-4-formular.png" width="220" alt="Formulář s náhledem taháku po"> |
-| Poděkování | <img src="docs/screenshots/pred-5-podekovani.png" width="220" alt="Rozbité poděkování před"> | <img src="docs/screenshots/po-5-podekovani.png" width="220" alt="Poděkování po"> |
-
-Varianty úvodu po: [?v=dvojce](docs/screenshots/po-1b-uvod-dvojce.png), [?v=zacatek](docs/screenshots/po-1c-uvod-zacatek.png).
-
-Panel a formulář na místě s otevřenou klávesnicí ve WebKitu (simulace, viz [scripts/test-webkit.mjs](scripts/test-webkit.mjs)):
-
-| | iPhone SE 1. gen. (320 px) | iPhone SE 3. gen. (375 px) | iPhone 13 (390 px) |
-|---|---|---|---|
-| Panel ze spodní lišty | <img src="docs/screenshots/webkit-panel-klavesnice-320.png" width="180" alt="Panel s klávesnicí, 320 px"> | <img src="docs/screenshots/webkit-panel-klavesnice-375.png" width="180" alt="Panel s klávesnicí, 375 px"> | <img src="docs/screenshots/webkit-panel-klavesnice-390.png" width="180" alt="Panel s klávesnicí, 390 px"> |
-| Formulář pod lístky | <img src="docs/screenshots/webkit-na-miste-klavesnice-320.png" width="180" alt="Formulář na místě s klávesnicí, 320 px"> | <img src="docs/screenshots/webkit-na-miste-klavesnice-375.png" width="180" alt="Formulář na místě s klávesnicí, 375 px"> | <img src="docs/screenshots/webkit-na-miste-klavesnice-390.png" width="180" alt="Formulář na místě s klávesnicí, 390 px"> |
+Snímky před úpravami a po nich a snímky s klávesnicí ve WebKitu jsou v sekci [Testování](#testování-co-automaticky-a-co-jen-na-telefonu).
 
 ## Nejasnosti v zadání a moje rozhodnutí
 
@@ -228,6 +211,7 @@ Panel a formulář na místě s otevřenou klávesnicí ve WebKitu (simulace, vi
 - **Co je konverze:** návštěva → odeslaný formulář. Oba konce trychtýře změříme vlastním měřením, bez dat z reklamního systému.
 - **Měření celé cesty bez cookie lišty:** vlastní události bez cookies (příchod, hloubka scrollu, otočení lístku, otevření formuláře, odeslání) ukládané do Supabase, místo GA4. ID návštěvy existuje jen v paměti po dobu jednoho načtení stránky a do prohlížeče se nic neukládá. GA4 by potřebovalo souhlas a cookie lišta na mobilu zdržuje a ubírá konverze. Trychtýř se počítá SQL dotazem.
 - **Správce osobních údajů:** zadání ho neuvádí. Na stránce uvádím **Clientelo Czech s.r.o.** Že je správcem právě tahle firma, je můj předpoklad. Její údaje jsou ověřené z [ARES](https://ares.gov.cz/ekonomicke-subjekty?ico=22193456) (obchodní rejstřík, 11. 10. 2026): IČO 22193456, sídlo Platnéřská 90/13, Staré Město, 110 00 Praha 1, spisová značka C 412348 u Městského soudu v Praze. [Zásady ochrany osobních údajů](public/ochrana-osobnich-udaju.html) jsou jen návrh, jasně tak označený, a před spuštěním je musí schválit právník. Co v nich chybí, je v sekci [Před spuštěním kampaně](#před-spuštěním-kampaně).
+- **Kdo data drží teď:** stránka je ukázka a Supabase i Vercel běží na mém účtu, i když souhlas u formuláře jmenuje jako správce Clientelo. Proto má stránka `noindex` a v patičce „Ukázkové řešení do výběrového řízení“. Reklamu na ni pustit až po převzetí projektů Clientelem a po schválení zásad právníkem.
 - **Tón textů:** stránka tyká. Cílovka jsou spíš mladší lidé z reklamy na Instagramu a Facebooku, vykání by tam působilo strojeně.
 
 ## Zdroje dat
@@ -325,7 +309,7 @@ Formulář je veřejný, takže počítám s tím, že ho budou zkoušet boti a 
 | Kopie formuláře mohla převzít zablokované tlačítko „Odesílám…“ z formuláře v sekci. | nízká (funkční) | **Opraveno:** kopie vznikají z čisté šablony. |
 | `?v=constructor` vypsal v nadpisu „undefined“. | nízká (kosmetika, ne XSS) | **Opraveno:** jen vlastní klíče objektu. |
 | `/__dev/db` lokálního serveru byl dostupný z Wi-Fi. | nízká (jen lokálně, falešná data) | **Opraveno:** jen z localhost. |
-| V [ai-log/denik.md](ai-log/denik.md) zůstala testovací adresa, která mohla patřit skutečnému člověku. | nízká | **Opraveno v souboru.** V historii commitů zůstává, historii podle pravidel projektu nepřepisuji. |
+| V [ai-log/](ai-log/) (deník, exporty 03 a 04) zůstaly vymyšlené testovací adresy na skutečných doménách, které mohly patřit skutečným lidem. | nízká | **Opraveno v souborech** (nahrazené `@example.com`). V historii commitů zůstává, historii podle pravidel projektu nepřepisuji. |
 
 **Zkontrolované bez nálezu:**
 - XSS: žádné `innerHTML` s daty z adresy nebo ze serveru,
@@ -388,6 +372,25 @@ Skripty a návod jsou ve [scripts/](scripts/README.md). Všechny vracejí nenulo
 - výřez displeje a domovský indikátor (safe area), tmavý režim iOS,
 - dotyková odezva a gumové dotažení stránky.
 
+**Snímky před úpravami a po nich** jsou v [docs/screenshots/](docs/screenshots/) (375 px, generuje `scripts/screenshots.mjs`):
+
+| | Před | Po |
+|---|---|---|
+| Úvod | <img src="docs/screenshots/pred-1-uvod.png" width="220" alt="Úvod před"> | <img src="docs/screenshots/po-1-uvod.png" width="220" alt="Úvod po"> |
+| Výběr ETF | <img src="docs/screenshots/pred-2-vysledek-voo.png" width="220" alt="Výsledek VOO před"> | <img src="docs/screenshots/po-2-otoceny-listek.png" width="220" alt="Otočený lístek VOO po"> |
+| Karty párů | <img src="docs/screenshots/pred-3-karty-paru.png" width="220" alt="Karty párů před"> | <img src="docs/screenshots/po-3-karty-paru.png" width="220" alt="Karty párů po"> |
+| Formulář | <img src="docs/screenshots/pred-4-formular.png" width="220" alt="Formulář před"> | <img src="docs/screenshots/po-4-formular.png" width="220" alt="Formulář s náhledem taháku po"> |
+| Poděkování | <img src="docs/screenshots/pred-5-podekovani.png" width="220" alt="Rozbité poděkování před"> | <img src="docs/screenshots/po-5-podekovani.png" width="220" alt="Poděkování po"> |
+
+Varianty úvodu po: [?v=dvojce](docs/screenshots/po-1b-uvod-dvojce.png), [?v=zacatek](docs/screenshots/po-1c-uvod-zacatek.png).
+
+Panel a formulář na místě s otevřenou klávesnicí ve WebKitu (simulace, viz [scripts/test-webkit.mjs](scripts/test-webkit.mjs)):
+
+| | iPhone SE 1. gen. (320 px) | iPhone SE 3. gen. (375 px) | iPhone 13 (390 px) |
+|---|---|---|---|
+| Panel ze spodní lišty | <img src="docs/screenshots/webkit-panel-klavesnice-320.png" width="180" alt="Panel s klávesnicí, 320 px"> | <img src="docs/screenshots/webkit-panel-klavesnice-375.png" width="180" alt="Panel s klávesnicí, 375 px"> | <img src="docs/screenshots/webkit-panel-klavesnice-390.png" width="180" alt="Panel s klávesnicí, 390 px"> |
+| Formulář pod lístky | <img src="docs/screenshots/webkit-na-miste-klavesnice-320.png" width="180" alt="Formulář na místě s klávesnicí, 320 px"> | <img src="docs/screenshots/webkit-na-miste-klavesnice-375.png" width="180" alt="Formulář na místě s klávesnicí, 375 px"> | <img src="docs/screenshots/webkit-na-miste-klavesnice-390.png" width="180" alt="Formulář na místě s klávesnicí, 390 px"> |
+
 ## Co v řešení chybí
 
 - **Hotové obrázky reklam.** Obě reklamy mají text a podrobný popis obrázku pro grafika, obrázky samotné nejsou.
@@ -410,6 +413,7 @@ Stránka je nasazená a funguje. Zbývá to, co musí doplnit nebo rozhodnout n�
 - nejdelší doba uložení e-mailu,
 - jak dlouho Vercel uchovává záznamy o přístupu (IP adresy) na zvoleném tarifu,
 - potvrdit, že e-maily neprodává ani nepředává dalším firmám (pak to doplnit do zásad),
+- převzít projekty Supabase a Vercel (teď jsou na účtu autora),
 - přijmout smlouvy o zpracování osobních údajů (DPA) u Supabase a Vercelu,
 - rozhodnout o double opt-inu ([doporučení](#bezpečnost-a-ochrana-proti-spamu)),
 - vlastní doména místo `vercel.app`: přidat ji ve Vercelu a změnit kanonickou adresu, `og:url` a `og:image` v `public/index.html` (CSP i funkce s doménou počítají samy).
