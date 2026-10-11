@@ -420,40 +420,44 @@ Co musí doplnit nebo rozhodnout někdo jiný než vývojář. V návrhu zásad 
 
 - odebrat `noindex`: meta tag v `public/index.html` a hlavičku `X-Robots-Tag` ve `vercel.json`, a poznámku „Ukázkové řešení do výběrového řízení“ v patičce. Do té doby ji vyhledávače neindexují (Lighthouse proto v kategorii SEO hlásí „stránka je blokovaná pro indexování“, to je záměr).
 
-**Po nasazení (vývojář):**
-
-- ověřit, že projekt dostal adresu `https://etf-dvojcata-demo.vercel.app` (jinak změnit kanonickou adresu, `og:url` a `og:image` v `public/index.html`), a odkaz zkontrolovat v [nástroji pro ladění sdílení od Facebooku](https://developers.facebook.com/tools/debug/).
-
 ## Nasazení na Supabase a Vercel
 
-Všechno je připravené, stačí založit projekty a zadat čtyři proměnné prostředí. Klíče patří jen do Vercelu (a lokálně do `.env.local`, který je v `.gitignore`), nikdy do repa ani do chatu.
+Checklist krok po kroku. Klíče patří jen do Vercelu (a lokálně do `.env.local`, který je v `.gitignore`), nikdy do repa ani do chatu.
 
-**1. Supabase (databáze)**
+**1. Supabase (databáze v EU)**
 
-1. Na [supabase.com](https://supabase.com/dashboard) → **New project**. Název třeba `etf-dvojcata`, **Region: Central EU (Frankfurt)**, tedy `eu-central-1`. Heslo k databázi si ulož do správce hesel, stránka ho nepotřebuje.
-2. **SQL Editor → New query** → vlož celý [supabase/schema.sql](supabase/schema.sql) → **Run**. V **Table Editor** pak uvidíš tabulky `leads`, `events` a `limity`, všechny s RLS zapnutým.
-3. Znovu **SQL Editor → New query** → vlož [supabase/funnel.sql](supabase/funnel.sql) → **Run**. Trychtýř pak kdykoli zobrazíš dotazem `select * from analytika.trychtyr;`.
-4. Tlačítko **Connect** (nebo **Project Settings → Data API**): zkopíruj **Project URL** (`https://….supabase.co`), to je `SUPABASE_URL`.
-5. **Project Settings → API Keys → Secret keys**: zkopíruj secret klíč (`sb_secret_…`), to je `SUPABASE_SECRET_KEY`. Publishable klíč stránka nepotřebuje, prohlížeč se Supabase vůbec nekontaktuje.
+- [ ] [supabase.com/dashboard](https://supabase.com/dashboard) → **New project**, název třeba `etf-dvojcata`, **Region: Central EU (Frankfurt)**, tedy `eu-central-1`. Heslo k databázi do správce hesel, stránka ho nepotřebuje.
+- [ ] **SQL Editor → New query** → vlož celý [supabase/schema.sql](supabase/schema.sql) → **Run**. V **Table Editor** jsou pak tabulky `leads`, `events` a `limity`, všechny s RLS.
+- [ ] Znovu **SQL Editor → New query** → [supabase/funnel.sql](supabase/funnel.sql) → **Run** (až po `schema.sql`). Zkouška: `select * from analytika.trychtyr;` vrátí 12 řádků s nulami.
+- [ ] **Connect** (nebo **Project Settings → Data API**): **Project URL** (`https://….supabase.co`) je `SUPABASE_URL`.
+- [ ] **Project Settings → API Keys → Secret keys**: secret klíč (`sb_secret_…`) je `SUPABASE_SECRET_KEY`. Publishable klíč stránka nepotřebuje.
 
 **2. Vercel (web a funkce)**
 
-1. Na [vercel.com](https://vercel.com/new) → **Add New → Project** → importuj repozitář z GitHubu.
-2. **Project Name:** `etf-dvojcata-demo`. Adresa pak bude `https://etf-dvojcata-demo.vercel.app` a sedí s kanonickou adresou, `og:url` a `og:image` ve stránce. Stránka není oficiálně Clientela, proto bez jejich jména v adrese. `etf-dvojcata` už používá cizí projekt, `etf-dvojcata-demo` byl 11. 10. 2026 volný. Kdyby Vercel přidělil jinou adresu, změň tři řádky v hlavičce `public/index.html` (hledej `etf-dvojcata-demo`).
-3. **Framework Preset:** Other. Build ani výstupní složku neměň, nastavuje je [vercel.json](vercel.json): web z `public/`, funkce z `api/` ve Frankfurtu (`fra1`) a denní cron na `/api/keepalive`.
-4. **Environment Variables** (pro Production, případně i Preview):
-   - `SUPABASE_URL`: Project URL ze Supabase,
-   - `SUPABASE_SECRET_KEY`: secret klíč `sb_secret_…`,
-   - `CRON_SECRET`: náhodný řetězec aspoň 16 znaků, vytvoříš ho třeba příkazem `openssl rand -hex 24`. Vercel ho posílá cronu v hlavičce, bez něj keep-alive nic neudělá.
-   - `ANTISPAM_SECRET`: náhodný řetězec aspoň 32 znaků (`openssl rand -hex 32`). Podepisuje token formuláře a hashuje IP adresy pro limit pokusů. Bez něj formulář vrátí chybu.
-5. **Deploy.**
+- [ ] [vercel.com/new](https://vercel.com/new) → importuj repozitář z GitHubu.
+- [ ] **Project Name: `etf-dvojcata-demo`**, aby adresa byla `https://etf-dvojcata-demo.vercel.app` a seděla s kanonickou adresou, `og:url` a `og:image`. Stránka není oficiálně Clientela, proto bez jejich jména v adrese. 11. 10. 2026 byla adresa volná.
+- [ ] **Framework Preset: Other.** Build ani výstupní složku neměň, nastavuje je [vercel.json](vercel.json): web z `public/`, funkce z `api/` ve Frankfurtu (`fra1`), denní cron na `/api/keepalive` a bezpečnostní hlavičky.
+- [ ] **Environment Variables** pro Production (a Preview, pokud ho chceš zkoušet), všechny čtyři:
+  - `SUPABASE_URL`: Project URL ze Supabase,
+  - `SUPABASE_SECRET_KEY`: secret klíč `sb_secret_…`,
+  - `CRON_SECRET`: náhodný řetězec aspoň 16 znaků (`openssl rand -hex 24`). Vercel ho posílá cronu v hlavičce, bez něj keep-alive nic neudělá,
+  - `ANTISPAM_SECRET`: náhodný řetězec aspoň 32 znaků (`openssl rand -hex 32`). Podepisuje token formuláře a hashuje IP pro limit pokusů, bez něj formulář vrátí chybu.
+- [ ] **Deploy.** Když proměnné přidáš až po prvním nasazení, pusť **Redeploy**, jinak je funkce neuvidí.
 
-**3. Kontrola po nasazení**
+**3. Kontrola na živé adrese**
 
-1. Otevři stránku na telefonu, otoč lístek a odešli svůj e-mail.
-2. V Supabase → **Table Editor → leads** musí být řádek s e-mailem. V `events` řádky z návštěvy.
-3. Ve Vercelu → **Settings → Cron Jobs** je `/api/keepalive` jednou denně. Tlačítkem **Run** ho můžeš pustit hned a v **Logs** uvidíš odpověď 200.
-4. **Settings → Functions:** region `fra1`.
-5. Odkaz stránky vlož do [nástroje pro ladění sdílení od Facebooku](https://developers.facebook.com/tools/debug/), ať je vidět obrázek pro sdílení.
+- [ ] Projekt dostal adresu `https://etf-dvojcata-demo.vercel.app`. Jinak změň kanonickou adresu, `og:url` a `og:image` v hlavičce `public/index.html` (hledej `etf-dvojcata-demo`).
+- [ ] `curl -sI https://etf-dvojcata-demo.vercel.app/` ukáže `content-security-policy`, `strict-transport-security` a `x-robots-tag: noindex`.
+- [ ] `curl -s https://etf-dvojcata-demo.vercel.app/api/token` vrátí `{"token":"…"}`. Odpověď 503 znamená chybějící `ANTISPAM_SECRET`.
+- [ ] `curl -s -o /dev/null -w "%{http_code}\n" https://etf-dvojcata-demo.vercel.app/api/keepalive` vrátí 401 (bez tajemství cron nikoho nepustí).
+- [ ] Na telefonu otevři `?v=dvojce`, otoč lístek a odešli svůj e-mail. Musí přijít poděkování a otevřít se tahák.
+- [ ] V Supabase → **Table Editor**: v `leads` je řádek s e-mailem a verzí `dvojce`, v `events` řádky z návštěvy a `odeslano` bez ID návštěvy. `select * from analytika.trychtyr;` ukáže u `dvojce` příchod, otočení, formulář a odeslání.
+- [ ] Ochrana formuláře: `x@mailinator.com` ukáže hlášku o jednorázové adrese, `test@neexistuje.invalid` hlášku, že na adresu nejde poslat e-mail.
+- [ ] Publishable klíč nic nepřečte: `curl -s "<SUPABASE_URL>/rest/v1/leads?select=email" -H "apikey: <publishable klíč>"` vrátí chybu oprávnění, ne data.
+- [ ] Vercel → **Settings → Cron Jobs**: `/api/keepalive` jednou denně. Tlačítkem **Run** ho pusť hned, v **Logs** musí být odpověď 200.
+- [ ] Vercel → **Settings → Functions**: region `fra1`.
+- [ ] [PageSpeed Insights](https://pagespeed.web.dev/) na živé adrese v mobilním režimu: výkon kolem 100, SEO nižší kvůli záměrnému `noindex`.
+- [ ] Odkaz vlož do [nástroje pro ladění sdílení od Facebooku](https://developers.facebook.com/tools/debug/), ať je vidět obrázek pro sdílení.
+- [ ] **15. 10. 2026** otevři projekt v Supabase a zkontroluj, že neběží jako „Paused“ ([riziko keep-alive](#před-spuštěním-kampaně)).
 
 **Lokálně se skutečnou databází** (jinak lokální server běží s podvrženou databází v paměti): vytvoř `.env.local` podle [.env.example](.env.example) a spusť `node --env-file=.env.local scripts/server.mjs`. Obsah `.env.local` nikdy nevypisuj ani nesdílej.
