@@ -27,7 +27,7 @@ for e in data["etf"]:
     errors += bool(missing)
     print(f"{'OK   ' if not missing else 'CHYBA'} {e['ticker']} → {twin}" + (f" | chybí: {missing}" if missing else ""))
 
-for phrase in ["Jak koupit dvojče krok za krokem", "XTB", "Trading 212", "Clientelo Czech s.r.o.", "Nejde o investiční doporučení"]:
+for phrase in ["Jak koupit dvojče krok za krokem", "XTB", "Trading 212", "Vydává Daniel Kuchválek", "Nejde o investiční doporučení"]:
     ok = phrase in text
     errors += not ok
     print(f"{'OK   ' if ok else 'CHYBA'} obsahuje „{phrase}“")

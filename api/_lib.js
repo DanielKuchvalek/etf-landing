@@ -6,6 +6,13 @@ import jednorazove from './_jednorazove-domeny.js';
 
 export const VARIANTY = ['vychozi', 'dvojce', 'zacatek'];
 
+// Text souhlasu u formuláře a jeho verze. Verze se ukládá ke kontaktu (leads.souhlas_verze), aby šlo doložit, s čím
+// člověk souhlasil. Při každé změně textu na stránce změň i verzi; test-page.mjs hlídá, že text na stránce sedí.
+export const SOUHLAS = {
+  verze: 'demo-2026-10-11',
+  text: 'Souhlasím, že Daniel Kuchválek uloží můj e-mail jen pro tuhle ukázku do výběrového řízení. Žádné e-maily mi neposílá a smaže ho nejpozději 31. 12. 2026.',
+};
+
 // Detail události: pro každou událost jen hodnoty, které stránka opravdu posílá (do měření nejde uložit nic jiného).
 const ETF = 'VOO|VTI|VT|VWO|SDY|VGT|AGG';
 const ZDROJ = /^(listky|lista|karty)$/;

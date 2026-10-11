@@ -23,6 +23,10 @@ create table if not exists public.leads (
   souhlas_cas timestamptz not null default now(),
   varianta    text        not null default 'vychozi' check (varianta in ('vychozi', 'dvojce', 'zacatek'))
 );
+-- Verze textu souhlasu, se kterým člověk souhlasil (text i verze jsou v api/_lib.js, SOUHLAS). Přidané 11. 10. 2026:
+-- na starší databázi ho doplní tenhle příkaz, řádky z doby před verzováním dostanou 'bez-verze'.
+alter table public.leads add column if not exists souhlas_verze text not null default 'bez-verze'
+  check (souhlas_verze ~ '^[a-z0-9-]{1,40}$');
 
 -- Anonymní události z cesty návštěvníka. Bez e-mailu; ID návštěvy žije jen v paměti jednoho načtení stránky.
 -- Události od odeslání formuláře dál (pokus, chyba, odeslání, otevření taháku, sdílení) jsou vždy bez ID návštěvy,
@@ -69,12 +73,13 @@ returns boolean language sql security invoker set search_path = '' as $$
 $$;
 
 -- Kontakt: nejvýš 30 pokusů za hodinu z jedné IP (sdílená IP mobilních operátorů, viz README). Vrací 'novy', 'duplicita' (e-mail už je, nic se nemění)
--- nebo 'limit'.
-create or replace function public.uloz_kontakt(p_klic text, p_email text, p_varianta text)
+-- nebo 'limit'. Starší verze funkce bez verze souhlasu se nahradí (jinak by volání se třemi argumenty bylo nejednoznačné).
+drop function if exists public.uloz_kontakt(text, text, text);
+create or replace function public.uloz_kontakt(p_klic text, p_email text, p_varianta text, p_souhlas_verze text default 'bez-verze')
 returns text language plpgsql security invoker set search_path = '' as $$
 begin
   if not public.zapocitej(p_klic, 30) then return 'limit'; end if;
-  insert into public.leads (email, souhlas, varianta) values (p_email, true, p_varianta)
+  insert into public.leads (email, souhlas, varianta, souhlas_verze) values (p_email, true, p_varianta, p_souhlas_verze)
   on conflict (email) do nothing;
   if found then return 'novy'; end if;
   return 'duplicita';
@@ -100,7 +105,7 @@ returns integer language sql security invoker set search_path = '' as $$
   select count(*)::integer from smazane;
 $$;
 
-revoke all on function public.zapocitej(text, integer), public.uloz_kontakt(text, text, text),
+revoke all on function public.zapocitej(text, integer), public.uloz_kontakt(text, text, text, text),
   public.uloz_udalost(text, uuid, text, text, text), public.uklid() from public, anon, authenticated;
-grant execute on function public.zapocitej(text, integer), public.uloz_kontakt(text, text, text),
+grant execute on function public.zapocitej(text, integer), public.uloz_kontakt(text, text, text, text),
   public.uloz_udalost(text, uuid, text, text, text), public.uklid() to service_role;

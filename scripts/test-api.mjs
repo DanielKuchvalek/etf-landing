@@ -85,7 +85,7 @@ const lead1 = (extra = {}) => ({ email: 'jana.nova@example.cz', souhlas: true, v
 let r = await run(lead, req('/api/lead', { body: lead1({ email: '  Jana.Nova@Example.CZ ' }) }));
 const c = r.calls[0] || {};
 check('lead: platný kontakt → 200 a jedno volání uloz_kontakt', r.status === 200 && r.json.ok === true && r.calls.length === 1 && c.url === 'https://projekt.supabase.co/rest/v1/rpc/uloz_kontakt', `${r.status} ${c.url}`);
-check('lead: e-mail oříznutý a malými písmeny, jen povolené argumenty', c.body && c.body.p_email === 'jana.nova@example.cz' && c.body.p_varianta === 'dvojce' && Object.keys(c.body).sort().join() === 'p_email,p_klic,p_varianta', JSON.stringify(c.body));
+check('lead: e-mail oříznutý a malými písmeny, jen povolené argumenty a verze textu souhlasu', c.body && c.body.p_email === 'jana.nova@example.cz' && c.body.p_varianta === 'dvojce' && c.body.p_souhlas_verze === lib.SOUHLAS.verze && Object.keys(c.body).sort().join() === 'p_email,p_klic,p_souhlas_verze,p_varianta', JSON.stringify(c.body));
 check('lead: do databáze jde hash IP (32 hex znaků), ne IP', /^[0-9a-f]{32}$/.test(c.body.p_klic) && !JSON.stringify(c.body).includes(IP));
 check('lead: klíč jen v hlavičce apikey, ne v Authorization', c.headers.apikey === KEY && !('Authorization' in c.headers) && !('authorization' in c.headers));
 check('lead: odpověď neobsahuje klíč', !r.text.includes(KEY));

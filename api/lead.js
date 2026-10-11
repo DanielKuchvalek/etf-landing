@@ -5,7 +5,7 @@
 //   povolená pole a velikost → skryté pole → token (rychlost odeslání) → formát e-mailu → souhlas →
 //   jednorázová doména → MX záznam → limit pokusů z jedné IP (v databázi, s hashem IP) → duplicita.
 // Bot (skryté pole, příliš rychlé odeslání) dostane stejnou odpověď jako úspěch, ať se nic nedozví.
-import { VARIANTY, odpoved, nactiTelo, ciziPuvod, platnyEmail, jednorazovaDomena, maPostu, overToken, klicIp, chybiNastaveni, rpc } from './_lib.js';
+import { VARIANTY, SOUHLAS, odpoved, nactiTelo, ciziPuvod, platnyEmail, jednorazovaDomena, maPostu, overToken, klicIp, chybiNastaveni, rpc } from './_lib.js';
 
 const MAX_BYTES = 1024;
 const POLE = ['email', 'souhlas', 'varianta', 'token', 'poznamka']; // poznamka = skryté pole proti botům
@@ -45,7 +45,7 @@ export default {
 
     try {
       // limit pokusů a uložení v jedné transakci; opakovaný e-mail se neuloží znovu, odpověď je stejná
-      const vysledek = await rpc('uloz_kontakt', { p_klic: klicIp(request, 'lead'), p_email: email, p_varianta: varianta });
+      const vysledek = await rpc('uloz_kontakt', { p_klic: klicIp(request, 'lead'), p_email: email, p_varianta: varianta, p_souhlas_verze: SOUHLAS.verze });
       if (vysledek === 'limit') {
         console.warn('[lead] zamítnuto: limit pokusů z jedné IP'); // bez IP; kdyby přibývalo během kampaně, zvednout limit
         return odpoved(429, { ok: false, chyba: 'limit' });

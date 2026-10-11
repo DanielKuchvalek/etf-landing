@@ -5,6 +5,7 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { execFileSync } from 'node:child_process';
 import { PGlite } from '@electric-sql/pglite';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -71,6 +72,9 @@ const pokusy = [];
 for (let i = 0; i <= LIMIT_KONTAKTU; i++) pokusy.push(await one('service_role', `select public.uloz_kontakt('${KLIC(3)}', 'novy${i}@example.com', 'vychozi')`));
 check(`uloz_kontakt: ${LIMIT_KONTAKTU} pokusů z jedné IP za hodinu projde, ${LIMIT_KONTAKTU + 1}. = limit`, pokusy.slice(0, -1).every((r) => r === 'novy') && pokusy.at(-1) === 'limit'
   && (await one('service_role', "select count(*)::int from public.leads where email like 'novy%'")) === LIMIT_KONTAKTU, pokusy.at(-1));
+check('uloz_kontakt: uloží verzi textu souhlasu', (await one('service_role', `select public.uloz_kontakt('${KLIC(12)}', 'verze@example.com', 'dvojce', 'demo-2026-10-11')`)) === 'novy'
+  && (await one('service_role', "select souhlas_verze from public.leads where email = 'verze@example.com'")) === 'demo-2026-10-11');
+check('leads: databáze odmítne verzi souhlasu s nepovolenými znaky', String(await one('service_role', `select public.uloz_kontakt('${KLIC(12)}', 'verze2@example.com', 'dvojce', 'Verze 1!')`)).includes('check constraint'));
 check('uloz_kontakt: jiná IP limit nemá', (await one('service_role', `select public.uloz_kontakt('${KLIC(4)}', 'jina@example.com', 'vychozi')`)) === 'novy');
 for (const [what, email] of [['velká písmena', 'Jana@Example.com'], ['diakritika', 'jána@example.com'], ['bez zavináče', 'jana.example.com'], ['znak <', 'ja<na@example.com']]) {
   const r = await one('service_role', `select public.uloz_kontakt('${KLIC(5)}', $1, 'vychozi')`, [email]);
@@ -119,6 +123,32 @@ check('trychtýř: kroky, postupně, formulář v sekci Tahák a odeslání z ko
 check('trychtýř: verze bez návštěv se ukáže s nulami, kontakty se neztratí', radky('zacatek') === '1:0/0/null/null 2:0/0/null/null 3:0/0/null/null 4:1/null/null/null' && radky('vychozi').startsWith('1:0/0/'), radky('zacatek'));
 
 await db.close();
+
+// --- migrace: databáze nasazená se starším schema.sql (před verzí souhlasu) → znovu spuštěný nový schema.sql ---
+{
+  let stare = null;
+  try { stare = execFileSync('git', ['-C', root, 'show', '3ad8636:supabase/schema.sql'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }); } catch { /* bez historie gitu */ }
+  if (!stare) console.log('INFO  migraci nejde otestovat: chybí historie gitu (commit 3ad8636)');
+  else {
+    const db3 = new PGlite();
+    await db3.exec(`create role anon nologin; create role authenticated nologin; create role service_role nologin bypassrls;
+      grant usage on schema public to anon, authenticated, service_role;`);
+    await db3.exec(stare);
+    await db3.exec("insert into public.leads (email, souhlas, varianta) values ('stary@example.com', true, 'dvojce')");
+    let err = '';
+    try { await db3.exec(schema); await db3.exec(funnel); } catch (e) { err = e.message; }
+    check('migrace: nový schema.sql proběhne na staré databázi', !err, err);
+    const q = async (sql) => Object.values((await db3.query(sql)).rows[0] || {})[0];
+    check('migrace: starý kontakt zůstal a má verzi „bez-verze“', (await q("select souhlas_verze from public.leads where email = 'stary@example.com'")) === 'bez-verze');
+    check('migrace: stará funkce uloz_kontakt se třemi argumenty je pryč, nová s verzí souhlasu je jediná', (await q("select count(*)::int from pg_proc where proname = 'uloz_kontakt'")) === 1
+      && (await q("select pg_get_function_identity_arguments('public.uloz_kontakt'::regproc)")).includes('p_souhlas_verze'));
+    await db3.exec('set role service_role');
+    const novy = await q("select public.uloz_kontakt('" + 'b'.repeat(32) + "', 'novy@example.com', 'zacatek', 'demo-2026-10-11')");
+    await db3.exec('reset role');
+    check('migrace: service_role po migraci uloží kontakt s verzí souhlasu', novy === 'novy' && (await q("select souhlas_verze from public.leads where email = 'novy@example.com'")) === 'demo-2026-10-11', String(novy));
+    await db3.close();
+  }
+}
 
 // --- Supabase s vypnutým „Automatically expose new tables“ a zapnutým automatickým RLS ---
 // Nová tabulka ani funkce v public nedostane žádná práva (ani execute pro PUBLIC) a přísněji než Supabase nemá

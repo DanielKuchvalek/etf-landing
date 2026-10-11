@@ -217,8 +217,8 @@ Snímky před úpravami a po nich a snímky s klávesnicí ve WebKitu jsou v sek
 - **Co je „kontakt“:** jen e-mail, žádný telefon. Zadání chce co nejméně polí a e-mail stačí k doručení toho, co návštěvníkovi slibujeme ([obchodní pohled](#obchodní-pohled)).
 - **Co je konverze:** návštěva → odeslaný formulář. Oba konce trychtýře změříme vlastním měřením, bez dat z reklamního systému.
 - **Měření celé cesty bez cookie lišty:** vlastní události bez cookies (příchod, hloubka scrollu, otočení lístku, otevření formuláře, odeslání) ukládané do Supabase, místo GA4. ID návštěvy existuje jen v paměti po dobu jednoho načtení stránky a do prohlížeče se nic neukládá. GA4 by potřebovalo souhlas a cookie lišta na mobilu zdržuje a ubírá konverze. Trychtýř se počítá SQL dotazem.
-- **Správce osobních údajů:** zadání ho neuvádí. Na stránce uvádím **Clientelo Czech s.r.o.** Že je správcem právě tahle firma, je můj předpoklad. Její údaje jsou ověřené z [ARES](https://ares.gov.cz/ekonomicke-subjekty?ico=22193456) (obchodní rejstřík, 11. 10. 2026): IČO 22193456, sídlo Platnéřská 90/13, Staré Město, 110 00 Praha 1, spisová značka C 412348 u Městského soudu v Praze. [Zásady ochrany osobních údajů](public/ochrana-osobnich-udaju.html) jsou jen návrh, jasně tak označený, a před spuštěním je musí schválit právník. Co v nich chybí, je v sekci [Před spuštěním kampaně](#před-spuštěním-kampaně).
-- **Kdo data drží teď:** stránka je ukázka a Supabase i Vercel běží na mém účtu, i když souhlas u formuláře jmenuje jako správce Clientelo. Proto má stránka `noindex` a v patičce „Ukázkové řešení do výběrového řízení“. Reklamu na ni pustit až po převzetí projektů Clientelem a po schválení zásad právníkem.
+- **Správce osobních údajů:** zadání ho neuvádí. Clientelo o ukázce neví a data jsou na mém účtu, proto je na živém demu správcem autor (Daniel Kuchválek, kontakt@test.cz). Účel je jen ukázka: žádné e-maily se neposílají a kontakty smažu nejpozději 31. 12. 2026. Souhlas u formuláře i [zásady](public/ochrana-osobnich-udaju.html) to říkají pravdivě a nemají žádná otevřená místa. Návrh souhlasu a zásad pro ostrou verzi pod Clientelem je v sekci [Před spuštěním kampaně](#před-spuštěním-kampaně).
+- **Kdo data drží teď:** stránka je ukázka, Supabase i Vercel běží na mém účtu a správcem jsem já. Proto má stránka `noindex` a v patičce „Ukázkové řešení do výběrového řízení“. Reklamu na ni pustit až po převzetí projektů Clientelem, výměně souhlasu a zásad a schválení právníkem.
 - **Tón textů:** stránka tyká. Cílovka jsou spíš mladší lidé z reklamy na Instagramu a Facebooku, vykání by tam působilo strojeně.
 
 ## Zdroje dat
@@ -411,7 +411,13 @@ Panel a formulář na místě s otevřenou klávesnicí ve WebKitu (simulace, vi
 
 ## Před spuštěním kampaně
 
-Stránka je nasazená a funguje. Zbývá to, co musí doplnit nebo rozhodnout někdo jiný než vývojář; v návrhu zásad jsou tato místa nenápadně označená „doplní správce“.
+Stránka je nasazená a funguje jako ukázka. Před ostrou kampaní pod Clientelem zbývá tohle.
+
+**Souhlas a zásady pro ostrou verzi.** Teď je správcem autor ukázky. Pro Clientelo je připravený návrh (text připravil autor stránky, ne právník):
+
+> Souhlasím, že mi Clientelo Czech s.r.o. bude posílat e-maily o investování do ETF. Odhlásit se můžu kdykoli. [Jak nakládáme s osobními údaji]
+
+Celý návrh zásad s místy k doplnění (kontakt, doba uložení, e-mailová služba, právní základ měření) je v [docs/navrh-pro-clientelo.md](docs/navrh-pro-clientelo.md). Při výměně textu souhlasu změnit i jeho verzi v `api/_lib.js` (`SOUHLAS`), ukládá se ke kontaktu.
 
 **Správce (Clientelo Czech s.r.o.):**
 
@@ -430,7 +436,7 @@ Stránka je nasazená a funguje. Zbývá to, co musí doplnit nebo rozhodnout n�
 - jestli smí být tahák podmíněný souhlasem s marketingovými e-maily, nebo má být souhlas dobrovolný a tahák dostane každý (souhlas musí být svobodný),
 - právní základ měření bez cookie lišty. Do prohlížeče nic neukládáme, ale i odesílání dat z prohlížeče může podle výkladu Evropského sboru pro ochranu osobních údajů (pokyny 2/2023) vyžadovat souhlas. Tenhle výklad jsme z primárního zdroje neověřovali,
 - předávání údajů mimo EU: Supabase i Vercel jsou americké firmy, i když data a funkce jsou ve Frankfurtu,
-- celý návrh [zásad ochrany osobních údajů](public/ochrana-osobnich-udaju.html) a text souhlasu u formuláře.
+- celý [návrh zásad a souhlasu pro Clientelo](docs/navrh-pro-clientelo.md).
 
 **Reklama:**
 

@@ -59,8 +59,8 @@ Už rozhodnuté, neotevírej znovu. Když narazíš na důvod rozhodnutí změni
 - **Reklamy:** A „Dvojče“ (zklamání z brokera) a B „Začátek“ (nejistota). Úvod stránky se mění podle `?v=dvojce` / `?v=zacatek`. Proč: testujeme dvě motivace a úvod musí navazovat na slib reklamy.
 - **Formulář se otevírá na místě:** pod lístky (výzva se ukáže po prvním otočení), nebo jako panel ze spodního tlačítka, nikdy odkazem dolů. Proč: méně kroků, návštěvník neztratí kontext.
 - **Brokery na stránce jmenujeme jen s ověřenou dostupností** (zdroj a datum v `data/etf.json`). Proč: jeden jmenovaný broker by vypadal jako jeho reklama.
-- **Správce osobních údajů: Clientelo Czech s.r.o.** Je to předpoklad zadavatele, ne ověřený údaj (poznámka je v README). IČO a sídlo jsou z ARES (ověřeno 11. 10. 2026), kontakt a další otevřená místa jsou v návrhu `public/ochrana-osobnich-udaju.html` nenápadně jako „doplní správce“ a sepsaná v README v sekci „Před spuštěním kampaně“. Proč: žluté TODO na stránce působí nedodělaně.
-- **Zásady ochrany osobních údajů jsou jen návrh.** Stránka je jasně označená a má `noindex`. Před spuštěním ji musí schválit právník.
+- **Správce osobních údajů na živém demu: Daniel Kuchválek** (kontakt@test.cz). Účel je jen ukázka do výběrového řízení, žádné e-maily se neposílají, kontakty se smažou nejpozději 31. 12. 2026. Proč: Clientelo o ukázce neví a data jsou na účtu autora, takže uvádět ho jako správce by nebyla pravda. Zásady na `public/ochrana-osobnich-udaju.html` platí pro demo a nemají žádná otevřená místa. Návrh souhlasu a zásad pro ostrou verzi pod Clientelem je v `docs/navrh-pro-clientelo.md`.
+- **Text souhlasu a jeho verze jsou v `api/_lib.js` (`SOUHLAS`).** Verze se ukládá ke kontaktu (`leads.souhlas_verze`). Při změně textu změň i verzi.
 - **Supabase projekt v EU regionu.** Proč: ukládáme e-maily českých návštěvníků a databáze má být blízko funkcím ve Frankfurtu.
 - **Denní keep-alive přes Vercel cron.** Proč: bezplatný Supabase projekt se po čase bez aktivity pozastaví a hodnotitel může stránku otevřít až za dva týdny.
 - **Vercel funkce v regionu `fra1` (Frankfurt).** Proč: kratší odezva pro české návštěvníky i k databázi v EU.

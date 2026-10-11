@@ -203,7 +203,7 @@ U „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnost ověř
 - **Rozbalovací odkaz:** Zdroje ke každému údaji
   Seznam: u každého páru odkaz na stránku originálu a dvojčete u správce. `[d: * › nazev.zdroj]` `[d: * › ucits_obdoba.nazev.zdroj]`
 - **Upozornění (zvýrazněný blok):** Nejde o investiční doporučení. Ukazujeme, jaké fondy existují a kolik stojí, co koupíš, je tvoje rozhodnutí. Hodnota investice může klesnout a zpátky můžeš dostat méně, než vložíš.
-- **Kdo za stránkou stojí:** Stránku provozuje Clientelo Czech s.r.o. (předpoklad, viz README).
+- **Kdo za stránkou stojí:** Stránku provozuje Daniel Kuchválek jako ukázku do výběrového řízení.
 
 ---
 
@@ -219,7 +219,7 @@ U „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnost ověř
 - **Pole:**
   - popisek: Tvůj e-mail
   - placeholder: jmeno@email.cz
-- **Souhlas (zaškrtávací pole):** Souhlasím, že mi Clientelo Czech s.r.o. bude posílat e-maily o investování do ETF. Odhlásit se můžu kdykoli.
+- **Souhlas (zaškrtávací pole):** Souhlasím, že Daniel Kuchválek uloží můj e-mail jen pro tuhle ukázku do výběrového řízení. Žádné e-maily mi neposílá a smaže ho nejpozději 31. 12. 2026. Odkaz: Jak nakládá s údaji. (Kanonické znění a verze jsou v `api/_lib.js`, `SOUHLAS`; návrh pro ostrou verzi pod Clientelem je v `docs/navrh-pro-clientelo.md`.)
   - odkaz: Jak nakládáme s osobními údaji → `public/ochrana-osobnich-udaju.html` (návrh, musí schválit právník)
   - `[ROZHODNOUT + právník: smí být stažení taháku podmíněné souhlasem s marketingovými e-maily? Pokud ne, souhlas bude dobrovolný a tahák dostane každý, kdo vyplní e-mail.]`
 - **Pořadí:** pole, hned pod ním tlačítko, pak souhlas a text pod ním. Tlačítko je co nejvýš, aby ho na mobilu nezakryla klávesnice s lištou návrhů e-mailů. Odeslat jde i modrou klávesou „Odeslat“ na klávesnici (`enterkeyhint="send"`), se stejnou kontrolou souhlasu.
@@ -280,8 +280,7 @@ U „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnost ověř
 - **Je to zdarma?**
   Ano. Srovnání i tahák jsou zdarma. Chceme jen tvůj e-mail.
 - **Co uděláte s mým e-mailem?**
-  Uloží ho Clientelo Czech s.r.o. a bude ti posílat e-maily o investování do ETF, jak stojí v souhlasu. Odhlásit se můžeš kdykoli, odkaz bude v každém e-mailu. Podrobnosti najdeš v zásadách ochrany osobních údajů.
-  `[TODO: obsah a frekvenci e-mailů musí potvrdit správce; odkaz na odhlášení v každém e-mailu musí umět e-mailový nástroj]`
+  Tahle stránka je ukázka do výběrového řízení. E-mail uloží Daniel Kuchválek jen pro ukázku, žádné e-maily ti posílat nebude, nikomu ho nepředá a nejpozději 31. 12. 2026 ho smaže. Podrobnosti najdeš v zásadách ochrany osobních údajů.
 - **Je dvojče úplně stejné jako originál?**
   U VOO, SDY a AGG sleduje dvojče stejný index. U VTI, VT, VWO a VGT je index podobný, ne stejný. Rozdíl vždycky píšeme u výsledku.
   `[d: * › ucits_obdoba.rozdil_oproti_originalu]`
@@ -297,8 +296,8 @@ U „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnost ověř
 
 - Data: weby správců fondů a brokerů, ověřeno 10. 10. 2026. `[d: meta.overeno_dne]`
 - Nejde o investiční doporučení ani nabídku investičního nástroje. Investování nese riziko.
-- Provozovatel: Clientelo Czech s.r.o. · Zásady ochrany osobních údajů (odkaz na návrh)
-- Nenápadně, menším písmem: Ukázkové řešení do výběrového řízení. (Spolu s `noindex` zůstane, dokud stránku Clientelo nepřevezme.)
+- Provozovatel a správce údajů: Daniel Kuchválek, kontakt@test.cz · Zásady ochrany osobních údajů
+- Nenápadně, menším písmem: Ukázkové řešení do výběrového řízení. (Spolu s `noindex` zůstane, dokud jde o ukázku.)
 
 ---
 

@@ -3,6 +3,7 @@
 // Události a kontakty čte z odeslaných požadavků na /api/event a /api/lead a porovnává s tím, co server uložil (/__dev/db).
 // page.evaluate / $eval jsou API puppeteeru (spouští funkci v prohlížeči), ne JS eval().
 import { launch, mobilePage, sleep, BASE_URL } from './lib/browser.mjs';
+import { SOUHLAS } from '../api/_lib.js';
 
 const BASE = process.argv[2] || BASE_URL;
 let fails = 0;
@@ -84,6 +85,9 @@ try {
     const { page, logs } = await open();
     check('lišta dole je na začátku schovaná', !(await visible(page, '#lista')));
     check('výzva k taháku je před otočením schovaná', !(await visible(page, '#vyber-cta')));
+    const souhlas = await page.$$eval('.consent > span', (ss) => ss.map((x) => x.firstChild.textContent.replace(/\u00a0/g, ' ').trim()));
+    check('souhlas na stránce přesně podle SOUHLAS.text v api/_lib.js (jinak změnit i verzi)', souhlas.length >= 1 && souhlas.every((x) => x === SOUHLAS.text), souhlas[0]);
+    check('souhlas ani stránka nejmenují Clientelo jako správce', !(await page.evaluate(() => document.body.innerText.includes('Clientelo'))));
     const stamp = await page.$eval('#vyber .stamp', (p) => `${p.textContent.replace(/ /g, ' ')}|${p.querySelector('a[href="#data"]') ? 'odkaz' : ''}`).catch(() => '');
     check('u lístků (ne až v patičce): zdroj dat, datum, odkaz na zdroje a „Není to investiční doporučení“', /správců fondů a brokerů, ověřeno \d{1,2}\. \d{1,2}\. \d{4}/.test(stamp) && stamp.includes('Není to investiční doporučení.') && stamp.endsWith('|odkaz') && await visible(page, '#vyber .stamp'), stamp);
     const rot = await page.$$eval('.listek', (ls) => ls.map((l) => {
@@ -157,7 +161,7 @@ try {
     const evs = events(logs);
     const db = await devDb();
     const row = db.leads.find((l) => l.email === 'jana@example.com');
-    check('databáze: kontakt uložený jen se sloupci e-mail, souhlas, čas souhlasu a verze', !!row && Object.keys(row).sort().join() === 'email,id,souhlas,souhlas_cas,varianta', JSON.stringify(row));
+    check('databáze: kontakt uložený jen se sloupci e-mail, souhlas, čas a verze souhlasu a verze úvodu', !!row && Object.keys(row).sort().join() === 'email,id,souhlas,souhlas_cas,souhlas_verze,varianta' && row.souhlas_verze === SOUHLAS.verze, JSON.stringify(row));
     // od odeslání formuláře dál bez ID návštěvy, aby kontakt nešel spárovat s návštěvou
     const BEZ = ['odeslani_pokus', 'odeslani_chyba', 'odeslano', 'tahak_otevren', 'sdileni'];
     const sVisit = evs.filter((e) => !BEZ.includes(e.udalost));
@@ -299,15 +303,14 @@ try {
     await page.close();
   }
 
-  // 9) Návrh zásad ochrany osobních údajů: označený návrh, bez TODO, údaje správce z ARES
+  // 9) Zásady ochrany osobních údajů pro ukázku: správce je autor, nic otevřeného, žádné Clientelo
   {
     const { page, logs } = await open('ochrana-osobnich-udaju.html');
-    const t = await page.evaluate(() => document.body.innerText);
+    const t = (await page.evaluate(() => document.body.innerText)).replace(/\u00a0/g, ' ');
     const robots = await page.$eval('meta[name=robots]', (m) => m.content).catch(() => null);
-    check('zásady: označené jako návrh a noindex', t.includes('Návrh.') && robots === 'noindex', String(robots));
-    check('zásady: bez TODO a žlutých bloků', !/TODO/.test(t) && !(await page.$('.todo')));
-    check('zásady: IČO, sídlo a region databáze', ['22193456', 'Platnéřská 90/13', 'eu-central-1'].every((x) => t.includes(x)));
-    check('zásady: otevřená místa jako „doplní správce“', (await page.$$('.doplni')).length >= 5);
+    check('zásady: označené jako ukázka do výběrového řízení a noindex', t.includes('Ukázka do výběrového řízení.') && robots === 'noindex', String(robots));
+    check('zásady: správce Daniel Kuchválek, kontakt, výmaz do 31. 12. 2026, region databáze', ['Správcem osobních údajů je Daniel Kuchválek', 'kontakt@test.cz', '31. 12. 2026', 'eu-central-1'].every((x) => t.includes(x)));
+    check('zásady: nic k doplnění, žádné TODO ani Clientelo', !/doplní|TODO|Clientelo/.test(t) && !(await page.$('.doplni, .todo')));
     check('zásady: bez chyb v konzoli', !realErrors(logs).length, realErrors(logs).map((l) => l.text).join(' | '));
     await page.close();
   }
