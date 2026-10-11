@@ -51,6 +51,7 @@ a{color:var(--ink);text-decoration-thickness:1px;text-underline-offset:2px}
 .hero{padding-block:8px 4px}
 .lead{font-size:1.0625rem;color:var(--ink-2);margin-bottom:.4em;text-wrap:balance}
 .note{font-size:.875rem;color:var(--ink-2);margin:0}
+.hero-tahak{font-size:.9375rem;font-weight:700;margin:.55em 0 0}
 .picker-label{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;font-weight:700;margin:18px 0 12px}
 .hint{font-weight:400;font-size:.875rem;color:var(--ink-2)}
 /* lístky z taháku: klepnutí lístek otočí, vzadu je dvojče. Líc a rub jsou ve stejné buňce mřížky, takže lístek
@@ -219,6 +220,7 @@ html{scroll-behavior:auto}
     zacatek:['Nevíš, kterým ETF <span class="fix">začít</span>?','7 známých fondů z USA a co v nich je.','Nic ti nedoporučujeme, jen ukazujeme, co existuje.']
   };var t=Object.prototype.hasOwnProperty.call(T,v)?T[v]:null;if(!t)return;document.getElementById('uvod-h1').innerHTML=t[0];document.getElementById('uvod-text').textContent=t[1];var n=document.getElementById('uvod-pozn');if(t[2]){n.textContent=t[2];n.hidden=false}})();
   </script>
+  <p class="hero-tahak" id="uvod-tahak"><span class="fix">Tahák zdarma v&nbsp;PDF</span>: ISINy a&nbsp;postup nákupu krok za krokem.</p>
 
   <div id="vyber">
     <p class="picker-label">Které ETF tě zajímá? <span class="hint">Klepni a&nbsp;lístek otoč.</span></p>

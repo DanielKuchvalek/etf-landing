@@ -34,6 +34,8 @@ Všechny texty landing page v pořadí sekcí. Tykáme, bez rodu (žádné „hl
 
 Nadpis a podnadpis se mění podle parametru v URL (viz `reklamy/README.md`). Zbytek stránky je pro všechny stejný.
 
+**Pod podnadpisem u všech verzí (bez otočení lístku vidět hned):** Tahák zdarma v PDF: ISINy a postup nákupu krok za krokem. („Tahák zdarma v PDF“ se žlutým fixem; navazuje na nabídku v obou reklamách.)
+
 ### Výchozí verze (bez parametru, organická návštěva)
 
 - **H1:** Najdi evropské dvojče k VOO, VT a dalším ETF z USA
