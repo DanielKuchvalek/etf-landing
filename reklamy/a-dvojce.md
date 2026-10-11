@@ -23,14 +23,16 @@ Hotové obrázky: [a-dvojce-feed.png](a-dvojce-feed.png) (1080 × 1350) a [a-dvo
 
 **Feed 4 : 5**
 
-- Nahoře velký ticker **VOO**, pod ním šipka dolů a ještě větší **VUAA** v akcentní barvě zvoleného designu.
-- Pod VUAA jeden řádek: „evropské dvojče · koupíš z Česka“.
-- Dole drobně: „Stejný index S&P 500“. `[d: VOO › ucits_obdoba.rozdil_oproti_originalu]`
-- Žádní lidé s telefonem, žádná loga, žádné rozhraní brokera. Na obrázku nejvýš tři krátké řádky textu.
+- **Hook nahoře:** otázka z primárního textu „Broker ti nenabídl VOO?“ a pod ní menší „Není to chyba.“ se žlutým fixem. Je to nejvýraznější text po VUAA. Bez něj by nebylo jasné, proč je VOO přeškrtnuté.
+- Pod tím **VOO** přeškrtnuté jako na stránce, šipka dolů a největší **VUAA** v kroužku a se žlutým fixem na lístku s páskou.
+- Na lístku: „evropské dvojče · koupíš z Česka“, pod ním drobně „Stejný index S&P 500“. `[d: VOO › ucits_obdoba.rozdil_oproti_originalu]`
+- **Nabídka dole** (lístek s páskou, „Tahák zdarma“ se žlutým fixem): „Tahák zdarma: všech 7 dvojčat v PDF →“. Říká, co člověk po kliknutí dostane, stejně jako výzva na stránce („Chci tahák se všemi 7 dvojčaty“, „PDF hned a zdarma“).
+- **Pod ní nenápadně:** „Není investiční doporučení.“
+- Žádní lidé s telefonem, žádná loga, žádné rozhraní brokera. Původně „nejvýš tři řádky textu“; hook a nabídka přibyly, protože bez nich byla reklama moc strohá (zpětná vazba 11. 10. 2026).
 
 **Stories a Reels 9 : 16**
 
-- Stejný obsah, VOO a VUAA nad sebou, víc vzduchu.
+- Stejný obsah, větší písmo a rozložený do celé bezpečné výšky: hook nahoře, VOO → VUAA uprostřed, nabídka dole nad zónou ovládání.
 - Text je mimo horních 270 px, dolních 450 px a 65 px po stranách (ovládání Instagramu a Facebooku; skript to kontroluje). Oficiální zóny Meta jsem neověřil, jen z návodů třetích stran, které se rozcházejí (dole 250–670 px), proto před spuštěním zkontrolovat v náhledu Ads Manageru.
 
 ## Navazující úvod stránky

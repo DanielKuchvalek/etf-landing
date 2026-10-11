@@ -40,10 +40,13 @@ Hotové obrázky: [b-zacatek-feed.png](b-zacatek-feed.png) (1080 × 1350) a [b-z
   - dluhopisy · AGG
 
   `[d: * › typ]`
+- U každého tickeru „→ ?“ (otazník se žlutým fixem): dvojčata reklama záměrně neukazuje, odpověď je v taháku a na stránce.
 - Žádný řádek není zakroužkovaný ani označený jako „nejlepší“, nic nedoporučujeme.
-- Dole jeden řádek: „Co v nich je a kde je koupíš z Česka“.
+- Pod seznamem: „Co v nich je a kde je koupíš z Česka“.
+- **Nabídka dole** (lístek s páskou, „Tahák zdarma“ se žlutým fixem): „Tahák zdarma: všech 7 dvojčat v PDF →“. Říká, co člověk po kliknutí dostane, stejně jako výzva na stránce („Chci tahák se všemi 7 dvojčaty“, „PDF hned a zdarma“).
+- **Pod ní nenápadně:** „Není investiční doporučení.“
 
-**Stories a Reels 9 : 16:** stejný seznam, větší písmo, text je mimo horních 270 px, dolních 450 px a 65 px po stranách (ovládání Instagramu a Facebooku; skript to kontroluje). Oficiální zóny Meta jsem neověřil, jen z návodů třetích stran, které se rozcházejí (dole 250–670 px), proto před spuštěním zkontrolovat v náhledu Ads Manageru.
+**Stories a Reels 9 : 16:** stejný obsah, větší písmo, rozložený do celé bezpečné výšky (nabídka dole nad zónou ovládání), text je mimo horních 270 px, dolních 450 px a 65 px po stranách (ovládání Instagramu a Facebooku; skript to kontroluje). Oficiální zóny Meta jsem neověřil, jen z návodů třetích stran, které se rozcházejí (dole 250–670 px), proto před spuštěním zkontrolovat v náhledu Ads Manageru.
 
 ## Navazující úvod stránky
 

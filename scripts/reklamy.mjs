@@ -1,7 +1,7 @@
 // Vygeneruje obrázky obou reklam do reklamy/ (headless Chrome, stejně jako og.png v obrazky.mjs):
 //   a-dvojce-feed.png a b-zacatek-feed.png (1080×1350, feed 4 : 5),
 //   a-dvojce-stories.png a b-zacatek-stories.png (1080×1920, Stories a Reels 9 : 16).
-// Texty jsou přesně podle reklamy/a-dvojce.md a reklamy/b-zacatek.md, tickery a popisy lístků z data/etf.json
+// Texty jsou podle reklamy/a-dvojce.md a reklamy/b-zacatek.md (hook, nabídka taháku, upozornění), tickery a popisy lístků z data/etf.json
 // a public/index.html. U 9 : 16 drží text v bezpečné zóně: nahoře 270 px, dole 450 px, po stranách 65 px
 // (ovládání Instagramu a Facebooku); skript to po vykreslení ověří a jinak skončí chybou.
 // page.$$eval je API puppeteeru (spustí funkci v prohlížeči), ne JS eval().
@@ -48,49 +48,74 @@ h1{margin:0;font-weight:800;letter-spacing:-.02em;line-height:1.05}
 .row:last-child{border-bottom:0}
 .row b{font-weight:800}`;
 
-// A „Dvojče“: VOO (přeškrtnuté jako na stránce) → šipka dolů → lístek s VUAA v kroužku a fixem
-const adA = (w, h, area, s) => `<!doctype html><html lang="cs"><head><meta charset="utf-8"><style>${BASE}
-body{width:${w}px;height:${h}px}
-.page{left:${area.l}px;top:${area.t}px;width:${w - area.l - area.r}px;height:${h - area.t - area.b}px;gap:${s.gap}px}
+// Společné: nabídka dole (lístek s páskou a fixem, slib jako výzva na stránce) a drobné upozornění
+const OFFER = `<div class="offer card"><span class="fix">Tahák zdarma</span>: všech 7&nbsp;dvojčat v&nbsp;PDF&nbsp;→</div>
+  <div class="disc muted">Není investiční doporučení.</div>`;
+const COMMON = (w, h, area, s) => `body{width:${w}px;height:${h}px}
+.page{left:${area.l}px;top:${area.t}px;width:${w - area.l - area.r}px;height:${h - area.t - area.b}px;gap:${s.gap}px;justify-content:${s.spread ? 'space-between' : 'center'}}
+.group{display:flex;flex-direction:column;align-items:center;gap:${s.gap}px;width:100%}
 .logo{font-size:${s.logo}px}
-.orig{font-size:${s.orig}px}
+.offer{padding:.5em .9em;font-size:${s.offer}px;font-weight:800;transform:rotate(-1.2deg)}
+.offer::before{width:110px;height:32px;margin-left:-55px;top:-16px}
+.disc{font-size:${s.disc}px;margin-top:-${s.gap * 0.4}px}
+.offer-group{margin-top:${s.gap * 0.8}px}`;
+
+// A „Dvojče“: hook z reklamy, VOO (přeškrtnuté jako na stránce) → šipka → lístek s VUAA v kroužku a fixem, nabídka
+const adA = (w, h, area, s) => `<!doctype html><html lang="cs"><head><meta charset="utf-8"><style>${BASE}
+${COMMON(w, h, area, s)}
+h1{font-size:${s.h1}px}
+.sub{font-size:${s.sub}px;font-weight:800;margin-top:-${s.gap * 0.55}px}
+.orig{font-size:${s.orig}px;line-height:1}
 .arrow{width:${s.arrow * 0.45}px;height:${s.arrow}px}
-.card{padding:${s.pad}px ${s.pad * 1.6}px;transform:rotate(1.2deg)}
-.card .tk{font-size:${s.tk}px;margin:.12em .3em}
-.card .tk .fixbg{position:absolute;left:-.14em;right:-.14em;top:.34em;height:.52em;background:url("${FIX}") 0 0/100% 100% no-repeat;z-index:-1}
-.line1{margin-top:${s.gap * 0.7}px;font-size:${s.line}px}
+.twin{padding:${s.pad}px ${s.pad * 1.6}px;transform:rotate(1.2deg)}
+.twin .tk{font-size:${s.tk}px;margin:.12em .3em}
+.twin .tk .fixbg{position:absolute;left:-.14em;right:-.14em;top:.34em;height:.52em;background:url("${FIX}") 0 0/100% 100% no-repeat;z-index:-1}
+.line1{margin-top:${s.gap * 0.6}px;font-size:${s.line}px}
 .line2{font-size:${s.small}px}
 </style></head><body><div class="page">
-  <div class="logo">ETF <span class="fix">dvojčata</span></div>
-  <div class="orig">${voo.ticker}</div>
-  ${ARROW_DOWN}
-  <div class="card"><span class="tk"><span class="fixbg"></span>${twin}${RING}</span>
-    <div class="line1 ok">evropské dvojče · koupíš z&nbsp;Česka</div></div>
-  <div class="line2 muted">${indexText}</div>
+  <div class="group">
+    <div class="logo">ETF <span class="fix">dvojčata</span></div>
+    <h1>Broker ti nenabídl VOO?</h1>
+    <div class="sub"><span class="fix">Není to chyba.</span></div>
+  </div>
+  <div class="group">
+    <div class="orig">${voo.ticker}</div>
+    ${ARROW_DOWN}
+    <div class="card twin"><span class="tk"><span class="fixbg"></span>${twin}${RING}</span>
+      <div class="line1 ok">evropské dvojče · koupíš z&nbsp;Česka</div></div>
+    <div class="line2 muted">${indexText}</div>
+  </div>
+  <div class="group offer-group">${OFFER}</div>
 </div></body></html>`;
 
-// B „Začátek“: „Kterým ETF začít?“, lístek se seznamem 7 typů a tickerů (nic zakroužkované), dole jeden řádek
+// B „Začátek“: „Kterým ETF začít?“, seznam 7 typů a tickerů s „→ ?“ (dvojčata záměrně neukazujeme, odpověď je
+// v taháku, nic zakroužkované), řádek z reklamy a nabídka
 const adB = (w, h, area, s) => `<!doctype html><html lang="cs"><head><meta charset="utf-8"><style>${BASE}
-body{width:${w}px;height:${h}px}
-.page{left:${area.l}px;top:${area.t}px;width:${w - area.l - area.r}px;height:${h - area.t - area.b}px;gap:${s.gap}px}
-.logo{font-size:${s.logo}px}
+${COMMON(w, h, area, s)}
 h1{font-size:${s.h1}px}
-.card{width:100%;font-size:${s.row}px;transform:rotate(-.4deg)}
+.list-card{width:100%;font-size:${s.row}px;transform:rotate(-.4deg)}
+.row .q{margin-left:.35em;font-weight:800;color:#4A4A4A}
+.row .q .fix{color:#141414}
 .bottom{font-size:${s.line}px;font-weight:700}
 </style></head><body><div class="page">
-  <div class="logo">ETF <span class="fix">dvojčata</span></div>
-  <h1>Kterým ETF <span class="fix">začít</span>?</h1>
-  <div class="card"><div class="list">${lístky.map(([co, tk]) => `<div class="row"><span>${co}</span><b>${tk}</b></div>`).join('')}</div></div>
-  <div class="bottom">Co v&nbsp;nich je a&nbsp;kde je koupíš z&nbsp;Česka</div>
+  <div class="group">
+    <div class="logo">ETF <span class="fix">dvojčata</span></div>
+    <h1>Kterým ETF <span class="fix">začít</span>?</h1>
+  </div>
+  <div class="card list-card"><div class="list">${lístky.map(([co, tk]) => `<div class="row"><span>${co}</span><span><b>${tk}</b><span class="q">→ <span class="fix">?</span></span></span></div>`).join('')}</div></div>
+  <div class="group">
+    <div class="bottom">Co v&nbsp;nich je a&nbsp;kde je koupíš z&nbsp;Česka</div>
+    ${OFFER}
+  </div>
 </div></body></html>`;
 
 const FEED = { w: 1080, h: 1350, area: { t: 70, b: 70, l: 80, r: 80 } };
 const STORY = { w: 1080, h: 1920, area: { t: 270, b: 450, l: 65, r: 65 } }; // bezpečná zóna 9 : 16
 const OUT = [
-  ['a-dvojce-feed.png', adA, FEED, { gap: 34, logo: 40, orig: 150, arrow: 130, tk: 230, pad: 34, line: 46, small: 40 }],
-  ['a-dvojce-stories.png', adA, STORY, { gap: 30, logo: 42, orig: 170, arrow: 120, tk: 250, pad: 32, line: 50, small: 44 }],
-  ['b-zacatek-feed.png', adB, FEED, { gap: 40, logo: 40, h1: 104, row: 46, line: 44 }],
-  ['b-zacatek-stories.png', adB, STORY, { gap: 26, logo: 40, h1: 112, row: 52, line: 48 }],
+  ['a-dvojce-feed.png', adA, FEED, { gap: 22, logo: 34, h1: 80, sub: 54, orig: 78, arrow: 76, tk: 176, pad: 24, line: 40, small: 34, offer: 42, disc: 26 }],
+  ['a-dvojce-stories.png', adA, STORY, { spread: true, gap: 22, logo: 38, h1: 86, sub: 60, orig: 88, arrow: 84, tk: 196, pad: 26, line: 44, small: 38, offer: 46, disc: 28 }],
+  ['b-zacatek-feed.png', adB, FEED, { gap: 26, logo: 34, h1: 96, row: 42, line: 40, offer: 42, disc: 26 }],
+  ['b-zacatek-stories.png', adB, STORY, { spread: true, gap: 22, logo: 38, h1: 104, row: 44, line: 42, offer: 46, disc: 28 }],
 ];
 
 const browser = await launch();

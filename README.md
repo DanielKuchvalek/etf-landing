@@ -69,12 +69,12 @@ Texty všech částí jsou v [texty.md](texty.md).
 
 ## Dvě verze reklamy
 
-Obě pro Meta (Facebook a Instagram) na mobilu: statický obrázek 4 : 5 do feedu a 9 : 16 do Stories a Reels, tlačítko „Zjistit víc“. Texty jsou v [reklamy/](reklamy/README.md). Obrázky generuje [scripts/reklamy.mjs](scripts/reklamy.mjs) z HTML ve stylu stránky (sešit, fix, lístky), takže jdou upravit a přegenerovat. U Stories a Reels je text mimo horních 270 px a dolních 450 px, kde je ovládání aplikace.
+Obě pro Meta (Facebook a Instagram) na mobilu: statický obrázek 4 : 5 do feedu a 9 : 16 do Stories a Reels, tlačítko „Zjistit víc“. Texty jsou v [reklamy/](reklamy/README.md). Obrázky generuje [scripts/reklamy.mjs](scripts/reklamy.mjs) z HTML ve stylu stránky (sešit, fix, lístky), takže jdou upravit a přegenerovat. Každá má nahoře hook z primárního textu, dole nabídku „Tahák zdarma: všech 7 dvojčat v PDF →“ (stejný slib jako výzva na stránce) a drobně „Není investiční doporučení.“ A ukazuje dvojče VOO, B dvojčata záměrně neukazuje („→ ?“ u tickerů), odpověď je v taháku. U Stories a Reels je text mimo horních 270 px a dolních 450 px, kde je ovládání aplikace.
 
 | | Feed 1080 × 1350 | Stories a Reels 1080 × 1920 |
 |---|---|---|
-| **A „Dvojče“** | <img src="reklamy/a-dvojce-feed.png" width="240" alt="Reklama A do feedu: VOO přeškrtnuté, šipka, VUAA v kroužku, evropské dvojče, koupíš z Česka"> | <img src="reklamy/a-dvojce-stories.png" width="190" alt="Reklama A do Stories"> |
-| **B „Začátek“** | <img src="reklamy/b-zacatek-feed.png" width="240" alt="Reklama B do feedu: Kterým ETF začít? a seznam 7 typů ETF s tickery"> | <img src="reklamy/b-zacatek-stories.png" width="190" alt="Reklama B do Stories"> |
+| **A „Dvojče“** | <img src="reklamy/a-dvojce-feed.png" width="240" alt="Reklama A do feedu: Broker ti nenabídl VOO? Není to chyba. VOO přeškrtnuté, šipka, VUAA v kroužku, nabídka taháku zdarma"> | <img src="reklamy/a-dvojce-stories.png" width="190" alt="Reklama A do Stories"> |
+| **B „Začátek“** | <img src="reklamy/b-zacatek-feed.png" width="240" alt="Reklama B do feedu: Kterým ETF začít? Seznam 7 typů ETF s tickery a otazníkem, nabídka taháku zdarma"> | <img src="reklamy/b-zacatek-stories.png" width="190" alt="Reklama B do Stories"> |
 
 | | A „Dvojče“ ([a-dvojce.md](reklamy/a-dvojce.md)) | B „Začátek“ ([b-zacatek.md](reklamy/b-zacatek.md)) |
 |---|---|---|
