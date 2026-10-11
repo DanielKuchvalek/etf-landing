@@ -237,6 +237,9 @@ U „Kde koupit“ jmenujeme všechny brokery, u kterých jsme dostupnost ověř
 | nezaškrtnutý souhlas | Zaškrtni prosím souhlas. (Závisí na rozhodnutí výše.) |
 | chyba serveru | Něco se pokazilo u nás. Zkus to prosím za chvíli znovu. |
 | bez internetu | Vypadá to, že nejde internet. Zkontroluj připojení a zkus to znovu. |
+| doména nepřijímá poštu (bez MX) | Na tuhle adresu nejde poslat e-mail. Zkontroluj, jestli v ní není překlep. |
+| jednorázová adresa | Jednorázové e-mailové adresy nebereme. Napiš prosím svůj běžný e-mail. |
+| moc pokusů z jedné IP (10 za hodinu) | Z tohohle připojení přišlo moc pokusů za sebou. Zkus to prosím za hodinu. |
 | e-mail už máme (není chyba) | Žádná hláška, stejné poděkování jako u nového e-mailu. Jinak by formulář prozradil, kdo už je v databázi. |
 
 ### Poděkování (nahradí celý blok s formulářem: kartu v sekci, výzvu pod lístky i obsah panelu)

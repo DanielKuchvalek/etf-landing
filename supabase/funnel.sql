@@ -6,6 +6,8 @@
 --
 -- Sloupce:
 --   navstev            kolik návštěv krok udělalo (v libovolném pořadí; formulář jde otevřít i bez otočení lístku)
+--                      „otevření formuláře“ = rozbalení nebo panel (formular_otevren), nebo první klepnutí do
+--                      formuláře v sekci Tahák, který je vidět pořád a neotvírá se (formular_zacatek)
 --   navstev_postupne   kolik návštěv udělalo tenhle krok i všechny předchozí
 --   pct_z_prichodu     navstev / návštěvy s příchodem
 --   pct_z_predchoziho  navstev_postupne / navstev_postupne předchozího kroku
@@ -20,7 +22,7 @@ with navstevy as (
     navsteva,
     bool_or(udalost = 'prichod')          as prichod,
     bool_or(udalost = 'otoceni_listku')   as otoceni,
-    bool_or(udalost = 'formular_otevren') as formular,
+    bool_or(udalost in ('formular_otevren', 'formular_zacatek')) as formular,
     bool_or(udalost = 'odeslano')         as odeslani
   from public.events
   group by varianta, navsteva

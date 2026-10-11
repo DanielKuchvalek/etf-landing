@@ -76,9 +76,73 @@ Vlastní anonymní události místo GA4, bez cookies a bez cookie lišty. Strán
 
 - **Každá událost má ID návštěvy** (náhodné UUID jen v paměti jednoho načtení stránky), název, verzi úvodu z `?v=` a krátký detail. Do prohlížeče se nic neukládá.
 - **Trychtýř podle verzí úvodu** počítá pohled `analytika.trychtyr` ze [supabase/funnel.sql](supabase/funnel.sql): příchod → otočení lístku → otevření formuláře → odeslání. U každého kroku je, kolik návštěv ho udělalo, kolik udělalo i všechny předchozí a podíl z příchodů.
-- **ID návštěvy se nikdy nespojuje s e-mailem.** Kontakt jde jinou funkcí ([`/api/lead`](api/lead.js)) do jiné tabulky, bez ID návštěvy. Funkce kontakt s ID odmítne a událost s „@“ v detailu taky. Čas událostí se ukládá jen na celé hodiny, takže událost `odeslano` nejde s řádkem kontaktu spárovat podle času.
+- **ID návštěvy se nikdy nespojuje s e-mailem.** Kontakt jde jinou funkcí ([`/api/lead`](api/lead.js)) do jiné tabulky, bez ID návštěvy. Funkce kontakt s ID odmítne a detail události bere jen z pevného seznamu hodnot. Klíče řádků jsou náhodná UUID a čas událostí je jen na celé hodiny. **Úplně spárování vyloučit nejde:** kdo má plný přístup do databáze, může při malém provozu odhadnout, která návštěva odeslala který kontakt, podle hodiny a pořadí zápisu v Postgresu. ID návštěvy je proto pseudonymní údaj, ne anonymní. Podrobnosti jsou v sekci [Bezpečnost a ochrana proti spamu](#bezpečnost-a-ochrana-proti-spamu).
 - **Ověřeno automaticky:** test v Chromu porovná události, které stránka odeslala, s tím, co lokální server uložil, a kontroluje, že v nich nikde není e-mail. Vlastní funkce mají testy s podvrženou databází ([scripts/test-api.mjs](scripts/test-api.mjs)).
 - **Před ostrou kampaní by měl měření posoudit právník.** Do prohlížeče sice nic neukládáme, ale i JavaScript, který z prohlížeče odesílá data, může podle výkladu Evropského sboru pro ochranu osobních údajů (pokyny 2/2023) vyžadovat souhlas. Tenhle výklad jsme z primárního zdroje neověřovali, proto ho necháváme na právníkovi.
+
+## Bezpečnost a ochrana proti spamu
+
+Formulář je veřejný, takže počítám s tím, že ho budou zkoušet boti a že ho někdo bude chtít zneužít. Projekt prošly dva review skilly Claude Code (`security-review` a `code-review`) a vlastní kontrola. Všechno je pokryté testy:
+- [scripts/test-api.mjs](scripts/test-api.mjs): funkce s podvrženou databází a DNS, 107 kontrol,
+- [scripts/test-db.mjs](scripts/test-db.mjs): `schema.sql` na skutečném Postgresu v PGlite, 44 kontrol,
+- [scripts/test-page.mjs](scripts/test-page.mjs): celá cesta v prohlížeči proti lokálnímu serveru se stejnou databází.
+
+**Cesta kontaktu přes `/api/lead`, v tomhle pořadí:**
+
+1. Jen povolená pole (`email`, `souhlas`, `varianta`, `token`, skryté pole). Kontakt s ID návštěvy nebo s čímkoli navíc funkce odmítne. Tělo nejvýš 1 kB, i když klient délku neuvede. Požadavek z cizí stránky (`Origin`) odmítne.
+2. **Skryté pole** `poznamka`: když ho bot vyplní, funkce odpoví jako při úspěchu, ale nic neuloží.
+3. **Rychlost odeslání:** stránka si po načtení vezme z `/api/token` podepsaný čas vydání (HMAC, `ANTISPAM_SECRET`). Kontakt bez platného tokenu funkce odmítne. Kontakt odeslaný dřív než 3 s po vydání potichu zahodí, protože tak rychle formulář vyplní jen bot. Rychlejší člověk o kontakt nepřijde: stránka ten zbytek počká na „Odesílám…“.
+4. **Formát e-mailu:** jen ASCII, platná doména s koncovkou, bez `< > " '`, bez `=`, `+` nebo `-` na začátku (vzorec při exportu do tabulky). Stejné pravidlo hlídá i databáze.
+5. **Souhlas** musí být `true`.
+6. **Jednorázové domény:** 9 222 domén ze seznamu [disposable-email-domains](https://github.com/disposable-email-domains/disposable-email-domains) (licence CC0, commit `81a8976` z 9. 10. 2026). Aktualizuje se skriptem [scripts/jednorazove-domeny.mjs](scripts/jednorazove-domeny.mjs). Kontroluje se i subdoména (`x.mailinator.com`).
+7. **MX záznam:** doména musí přijímat poštu. Doména bez MX nebo s „null MX“ (RFC 7505) neprojde. Když DNS neodpoví do 2,5 s, kontakt projde, aby skutečný člověk nedoplatil na výpadek DNS.
+8. **Limit pokusů:** nejvýš 10 kontaktů za hodinu z jedné IP adresy. Počítá to databáze (funkce `uloz_kontakt`) podle HMAC z IP, hodiny a tajné soli. IP adresa se nikam neukládá a klíče z různých hodin nejdou spojit. Záznamy starší než 2 dny maže denní cron.
+9. **Duplicita:** stejný e-mail se podruhé neuloží (`on conflict do nothing`), ale návštěvník dostane stejnou odpověď a tahák. Formulář tak neprozradí, kdo už v databázi je.
+
+**Nálezy a co s nimi:**
+
+| Nález | Závažnost | Stav |
+|---|---|---|
+| Spam a cizí e-maily přes API: skript bez hlavičky `Origin` mohl posílat kontakty donekonečna, proti tomu bylo jen skryté pole. | střední | **Opraveno** body 3 až 8 výše. Zůstává jedna věc: kdo zná cizí existující adresu, může ji zapsat. To žádná kontrola na stránce nepozná, pomůže jen double opt-in (níže). |
+| Zahlcení `/api/event` nebo ukládání libovolných dat přes měření. | střední | **Opraveno:** detail události jen z pevného seznamu hodnot pro každou událost (např. `scroll` jen 25/50/75/100), nejvýš 600 událostí za hodinu z jedné IP a 100 na návštěvu (počítá databáze), tělo nejvýš 512 B. |
+| Spárování e-mailu s návštěvou podle pořadí zápisu: tabulky měly pořadová čísla, takže k-tý kontakt odpovídal k-té události `odeslano`. README přitom tvrdilo, že spárovat nejdou. | střední (soukromí, jen pro toho, kdo má přístup do databáze) | **Částečně:** klíče jsou náhodná UUID a nepravdivé tvrzení je opravené. Úplně to vyloučit nejde: při malém provozu lze páry odhadnout podle hodiny a systémových sloupců Postgresu. Spolehlivě by pomohlo jen neposílat ID návštěvy u událostí kolem odeslání, což mění měření. To je rozhodnutí pro tebe a právníka, ne pro mě. |
+| Skryté pole kontrolované v prohlížeči tiše zahodilo kontakt, když ho vyplnilo automatické vyplňování formulářů. | nízká (ztracené kontakty) | **Opraveno:** rozhoduje jen server a pole se jmenuje `poznamka`, což automatické vyplňování nezná. |
+| Chybějící bezpečnostní hlavičky. | nízká (obrana do hloubky) | **Opraveno ve [vercel.json](vercel.json):** Content-Security-Policy s hashi obou vložených skriptů (bez `unsafe-inline` pro skripty, test ověřuje, že podstrčený skript se nespustí; hashe hlídá [scripts/csp.mjs](scripts/csp.mjs)), HSTS, `nosniff`, Referrer-Policy, Permissions-Policy, COOP a zákaz vkládání do rámu. Lighthouse ani stránku to nerozbilo, lokální server posílá stejné hlavičky. |
+| Výchozí práva Supabase dávají anonymní roli přístup ke každé nové tabulce a funkci v `public`. | nízká (obrana do hloubky) | **Opraveno:** schéma výchozí práva odebere a test v PGlite ověřuje, že anonymní ani přihlášená role nic nepřečte, nezapíše ani nezavolá. |
+| E-maily s ne-ASCII znaky: `toLowerCase()` v JS a `lower()` v Postgresu se liší, uživatel by dostal „Něco se pokazilo“. | nízká | **Opraveno:** e-mail jen ASCII. |
+| Kopie formuláře mohla převzít zablokované tlačítko „Odesílám…“ z formuláře v sekci. | nízká (funkční) | **Opraveno:** kopie vznikají z čisté šablony. |
+| `?v=constructor` vypsal v nadpisu „undefined“. | nízká (kosmetika, ne XSS) | **Opraveno:** jen vlastní klíče objektu. |
+| `/__dev/db` lokálního serveru byl dostupný z Wi-Fi. | nízká (jen lokálně, falešná data) | **Opraveno:** jen z localhost. |
+| V [ai-log/denik.md](ai-log/denik.md) zůstala testovací adresa, která mohla patřit skutečnému člověku. | nízká | **Opraveno v souboru.** V historii commitů zůstává, historii podle pravidel projektu nepřepisuji. |
+
+**Zkontrolované bez nálezu:**
+- XSS: žádné `innerHTML` s daty z adresy nebo ze serveru,
+- CORS: žádné `Access-Control-Allow-Origin`, preflight z cizí stránky skončí 405,
+- klíče: jen v proměnných prostředí a v hlavičce `apikey`, nikdy v odpovědi ani v logu, test hlídá i nepřítomnost e-mailu a IP v logu,
+- RLS: zapnuté bez politik,
+- lokální server: žádný path traversal,
+- keep-alive: bez `CRON_SECRET` nepustí nikoho.
+
+Falešný poplach z review: „chybějící nezlomitelné mezery“ v textech z JS. Texty je mají, jen jako znak, ne `&nbsp;`.
+
+**Co jsem vědomě neudělal:**
+- **CAPTCHA (např. Turnstile):** přidala by skript třetí strany a otázku souhlasu. Má smysl, až by spam prošel přes limity.
+- **Limit z jedné IP může omylem zastavit skutečné lidi** za stejnou sdílenou adresou mobilního operátora. Při 10 kontaktech za hodinu je to málo pravděpodobné. Botnet s mnoha adresami limit obejde, proto jsou za ním další kontroly.
+- **Formulář bez JavaScriptu nefunguje** (chybí token). Obsah stránky bez JS funguje dál.
+
+**Double opt-in (doporučení, zatím nestavěno).** Po odeslání by přišel e-mail s potvrzovacím odkazem a do marketingových e-mailů by se kontakt zařadil až po kliknutí.
+- **Proč:**
+  - je to jediná ochrana proti tomu, že někdo zadá cizí existující adresu,
+  - dává doklad, kdo a kdy souhlas potvrdil,
+  - seznam bez neplatných adres zlepšuje doručitelnost e-mailů.
+- **Dopad na konverzi:** konverze stránky (návštěva → odeslaný formulář) se nezmění, tahák se ukáže hned jako teď. Klesne podíl kontaktů, kterým se smí psát, protože část lidí potvrzovací e-mail neotevře. Kolik, bez ověřeného zdroje neodhaduji. Změří se jako podíl potvrzených z odeslaných.
+- **Co je potřeba:**
+  - e-mailová služba (další zpracovatel),
+  - sloupec s časem potvrzení a jednorázový odkaz,
+  - endpoint pro potvrzení,
+  - text e-mailu.
+  
+  Rozhodne správce s právníkem.
 
 ## Nasazení na Supabase a Vercel
 
@@ -101,6 +165,7 @@ Všechno je připravené, stačí založit projekty a zadat tři proměnné pros
    - `SUPABASE_URL`: Project URL ze Supabase,
    - `SUPABASE_SECRET_KEY`: secret klíč `sb_secret_…`,
    - `CRON_SECRET`: náhodný řetězec aspoň 16 znaků, vytvoříš ho třeba příkazem `openssl rand -hex 24`. Vercel ho posílá cronu v hlavičce, bez něj keep-alive nic neudělá.
+   - `ANTISPAM_SECRET`: náhodný řetězec aspoň 32 znaků (`openssl rand -hex 32`). Podepisuje token formuláře a hashuje IP adresy pro limit pokusů. Bez něj formulář vrátí chybu.
 5. **Deploy.**
 
 **3. Kontrola po nasazení**
@@ -136,13 +201,7 @@ _TODO: stack a proč (čisté HTML/CSS/JS bez build kroku, Vercel, Supabase), zp
 - **Panel s formulářem je přístupný z klávesnice.** Je to nativní modální `<dialog>` s `aria-modal`: Tab a Shift+Tab zůstávají v panelu, Esc ho zavře a fokus se vrátí na tlačítko, které ho otevřelo.
 - **Funguje i bez JavaScriptu.** Obsah je v HTML a tlačítka výběru jsou odkazy na karty párů. JS jen přidává výsledek na místě, formulář na místě a lištu dole.
 - **Úvod podle reklamy:** malý inline skript hned za nadpisem přepíše nadpis podle `?v=` dřív, než se stránka vykreslí, takže se layout neposune (CLS 0 i u varianty s poznámkou navíc).
-- **Zpracování formuláře a měření: tři malé funkce bez závislostí** ([api/](api/)). Volají Supabase přímo přes REST (`fetch`), bez knihovny `supabase-js`, takže se nic neinstaluje. Každá funkce sama ověří vstup a nespoléhá na formulář:
-  - povolená pole (kontakt s ID návštěvy nebo s polem navíc odmítne), formát e-mailu, souhlas musí být `true`,
-  - velikost těla nejvýš 1 kB u kontaktu a 512 B u události, i když klient délku neuvede,
-  - skryté pole `web` proti botům: když je vyplněné, funkce odpoví úspěchem, ale nic neuloží,
-  - požadavek z cizí stránky (hlavička `Origin`) odmítne,
-  - opakovaný e-mail se uloží jen jednou a odpověď je stejná, aby formulář neprozradil, kdo už je v databázi,
-  - do logu jde jen stavový kód, nikdy e-mail ani klíč.
+- **Zpracování formuláře a měření: čtyři malé funkce bez závislostí** ([api/](api/)): `lead`, `event`, `token` a `keepalive`, společný kód je v [api/_lib.js](api/_lib.js). Soubory s podtržítkem Vercel jako funkce nenasadí (ověřeno ve zdrojovém kódu Vercelu, `packages/fs-detectors/src/detect-builders.ts`). Supabase volají přímo přes REST (`fetch`), bez knihovny `supabase-js`, takže se nic neinstaluje. Každá funkce sama ověří vstup a nespoléhá na formulář. Co přesně kontrolují, je v sekci [Bezpečnost a ochrana proti spamu](#bezpečnost-a-ochrana-proti-spamu).
 - **Secret klíč Supabase (`sb_secret_…`) jen na serveru.** Funkce ho posílá v hlavičce `apikey`, jak chce [dokumentace Supabase](https://supabase.com/docs/guides/api/api-keys) (nové klíče nejsou JWT, do `Authorization: Bearer` nepatří). Starý klíč `service_role` Supabase do konce roku 2026 ruší. Tabulky mají zapnuté RLS bez jediné politiky a odebraná práva pro `anon` a `authenticated`, takže publishable klíčem nejde nic přečíst ani zapsat.
 - **Lokální server se stejnými funkcemi** ([scripts/server.mjs](scripts/server.mjs)): servíruje `public/` a funkce z `api/` jako Vercel. Bez klíčů běží s podvrženou databází v paměti, takže formulář jde vyzkoušet i na telefonu ve stejné Wi-Fi a testy můžou ověřit, co se opravdu uložilo.
 - **Supabase projekt v EU regionu.** Ukládáme e-maily českých návštěvníků a databáze má být blízko serverless funkcím ve Frankfurtu.
@@ -250,7 +309,7 @@ Co musí doplnit nebo rozhodnout někdo jiný než vývojář. V návrhu zásad 
 
 **Vývojář (před ostrou kampaní):**
 
-- omezení počtu požadavků z jedné adresy (rate limiting) chybí. Proti botům je jen skryté pole a kontrola `Origin`; bez úložiště pro počítadla ho serverless funkce sama neudělá. Kdyby přišel spam, přidat ochranu na úrovni Vercelu nebo službu typu Turnstile,
+- sledovat v logu Vercelu zamítnuté pokusy (`[lead] zamítnuto: …`). Kdyby spam prošel přes limity, přidat CAPTCHA (například Cloudflare Turnstile) a s právníkem probrat, co to znamená pro souhlas,
 - ověřit, že denní dotaz z keep-alive Supabase opravdu počítá jako aktivitu (předpoklad, z dokumentace neověřený),
 - [nasadit podle návodu](#nasazení-na-supabase-a-vercel) a projít kontrolu po nasazení.
 

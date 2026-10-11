@@ -25,7 +25,7 @@ V jednom terminálu spusť server:
 ./scripts/serve.sh
 ```
 
-Server ([server.mjs](server.mjs)) servíruje `public/` a funkce z `api/` stejně jako Vercel. Bez proměnných `SUPABASE_*` běží s podvrženou databází v paměti: formulář i měření fungují, nic se nikam neposílá a na `/__dev/db` je vidět, co by se uložilo. U každé odpovědi 404 vypíše, kde soubor hledal a kdo se ptal. Se skutečnou databází: `node --env-file=.env.local scripts/server.mjs` (z kořene repa; obsah `.env.local` nikdy nevypisuj).
+Server ([server.mjs](server.mjs)) servíruje `public/` a funkce z `api/` stejně jako Vercel, včetně hlaviček z `vercel.json` (CSP). Bez proměnných `SUPABASE_*` běží s podvrženou databází: PGlite (Postgres ve WASM) se skutečným `supabase/schema.sql`. Formulář i měření fungují, nic se nikam neposílá a na `/__dev/db` je vidět, co by se uložilo (jen z tohohle počítače). E-mailové domény končící `.invalid` se tváří, že nemají MX. U každé odpovědi 404 vypíše, kde soubor hledal a kdo se ptal. Se skutečnou databází: `node --env-file=.env.local scripts/server.mjs` (z kořene repa; obsah `.env.local` nikdy nevypisuj).
 
 V druhém terminálu:
 
@@ -33,7 +33,10 @@ V druhém terminálu:
 python3 scripts/check_data.py      # data/etf.json: každý údaj má zdroj a datum, platné ISINy
 python3 scripts/check_page.py      # čísla na stránce odpovídají data/etf.json
 cd scripts
-node test-api.mjs                  # funkce v api/ s podvrženou databází: validace, limity, honeypot, klíče, vercel.json
+node test-api.mjs                  # funkce v api/ s podvrženou databází a DNS: validace, token, MX, limity, hlavičky
+node test-db.mjs                   # supabase/schema.sql a funnel.sql na skutečném Postgresu (PGlite): práva, RLS, limity
+node csp.mjs                       # po změně skriptu v public/*.html přepočítá hashe CSP ve vercel.json (--check jen ověří)
+node jednorazove-domeny.mjs        # aktualizuje seznam jednorázových e-mailových domén (api/_jednorazove-domeny.js)
 node test-page.mjs                 # interakce na 375 px: výběr ETF, formuláře, panel, měření, uložení do databáze
 node test-webkit.mjs               # WebKit, iPhone 13 / SE / SE 320 px: formuláře se simulovanou klávesnicí
 node lighthouse.mjs                # Lighthouse (mobil) pro všechny verze úvodu

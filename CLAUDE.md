@@ -21,12 +21,13 @@ public/        web – jediná složka, kterou Vercel servíruje
   tahak.pdf    lead magnet, generovaný (needitovat ručně)
   favicon.*, apple-touch-icon.png, og.png   ikony a obrázek pro sdílení, generuje scripts/obrazky.mjs
   ochrana-osobnich-udaju.html   návrh zásad (musí schválit právník)
-api/           serverless funkce: lead.js (formulář), event.js (měření), keepalive.js (cron), každá soběstačná
+api/           serverless funkce: lead.js (formulář), event.js (měření), token.js (token proti botům), keepalive.js (cron);
+               společný kód v _lib.js (soubory s _ Vercel nenasadí jako funkce)
 tahak/         zdroj PDF taháku (tahak.html), generuje scripts/pdf.mjs
 scripts/       testy, Lighthouse, snímky obrazovky, generování PDF (návod v scripts/README.md)
 docs/screenshots/  snímky obrazovky před a po úpravách
 data/          podklady k údajům o ETF: hodnota, zdroj (URL), datum
-supabase/      SQL: schema.sql (tabulky a RLS), funnel.sql (trychtýř podle verzí úvodu)
+supabase/      SQL: schema.sql (tabulky, RLS, limity, funkce), funnel.sql (trychtýř podle verzí úvodu)
 reklamy/       obě verze reklamy (texty a vizuály)
 ai-log/        exporty konverzací z Claude Code (/export) a deník práce s AI
 README.md      dokumentace pro hodnotitele

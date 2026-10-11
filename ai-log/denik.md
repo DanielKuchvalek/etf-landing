@@ -107,6 +107,6 @@ Doplňuje exporty konverzací (`/export`), které nezachytí celý průběh prá
   - Kontrola šířky hlídala jen vodorovné přetečení, takže nezachytila, že na 320 px rub lístku se třemi brokery přetéká svisle přes další řadu. AI na to přišla při prohlížení snímků z 320 px a doplnila svislou kontrolu.
   - Headless WebKit nerespektuje `backface-visibility`, takže všechny lístky ukazovaly zrcadlově rub. Na iPhonu to podle člověka fungovalo. Odhalil to snímek z WebKitu; stránka má teď pojistku přes `visibility`.
   - Test měření po přechodu na skutečné požadavky nezachytil odeslání kontaktu: Puppeteer u `fetch`, jehož tělo stránka nečte, nevyvolá `requestfinished`. Test teď čte událost `response`.
-  - Testovací adresa `jana@seznam.cz` mohla patřit skutečnému člověku. Při kontrole diffu před commitem ji AI nahradila adresou na vyhrazené doméně `example.com`.
+  - Testovací adresa na skutečné doméně (seznam.cz) mohla patřit skutečnému člověku. Při kontrole diffu před commitem ji AI nahradila adresou na vyhrazené doméně `example.com`.
   - Adresu `etf-dvojcata.vercel.app` AI chtěla použít pro `og:image`, ale kontrola ukázala, že ji už používá cizí projekt. Zvolila volnou `etf-dvojcata-clientelo` a zapsala to do návodu.
   - Příčinu 404 u PDF se nepodařilo zjistit. AI to neoznačila za vyřešené: zapsala, co vyloučila, a přidala diagnostiku do lokálního serveru.

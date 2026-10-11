@@ -9,9 +9,13 @@
     "lighthouse": "node lighthouse.mjs",
     "pdf": "node pdf.mjs",
     "webkit": "PLAYWRIGHT_BROWSERS_PATH=0 playwright install webkit",
-    "test:webkit": "node test-webkit.mjs"
+    "test:webkit": "node test-webkit.mjs",
+    "test:api": "node test-api.mjs",
+    "test:db": "node test-db.mjs",
+    "csp": "node csp.mjs"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "0.5.8",
     "lighthouse": "13.5.0",
     "playwright": "1.63.0",
     "puppeteer-core": "25.13.0"

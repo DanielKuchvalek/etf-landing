@@ -209,10 +209,10 @@ html{scroll-behavior:auto}
   <p class="lead" id="uvod-text">Americká ti broker často nenabídne, evropská ano.</p>
   <p class="note" id="uvod-pozn" hidden></p>
   <script>
-  (function(){var v=new URLSearchParams(location.search).get('v');var t={
+  (function(){var v=new URLSearchParams(location.search).get('v');var T={
     dvojce:['Broker ti nenabídl VOO? <span class="fix">Není to chyba.</span>','Tady je jeho evropské dvojče a 6 dalších.',''],
     zacatek:['Nevíš, kterým ETF <span class="fix">začít</span>?','7 známých fondů z USA a co v nich je.','Nic ti nedoporučujeme, jen ukazujeme, co existuje.']
-  }[v];if(!t)return;document.getElementById('uvod-h1').innerHTML=t[0];document.getElementById('uvod-text').textContent=t[1];var n=document.getElementById('uvod-pozn');if(t[2]){n.textContent=t[2];n.hidden=false}})();
+  };var t=Object.prototype.hasOwnProperty.call(T,v)?T[v]:null;if(!t)return;document.getElementById('uvod-h1').innerHTML=t[0];document.getElementById('uvod-text').textContent=t[1];var n=document.getElementById('uvod-pozn');if(t[2]){n.textContent=t[2];n.hidden=false}})();
   </script>
 
   <div id="vyber">
@@ -421,7 +421,7 @@ html{scroll-behavior:auto}
           <span>Souhlasím, že mi Clientelo Czech&nbsp;s.r.o. bude posílat e-maily o&nbsp;investování do ETF. Odhlásit se můžu kdykoli. <a href="ochrana-osobnich-udaju.html">Jak nakládáme s&nbsp;osobními údaji</a></span>
         </label>
         <p class="small">Tahák otevřeš hned po odeslání, na e-mail čekat nemusíš.</p>
-        <div class="hp" aria-hidden="true"><label>Toto pole nech prázdné <input type="text" name="web" tabindex="-1" autocomplete="off"></label></div>
+        <div class="hp" aria-hidden="true"><label>Toto pole nech prázdné <input type="text" name="poznamka" tabindex="-1" autocomplete="off"></label></div>
       </form>
     </div>
   </div>
@@ -504,11 +504,46 @@ html{scroll-behavior:auto}
     if (window.fetch) fetch('/api/event', { method: 'POST', body: body, keepalive: true, headers: { 'Content-Type': 'text/plain' } }).catch(function () {});
   }
 
-  /* Odeslání kontaktu na /api/lead: jen e-mail, souhlas a verze úvodu, záměrně bez ID návštěvy.
-     Při chybě vrátí { chyba }: email / souhlas od serveru, jinak sit nebo server. */
-  function submitLead(lead) {
+  /* Token proti botům: podepsaný čas vydání ze /api/token, stránka si ho vezme hned po načtení.
+     Server odmítne kontakt bez tokenu a potichu zahodí odeslaný dřív než 3 s po vydání (to stihne jen bot).
+     Kdo je rychlejší, chvíli počká na „Odesílám…“, o kontakt nepřijde. */
+  var MIN_FORM_MS = 3200;
+  var token = null;
+  var tokenAt = 0;
+  var tokenReq = null;
+  function getToken(fresh) {
+    if (fresh) tokenReq = null;
+    if (!tokenReq) {
+      tokenReq = fetch('/api/token', { cache: 'no-store' }).then(function (r) {
+        if (!r.ok) throw new Error(r.status);
+        return r.json();
+      }).then(function (d) {
+        token = d.token;
+        tokenAt = Date.now();
+      }, function () {
+        tokenReq = null;
+        throw { chyba: 'sit' };
+      });
+    }
+    return tokenReq;
+  }
+  window.addEventListener('load', function () { setTimeout(function () { getToken().catch(function () {}); }, 0); });
+  function wait(ms) { return new Promise(function (resolve) { setTimeout(resolve, Math.max(0, ms)); }); }
+
+  /* Odeslání kontaktu na /api/lead: jen e-mail, souhlas, verze úvodu, token a skryté pole, záměrně bez ID návštěvy.
+     Při chybě vrátí { chyba }: email / souhlas / mx / jednorazovy / limit od serveru, jinak sit nebo server. */
+  function submitLead(lead, retried) {
+    return getToken(retried).then(function () { return wait(MIN_FORM_MS - (Date.now() - tokenAt)); }).then(function () { return postLead(lead); })
+      .catch(function (err) {
+        // propadlý token (stránka otevřená přes den): jednou vzít nový a zkusit znovu
+        if (err && err.chyba === 'token' && !retried) return submitLead(lead, true);
+        throw err;
+      });
+  }
+  function postLead(lead) {
     var ctrl = window.AbortController ? new AbortController() : null;
     var timer = ctrl && setTimeout(function () { ctrl.abort(); }, 10000);
+    lead.token = token;
     return fetch('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(lead), signal: ctrl ? ctrl.signal : undefined })
       .then(function (r) {
         clearTimeout(timer);
@@ -619,15 +654,21 @@ html{scroll-behavior:auto}
     neplatny: 'Tenhle e-mail nevypadá správně. Zkontroluj ho.',
     souhlas: 'Zaškrtni prosím souhlas.',
     offline: 'Vypadá to, že nejde internet. Zkontroluj připojení a zkus to znovu.',
-    server: 'Něco se pokazilo u nás. Zkus to prosím za chvíli znovu.'
+    server: 'Něco se pokazilo u nás. Zkus to prosím za chvíli znovu.',
+    mx: 'Na tuhle adresu nejde poslat e-mail. Zkontroluj, jestli v ní není překlep.',
+    jednorazovy: 'Jednorázové e-mailové adresy nebereme. Napiš prosím svůj běžný e-mail.',
+    limit: 'Z tohohle připojení přišlo moc pokusů za sebou. Zkus to prosím za hodinu.'
   };
-  var EMAIL = /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/;
+  // stejné pravidlo jako na serveru (api/_lib.js): jen ASCII, platná doména
+  var EMAIL = /^(?![.+=-])[A-Za-z0-9._%+-]{1,64}@(?=.{4,253}$)(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+(?:[A-Za-z]{2,24}|xn--[A-Za-z0-9-]{2,59})$/;
+  function validEmail(e) { return EMAIL.test(e) && e.indexOf('..') < 0 && !/\.@/.test(e); }
   var tpl = doc.querySelector('[data-slot="sekce"] .lead-form');
+  var pristine = tpl.cloneNode(true); // čistá kopie pro formuláře na místě (ne rozpracovaný stav sekce)
 
   function showError(form, type) {
     var p = form.querySelector('.form-error');
     var email = form.elements.email;
-    var emailErr = type === 'prazdny' || type === 'neplatny';
+    var emailErr = ['prazdny', 'neplatny', 'mx', 'jednorazovy'].indexOf(type) >= 0;
     p.textContent = MSG[type];
     p.hidden = false;
     email.setAttribute('aria-invalid', emailErr ? 'true' : 'false');
@@ -647,21 +688,22 @@ html{scroll-behavior:auto}
       var email = form.elements.email.value.trim();
       var consent = form.elements.consent.checked;
       track('odeslani_pokus', zdroj);
-      var err = !email ? 'prazdny' : !EMAIL.test(email) ? 'neplatny' : !consent ? 'souhlas' : navigator.onLine === false ? 'offline' : '';
+      var err = !email ? 'prazdny' : !validEmail(email) ? 'neplatny' : !consent ? 'souhlas' : navigator.onLine === false ? 'offline' : '';
       if (err) return showError(form, err);
       form.querySelector('.form-error').hidden = true;
-      if (form.elements.web.value) return finish(form); // skryté pole vyplnil bot: tvářit se úspěšně, nic neukládat
+      // skryté pole proti botům posíláme serveru, rozhodne on (v prohlížeči by vyplnění automatem tiše zahodilo kontakt)
       var btn = form.querySelector('[type=submit]');
       var label = btn.textContent;
       btn.disabled = true;
       btn.textContent = 'Odesílám…';
-      submitLead({ email: email, souhlas: consent, varianta: variant }).then(function () {
+      submitLead({ email: email, souhlas: consent, varianta: variant, poznamka: form.elements.poznamka.value }).then(function () {
         track('odeslano', zdroj);
         finish(form);
       }, function (err) {
         btn.disabled = false;
         btn.textContent = label;
-        showError(form, err.chyba === 'email' ? 'neplatny' : err.chyba === 'souhlas' ? 'souhlas' : err.chyba === 'sit' && navigator.onLine === false ? 'offline' : 'server');
+        var c = err && err.chyba;
+        showError(form, c === 'email' ? 'neplatny' : ['souhlas', 'mx', 'jednorazovy', 'limit'].indexOf(c) >= 0 ? c : c === 'sit' && navigator.onLine === false ? 'offline' : 'server');
       });
     });
   }
@@ -672,9 +714,7 @@ html{scroll-behavior:auto}
     var slot = doc.querySelector('[data-slot="' + slotName + '"]');
     var form = slot.querySelector('.lead-form');
     if (!form) {
-      form = tpl.cloneNode(true);
-      form.reset();
-      form.querySelector('.form-error').hidden = true;
+      form = pristine.cloneNode(true);
       slot.appendChild(form);
       bind(form);
     }
@@ -834,7 +874,7 @@ html{scroll-behavior:auto}
   var SHARE_URL = location.origin + location.pathname + '?ref=sdileni';
   function share(status) {
     if (navigator.share) {
-      navigator.share({ title: 'ETF dvojčata', text: 'Americká ETF ti broker v Česku často nenabídne. Tady jsou jejich evropská dvojčata.', url: SHARE_URL }).then(function () {
+      navigator.share({ title: 'ETF dvojčata', text: 'Americká ETF ti broker v Česku často nenabídne. Tady jsou jejich evropská dvojčata.', url: SHARE_URL }).then(function () {
         track('sdileni', 'nativni');
       }, function (e) {
         if (e && e.name === 'AbortError') return track('sdileni', 'zruseno');

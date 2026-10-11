@@ -36,6 +36,9 @@ async function open(query = '', before = null) {
 const realErrors = (logs) => logs.filter((l) => l.type === 'pageerror' || l.type === 'error' || l.type === 'http');
 const events = (logs) => logs.filter((l) => l.type === 'event').map((l) => l.data);
 const devDb = (q = '') => fetch(`${BASE}__dev/db${q}`).then((r) => r.json());
+// poděkování přijde až ~3 s po načtení (server zahodí formulář odeslaný rychleji, stránka do té doby počká)
+const waitFor = (page, sel, ms = 12000) => page.waitForSelector(sel, { timeout: ms }).then(() => true, () => false);
+const waitError = (page, F, ms = 12000) => page.waitForFunction((F) => { const p = document.querySelector(`${F} .form-error`); return p && !p.hidden && !document.querySelector(`${F} [type=submit]`).disabled; }, { timeout: ms }, F).then(() => true, () => false);
 const visible = (page, sel) => page.$eval(sel, (el) => !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length)).catch(() => false);
 const text = (page, sel) => page.$eval(sel, (el) => el.textContent.trim()).catch(() => null);
 
@@ -123,7 +126,7 @@ try {
     await sleep(80);
     const busy = await page.evaluate(() => window.__btn || []);
     check('tlačítko při odesílání: zablokované s textem „Odesílám…“', busy.includes('true|Odesílám…'), busy.join(' / '));
-    await sleep(900);
+    await waitFor(page, '#vyber-cta .thanks');
     check('poděkování po odeslání', ((await text(page, '#vyber-cta .thanks h3')) || '') === 'Hotovo, tahák je tvůj.');
     check('všechny formuláře nahrazené poděkováním', (await page.$$('.lead-form')).length === 0);
     check('poděkování nahradilo celou kartu v sekci (žádné odrážky)', (await page.$$('#tahak .form-card ul, #tahak .form-card .lead-form')).length === 0 && !!(await page.$('#tahak .form-card .thanks')));
@@ -133,12 +136,12 @@ try {
     check('na stránce není viditelné TODO', !(await page.evaluate(() => document.body.innerText.includes('TODO'))));
     check('lišta dole po odeslání schovaná', !(await visible(page, '#lista')));
     const lead = logs.find((l) => l.type === 'lead');
-    check('odeslání: e-mail, souhlas a verze úvodu, bez ID návštěvy', lead && lead.status === 200 && JSON.stringify(lead.data) === JSON.stringify({ email: 'jana@example.com', souhlas: true, varianta: 'vychozi' }), JSON.stringify(lead && lead.data));
+    check('odeslání: e-mail, souhlas, verze úvodu, token a prázdné skryté pole, bez ID návštěvy', lead && lead.status === 200 && Object.keys(lead.data).sort().join() === 'email,poznamka,souhlas,token,varianta' && lead.data.email === 'jana@example.com' && lead.data.souhlas === true && lead.data.varianta === 'vychozi' && lead.data.poznamka === '' && /^\d{13}\./.test(lead.data.token), JSON.stringify(lead && lead.data));
     await sleep(300);
     const evs = events(logs);
     const db = await devDb();
     const row = db.leads.find((l) => l.email === 'jana@example.com');
-    check('databáze: kontakt uložený jen se sloupci e-mail, souhlas, čas souhlasu a verze', !!row && Object.keys(row).sort().join() === 'email,souhlas,souhlas_cas,varianta', JSON.stringify(row));
+    check('databáze: kontakt uložený jen se sloupci e-mail, souhlas, čas souhlasu a verze', !!row && Object.keys(row).sort().join() === 'email,id,souhlas,souhlas_cas,varianta', JSON.stringify(row));
     const visit = evs[0] && evs[0].navsteva;
     const stored = db.events.filter((e) => e.navsteva === visit).map((e) => `${e.udalost}:${e.detail}`).sort().join();
     check('databáze: každá odeslaná událost této návštěvy opravdu dorazila', !!visit && stored === evs.map((e) => `${e.udalost}:${e.detail ?? null}`).sort().join() && evs.every((e) => e.navsteva === visit), `${evs.length} odesláno`);
@@ -184,7 +187,7 @@ try {
     await page.type(`${F} input[name=email]`, 'petr@example.com');
     await page.tap(`${F} input[name=consent]`);
     await page.tap(`${F} [type=submit]`);
-    await sleep(900);
+    await waitFor(page, '#panel .thanks');
     check('odeslání z panelu → poděkování', ((await text(page, '#panel .thanks h3')) || '') === 'Hotovo, tahák je tvůj.');
     const ev = events(logs).filter((e) => e.udalost === 'odeslano');
     check('měření: odeslano se zdrojem karty', ev.length === 1 && ev[0].detail === 'karty', JSON.stringify(ev));
@@ -230,13 +233,15 @@ try {
     kopie: () => { delete Navigator.prototype.share; Object.defineProperty(navigator, 'clipboard', { value: { writeText: () => Promise.resolve() } }); },
     rucne: () => { delete Navigator.prototype.share; Object.defineProperty(navigator, 'clipboard', { value: undefined }); },
   };
+  await devDb('?smazat=1'); // limit 10 kontaktů za hodinu z jedné IP: testy jich odešlou víc
   for (const [mode, before] of Object.entries(SHARE)) {
     const { page, logs } = await open('', before);
     const F = '[data-slot="sekce"] .lead-form';
     await page.type(`${F} input[name=email]`, 'eva@example.com');
     await page.tap(`${F} input[name=consent]`);
     await page.tap(`${F} [type=submit]`);
-    await sleep(700);
+    await waitFor(page, '#tahak .thanks');
+    await sleep(700); // fokus na poděkování stránku plynule posune, klepat až potom
     const T = '#tahak .thanks';
     if (mode === 'nativni') {
       const btn = await page.$eval(`${T} [data-tahak]`, (a) => `${a.textContent}|${a.className}|${a.getAttribute('href')}|${a.target}`).catch(() => null);
@@ -298,6 +303,13 @@ try {
     check('favicon, ikona pro iOS a obrázek pro sdílení existují', head.files.every((f) => / 200 (image|text)/.test(f)), head.files.join(' | '));
     check('og:image: absolutní https adresa, 1200×630', /^https:\/\/[^/]+\/og\.png$/.test(head.ogImage) && head.ogSize === '1200×630', `${head.ogImage} ${head.ogSize}`);
     check('panel má aria-modal', head.modal === 'true');
+    const csp = await page.evaluate(() => {
+      const s = document.createElement('script');
+      s.textContent = 'window.__xss = 1';
+      document.body.appendChild(s);
+      return window.__xss === undefined;
+    });
+    check('CSP: podstrčený vložený skript (XSS) se nespustí', csp);
     await page.close();
   }
 
@@ -328,13 +340,14 @@ try {
   {
     const { page, logs } = await open();
     const F = '[data-slot="sekce"] .lead-form';
-    await page.evaluate((F) => { document.querySelector(`${F} input[name=web]`).value = 'spam'; }, F);
+    await page.evaluate((F) => { document.querySelector(`${F} input[name=poznamka]`).value = 'spam'; }, F);
     await page.type(`${F} input[name=email]`, 'bot@example.com');
     await page.evaluate((F) => { document.querySelector(`${F} input[name=consent]`).checked = true; }, F);
     await page.evaluate((F) => document.querySelector(F).requestSubmit(), F);
-    await sleep(300);
-    check('bot: poděkování se ukáže', ((await text(page, '#tahak .form-card .thanks h3')) || '') === 'Hotovo, tahák je tvůj.');
-    check('bot: kontakt se neodeslal', !logs.some((l) => l.type === 'lead'));
+    await waitFor(page, '#tahak .form-card .thanks');
+    check('bot: poděkování se ukáže (bot se nic nedozví)', ((await text(page, '#tahak .form-card .thanks h3')) || '') === 'Hotovo, tahák je tvůj.');
+    const sent = logs.find((l) => l.type === 'lead');
+    check('bot: rozhodne server – skryté pole odešle, kontakt se neuloží', !!sent && sent.data.poznamka === 'spam' && !(await devDb()).leads.some((l) => l.email === 'bot@example.com'));
     await page.close();
   }
 
@@ -355,8 +368,35 @@ try {
     await page.tap(`${F} input[name=consent]`);
     await page.focus(`${F} input[name=email]`);
     await page.keyboard.press('Enter');
-    await sleep(700);
+    await waitFor(page, '#tahak .thanks');
     check('Enter se souhlasem: odesláno, poděkování', ((await text(page, '#tahak .thanks h3')) || '') === 'Hotovo, tahák je tvůj.');
+    await page.close();
+  }
+
+  // 14) Hlášky z ochrany proti spamu: doména bez MX, jednorázová adresa, limit pokusů, rychlé odeslání počká
+  {
+    const { page } = await open();
+    const F = '[data-slot="sekce"] .lead-form';
+    const t0 = await page.evaluate(() => performance.now());
+    for (const [email, exp] of [['jana@neexistuje.invalid', 'Na tuhle adresu nejde poslat e-mail. Zkontroluj, jestli v ní není překlep.'], ['jana@mailinator.com', 'Jednorázové e-mailové adresy nebereme. Napiš prosím svůj běžný e-mail.']]) {
+      await page.$eval(`${F} input[name=email]`, (i) => { i.value = ''; });
+      await page.type(`${F} input[name=email]`, email);
+      if (!(await page.$eval(`${F} input[name=consent]`, (c) => c.checked))) await page.$eval(`${F} input[name=consent]`, (c) => { c.checked = true; });
+      await page.$eval(F, (f) => f.requestSubmit());
+      await waitError(page, F);
+      const err = ((await text(page, `${F} .form-error`)) || '').replace(/\u00a0/g, ' ');
+      const focus = await page.evaluate(() => document.activeElement.name);
+      check(`spam: ${email.split('@')[1]} → srozumitelná hláška, fokus v poli e-mail`, err === exp && focus === 'email', `${err} | ${focus}`);
+    }
+    const waited = await page.evaluate((t0) => performance.now() - t0, t0);
+    check('rychlé odeslání: stránka počká, až bude token starý aspoň 3 s (nic se neztratí)', waited >= 2500, `${Math.round(waited)} ms od načtení`);
+    await page.setRequestInterception(true);
+    page.on('request', (r) => (r.url().endsWith('/api/lead') ? r.respond({ status: 429, contentType: 'application/json', body: '{"ok":false,"chyba":"limit"}' }) : r.continue()));
+    await page.$eval(`${F} input[name=email]`, (i) => { i.value = 'jana@example.com'; });
+    await page.$eval(F, (f) => f.requestSubmit());
+    await waitError(page, F);
+    const lim = ((await text(page, `${F} .form-error`)) || '').replace(/\u00a0/g, ' ');
+    check('spam: překročený limit → hláška, ať to zkusí za hodinu', lim === 'Z tohohle připojení přišlo moc pokusů za sebou. Zkus to prosím za hodinu.', lim);
     await page.close();
   }
 
@@ -368,14 +408,14 @@ try {
     await page.type(`${F} input[name=email]`, 'petra@example.com');
     await page.tap(`${F} input[name=consent]`);
     await page.tap(`${F} [type=submit]`);
-    await sleep(600);
+    await waitError(page, F);
     const err = ((await text(page, `${F} .form-error`)) || '').replace(/\u00a0/g, ' ');
     const btn = await page.$eval(`${F} [type=submit]`, (b) => `${b.disabled}|${b.textContent}`);
     check('výpadek databáze: srozumitelná hláška a tlačítko zase funguje', err === 'Něco se pokazilo u nás. Zkus to prosím za chvíli znovu.' && btn === 'false|Získat tahák', `${err} | ${btn}`);
     check('výpadek databáze: kontakt se neuložil, formulář zůstal', !(await devDb()).leads.some((l) => l.email === 'petra@example.com') && !!(await page.$(F)));
     await devDb('?vypadek=0');
     await page.tap(`${F} [type=submit]`);
-    await sleep(600);
+    await waitFor(page, '#tahak .thanks');
     check('po obnovení databáze druhý pokus projde', ((await text(page, '#tahak .thanks h3')) || '') === 'Hotovo, tahák je tvůj.' && (await devDb()).leads.some((l) => l.email === 'petra@example.com'));
     const bad = realErrors(logs).filter((l) => !(l.type === 'http' && /^502 \/api\/(lead|event)$/.test(l.text)) && !(l.type === 'error' && l.text.includes('502')));
     check('výpadek databáze: kromě očekávané 502 bez chyb', !bad.length, bad.map((l) => l.text).join(' | '));

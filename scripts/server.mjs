@@ -1,11 +1,13 @@
-// Lokální server: statické soubory z public/ a funkce z api/ (stejně jako na Vercelu).
-// Bez proměnných SUPABASE_* běží s podvrženou databází v paměti: nic se nikam neposílá
-// a na /__dev/db je vidět, co by se uložilo (jen pro testy, na Vercel se tenhle soubor nedostane).
+// Lokální server: statické soubory z public/ a funkce z api/ (stejně jako na Vercelu), včetně hlaviček z vercel.json.
+// Bez proměnných SUPABASE_* běží s podvrženou databází: PGlite (Postgres ve WASM) se skutečným supabase/schema.sql,
+// funkce volají jeho funkce stejně jako na Supabase. Na /__dev/db je vidět, co by se uložilo – jen z tohohle
+// počítače (ne z telefonu v síti) a jen přes adresu localhost / 127.0.0.1. Na Vercel se tenhle soubor nedostane.
 // Se skutečnou databází: node --env-file=../.env.local server.mjs  (klíče se nikdy nevypisují)
 // Použití: node server.mjs   (HOST=0.0.0.0 pro telefon ve stejné Wi-Fi, PORT=8737)
 import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
-import { readdirSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
+import { randomBytes } from 'node:crypto';
 import { dirname, extname, join, normalize, sep } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -18,33 +20,57 @@ const TYPES = {
   '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png', '.webp': 'image/webp',
   '.ico': 'image/x-icon', '.pdf': 'application/pdf', '.txt': 'text/plain; charset=utf-8',
 };
-const FUNCTIONS = readdirSync(join(root, 'api')).filter((f) => f.endsWith('.js')).map((f) => f.slice(0, -3));
+const FUNCTIONS = readdirSync(join(root, 'api')).filter((f) => f.endsWith('.js') && !f.startsWith('_')).map((f) => f.slice(0, -3));
 
-// Podvržená databáze: zachytí volání funkcí na Supabase REST a uloží řádky do paměti.
+// Hlavičky z vercel.json (zdroje typu "/(.*)" nebo přesná cesta), ať se lokálně projeví i CSP.
+const HEADERS = JSON.parse(readFileSync(join(root, 'vercel.json'), 'utf8')).headers || [];
+const headerRules = HEADERS.map((h) => ({ re: new RegExp(`^${h.source.replace(/\(\.\*\)/g, '(.*)')}$`), headers: h.headers }));
+function vercelHeaders(path) {
+  const out = {};
+  for (const rule of headerRules) if (rule.re.test(path)) for (const { key, value } of rule.headers) out[key] = value;
+  return out;
+}
+
+// Podvržená databáze (PGlite) a DNS: e-mailové domény končící .invalid nemají MX, ostatní ano.
 const fake = !process.env.SUPABASE_URL;
-const db = { leads: [], events: [], vypadek: false };
+let db = null;
+let vypadek = false;
+if (!process.env.ANTISPAM_SECRET) process.env.ANTISPAM_SECRET = randomBytes(32).toString('hex');
 if (fake) {
+  const { PGlite } = await import('@electric-sql/pglite');
+  db = new PGlite();
+  await db.exec(`create role anon nologin; create role authenticated nologin; create role service_role nologin bypassrls;
+    grant usage on schema public to anon, authenticated, service_role;`);
+  await db.exec(readFileSync(join(root, 'supabase', 'schema.sql'), 'utf8'));
+  await db.exec(readFileSync(join(root, 'supabase', 'funnel.sql'), 'utf8'));
   process.env.SUPABASE_URL = 'http://supabase.lokalne';
   process.env.SUPABASE_SECRET_KEY = 'lokalni-atrapa';
   process.env.CRON_SECRET ??= 'lokalni-cron';
+  const lib = await import(pathToFileURL(join(root, 'api', '_lib.js')).href);
+  lib.zavislosti.resolveMx = async (domena) => {
+    if (domena.endsWith('.invalid')) throw Object.assign(new Error('nenalezeno'), { code: 'ENOTFOUND' });
+    return [{ exchange: 'mx.lokalne', priority: 10 }];
+  };
   const realFetch = globalThis.fetch;
   globalThis.fetch = async (url, opts = {}) => {
     const u = new URL(url);
     if (u.host !== 'supabase.lokalne') return realFetch(url, opts);
-    if (db.vypadek) throw new TypeError('fetch failed');
-    const table = u.pathname.replace('/rest/v1/', '');
-    if ((opts.method || 'GET') === 'POST') {
-      const row = JSON.parse(opts.body);
-      if (table === 'leads') {
-        if (!db.leads.some((l) => l.email === row.email)) db.leads.push({ ...row, souhlas_cas: new Date().toISOString() });
-      } else {
-        const hodina = new Date();
-        hodina.setMinutes(0, 0, 0);
-        db.events.push({ ...row, cas: hodina.toISOString() });
-      }
-      return new Response(null, { status: 201 });
+    if (vypadek) throw new TypeError('fetch failed');
+    const m = u.pathname.match(/^\/rest\/v1\/rpc\/([a-z_]+)$/);
+    if (!m || (opts.method || 'GET') !== 'POST') return new Response('{"message":"nepodporováno"}', { status: 404 });
+    const args = JSON.parse(opts.body || '{}');
+    const names = Object.keys(args);
+    if (!names.every((n) => /^p_[a-z_]+$/.test(n))) return new Response('{"message":"argumenty"}', { status: 400 });
+    // jako PostgREST: volání funkce pod rolí service_role s pojmenovanými argumenty
+    await db.exec('set role service_role');
+    try {
+      const r = await db.query(`select public.${m[1]}(${names.map((n, i) => `${n} => $${i + 1}`).join(', ')}) as r`, names.map((n) => args[n]));
+      return Response.json(r.rows[0].r);
+    } catch (e) {
+      return Response.json({ message: e.message }, { status: 400 });
+    } finally {
+      await db.exec('reset role');
     }
-    return Response.json(db[table] ? db[table].slice(0, 1).map((_, i) => ({ id: i + 1 })) : []);
   };
 }
 
@@ -62,22 +88,31 @@ async function callFunction(name, req, res) {
   }
   const headers = new Headers();
   for (const [k, v] of Object.entries(req.headers)) if (typeof v === 'string') headers.set(k, v);
+  headers.set('x-forwarded-for', req.socket.remoteAddress || ''); // jako Vercel: IP klienta, ne co klient pošle
   const request = new Request(`http://${req.headers.host}${req.url}`, {
     method: req.method, headers, body: ['GET', 'HEAD'].includes(req.method) ? undefined : Buffer.concat(chunks),
   });
   const mod = await import(pathToFileURL(join(root, 'api', `${name}.js`)).href);
   const response = await mod.default.fetch(request);
   const body = Buffer.from(await response.arrayBuffer());
-  res.writeHead(response.status, Object.fromEntries(response.headers));
+  res.writeHead(response.status, { ...vercelHeaders(new URL(request.url).pathname), ...Object.fromEntries(response.headers) });
   res.end(body);
   log(req, response.status);
 }
 
+// /__dev/db jen z tohohle počítače a jen přes localhost/127.0.0.1 (ne z telefonu v síti, ne přes podvržený Host)
+function devAllowed(req) {
+  const local = ['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(req.socket.remoteAddress);
+  const host = (req.headers.host || '').replace(/:\d+$/, '');
+  return local && ['127.0.0.1', 'localhost', '[::1]'].includes(host);
+}
 async function devDb(req, res, url) {
-  if (url.searchParams.has('vypadek')) db.vypadek = url.searchParams.get('vypadek') === '1';
-  if (url.searchParams.has('smazat')) { db.leads.length = 0; db.events.length = 0; }
+  if (!devAllowed(req)) { res.writeHead(403).end(); return log(req, 403); }
+  if (url.searchParams.has('vypadek')) vypadek = url.searchParams.get('vypadek') === '1';
+  if (url.searchParams.has('smazat')) await db.exec('delete from public.leads; delete from public.events; delete from public.limity;');
+  const [leads, events, limity] = await Promise.all(['leads', 'events', 'limity'].map((t) => db.query(`select * from public.${t}`)));
   res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
-  res.end(JSON.stringify(db));
+  res.end(JSON.stringify({ leads: leads.rows, events: events.rows, limity: limity.rows, vypadek }));
 }
 
 async function serveStatic(req, res, url) {
@@ -87,7 +122,7 @@ async function serveStatic(req, res, url) {
   try {
     if ((await stat(path)).isDirectory()) path = join(path, 'index.html');
     const data = await readFile(path);
-    res.writeHead(200, { 'Content-Type': TYPES[extname(path)] || 'application/octet-stream', 'Content-Length': data.length, 'Cache-Control': 'no-cache' });
+    res.writeHead(200, { ...vercelHeaders(url.pathname), 'Content-Type': TYPES[extname(path)] || 'application/octet-stream', 'Content-Length': data.length, 'Cache-Control': 'no-cache' });
     res.end(req.method === 'HEAD' ? undefined : data);
     log(req, 200);
   } catch {
@@ -110,5 +145,5 @@ createServer(async (req, res) => {
     if (!res.headersSent) res.writeHead(500).end();
   }
 }).listen(PORT, HOST, () => {
-  console.log(`http://${HOST}:${PORT}/  (funkce: ${FUNCTIONS.join(', ')}; databáze: ${fake ? 'podvržená v paměti' : 'Supabase z proměnných prostředí'})`);
+  console.log(`http://${HOST}:${PORT}/  (funkce: ${FUNCTIONS.join(', ')}; databáze: ${fake ? 'podvržená (PGlite se schema.sql)' : 'Supabase z proměnných prostředí'})`);
 });
