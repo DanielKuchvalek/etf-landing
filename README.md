@@ -108,7 +108,7 @@ Zjednodušení: formulář jde otevřít i bez otočení lístku (spodní lišta
 **Orientační cena za kontakt.** Cena za kontakt = cena za klik ÷ (podíl kliků, ze kterých je načtená stránka × konverze návštěva → kontakt). Předpoklady:
 
 - **Cena za klik z Meta v Česku: předpoklad 5–20 Kč, středně 10 Kč.** Ověřený zdroj pro český trh nemám. Pro představu: [LocaliQ (WordStream)](https://localiq.com/blog/facebook-advertising-benchmarks/) uvádí u kampaní Facebooku na návštěvnost průměrnou cenu za klik 0,60 USD napříč obory a 0,86 USD pro finance a pojištění. Jsou to data z kampaní jejich klientů, český trh v nich zvlášť není a na koruny je nepřepočítávám.
-- **Z kliku je načtená stránka: předpoklad 85 %.** Část lidí stránku zavře dřív, než se načte. Stránka je rychlá (LCP 1,2 s v Lighthouse), ztráta by tedy neměla být velká, ale změřená není.
+- **Z kliku je načtená stránka: předpoklad 85 %.** Část lidí stránku zavře dřív, než se načte. Stránka je rychlá (LCP 1,0–1,1 s v Lighthouse na živé adrese), ztráta by tedy neměla být velká, ale změřená není.
 - **Konverze: 2 %, 6 % a 13,2 %** z [odhadu výše](#očekávaná-konverze).
 
 Výpočet střední varianty: 10 Kč ÷ (0,85 × 0,06) = 10 Kč ÷ 0,051 ≈ **196 Kč za kontakt**. Jinak řečeno: 1 000 kliků za 10 000 Kč → 850 návštěv → 51 kontaktů.
@@ -265,7 +265,16 @@ Vlastní události místo GA4, bez cookies a bez cookie lišty. Stránka je pos�
 
 **Stack:** čisté HTML, CSS a JavaScript bez frameworku a bez build kroku, Vercel (statika a serverless funkce) a Supabase (Postgres v EU). Proč: stránka pro návštěvníka z mobilní reklamy musí být hlavně rychlá a malá a tohle je nejkratší cesta k webu, funkcím a databázi zdarma, v EU a bez závislostí, které by se musely instalovat a aktualizovat.
 
-- **Celá stránka je jeden soubor `public/index.html`** s inline CSS a JS a systémovým písmem. Bez externích skriptů a písem: 61,0 kB, po gzipu 17,8 kB, z toho JS 19,4 kB (oba vložené skripty, po gzipu 7,1 kB, limit 20 kB hlídá test). Jediný obrázek je náhled taháku (WebP, 24 kB), který se načte až u formuláře. Lighthouse (mobil, 11. 10. 2026, lokální server bez komprese, s CSP a ostatními hlavičkami z `vercel.json`): výkon, přístupnost a osvědčené postupy 100 u všech tří verzí úvodu, LCP 1,2 s, CLS 0, TBT 0 ms, celkem 87 KiB, bez chyb v konzoli. SEO 66, protože stránka má záměrně `noindex` (jediný neúspěšný audit je „stránka je blokovaná pro indexování“).
+- **Celá stránka je jeden soubor `public/index.html`** s inline CSS a JS a systémovým písmem. Bez externích skriptů a písem: 61,0 kB, po gzipu 17,8 kB, z toho JS 19,4 kB (oba vložené skripty, po gzipu 7,1 kB, limit 20 kB hlídá test). Jediný obrázek je náhled taháku (WebP, 24 kB), který se načte až u formuláře.
+- **Lighthouse na živé adrese** (mobil, 11. 10. 2026, Lighthouse 13.5, [scripts/lighthouse.mjs](scripts/lighthouse.mjs) s blokovanými požadavky na `/api/`, aby měření nezapsalo do databáze příchody):
+
+  | Verze úvodu | Výkon | Přístupnost | Osvědčené postupy | SEO | LCP | CLS | TBT | Přeneseno |
+  |---|---|---|---|---|---|---|---|---|
+  | výchozí | 100 | 100 | 100 | 66 | 1,0 s | 0 | 0 ms | 44 KiB |
+  | `?v=dvojce` | 100 | 100 | 100 | 66 | 1,1 s | 0 | 0 ms | 44 KiB |
+  | `?v=zacatek` | 100 | 100 | 100 | 66 | 1,0 s | 0 | 0 ms | 44 KiB |
+
+  SEO 66 jen proto, že stránka má záměrně `noindex` (jediný neúspěšný audit je „stránka je blokovaná pro indexování“). V konzoli žádné chyby. Lokálně bez komprese (stejný den) vychází totéž, jen 87 KiB a LCP 1,2 s.
 - **„Ručně kreslené“ prvky bez písma navíc.** Fix, šipky, kroužky a fajfky jsou malá inline SVG. Rukou psané písmo by přidalo desítky kB a probliknutí textu. Lístky se otáčejí bez 3D kontextu a bez `backface-visibility`: JS (Web Animations API, bez knihovny) otočí jednu rovinu s perspektivou o 90°, když je lístek z boku, vymění strany a dotočí. WebKit to kreslí stejně s grafickým čipem i bez něj. Při `prefers-reduced-motion` se jen vymění strany.
 - **Ikony a obrázek pro sdílení generuje skript** ([scripts/obrazky.mjs](scripts/obrazky.mjs)) ve stylu stránky a s čísly z `data/etf.json`: favicon (SVG a ICO), ikona pro iOS a `og.png` 1200×630 pro náhled odkazu na Facebooku a v Messengeru. Stránka si je nenačítá, takže nezdržují.
 - **Jen světlé barvy** (`color-scheme: only light`). Tmavý režim iOS ani automatické ztmavení v Chromu stránku nepřebarví, „sešit“ zůstane papírový.
