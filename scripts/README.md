@@ -25,13 +25,16 @@ V jednom terminálu spusť server:
 ./scripts/serve.sh
 ```
 
+Server ([server.mjs](server.mjs)) servíruje `public/` a funkce z `api/` stejně jako Vercel. Bez proměnných `SUPABASE_*` běží s podvrženou databází v paměti: formulář i měření fungují, nic se nikam neposílá a na `/__dev/db` je vidět, co by se uložilo. U každé odpovědi 404 vypíše, kde soubor hledal a kdo se ptal. Se skutečnou databází: `node --env-file=.env.local scripts/server.mjs` (z kořene repa; obsah `.env.local` nikdy nevypisuj).
+
 V druhém terminálu:
 
 ```
 python3 scripts/check_data.py      # data/etf.json: každý údaj má zdroj a datum, platné ISINy
 python3 scripts/check_page.py      # čísla na stránce odpovídají data/etf.json
 cd scripts
-node test-page.mjs                 # interakce na 375 px: výběr ETF, formuláře, panel, měření
+node test-api.mjs                  # funkce v api/ s podvrženou databází: validace, limity, honeypot, klíče, vercel.json
+node test-page.mjs                 # interakce na 375 px: výběr ETF, formuláře, panel, měření, uložení do databáze
 node test-webkit.mjs               # WebKit, iPhone 13 / SE / SE 320 px: formuláře se simulovanou klávesnicí
 node lighthouse.mjs                # Lighthouse (mobil) pro všechny verze úvodu
 node screenshots.mjs po            # snímky do docs/screenshots/po-*.png

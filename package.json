@@ -1,0 +1,6 @@
+{
+  "name": "etf-dvojcata",
+  "private": true,
+  "type": "module",
+  "description": "Serverless funkce v api/ jsou ES moduly. Web je ve public/, testy a skripty ve scripts/ (vlastní package.json)."
+}

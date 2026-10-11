@@ -59,10 +59,59 @@ Podklady: [data/etf.json](data/etf.json) (každý údaj se zdrojem a datem) a sh
 
 ## Měření cesty návštěvníka
 
-_TODO: jaké události měříme od příchodu po odeslání formuláře, čím a kde se dají zobrazit; jak je vyřešený souhlas s cookies._
+Vlastní anonymní události místo GA4, bez cookies a bez cookie lišty. Stránka je posílá přes `navigator.sendBeacon` na [`/api/event`](api/event.js) a funkce je ukládá do tabulky `events` v Supabase ([schéma](supabase/schema.sql)).
 
-- **ID návštěvy se nikdy nespojuje s e-mailem.** Eventy a kontakty jsou oddělené, jinak by se z anonymních eventů staly osobní údaje.
+| Událost | Kdy | Detail |
+|---|---|---|
+| `prichod` | načtení stránky | `sdileni` u odkazu od kamaráda, jinak `utm_source` |
+| `scroll` | 25, 50, 75 a 100 % stránky, každá jednou | hloubka |
+| `otoceni_listku` | klepnutí na lístek | např. `VOO:dvojce`, `VOO:original` |
+| `vyzva_zobrazena` | výzva k taháku pod lístky po prvním otočení | `listky` |
+| `cta` | klepnutí na tlačítko taháku | odkud: `listky`, `lista`, `karty` |
+| `formular_otevren` | formulář se rozbalí nebo otevře v panelu | odkud |
+| `formular_zacatek` | první fokus do formuláře | odkud, včetně `sekce` |
+| `odeslani_pokus`, `odeslani_chyba`, `odeslano` | odeslání, chybová hláška, úspěch | odkud / typ chyby |
+| `tahak_otevren` | klepnutí na „Otevřít tahák“ | kde: `panel`, `listky`, `sekce` |
+| `sdileni` | „Poslat odkaz kamarádovi“ | `nativni`, `zruseno`, `kopie`, `rucne` |
+
+- **Každá událost má ID návštěvy** (náhodné UUID jen v paměti jednoho načtení stránky), název, verzi úvodu z `?v=` a krátký detail. Do prohlížeče se nic neukládá.
+- **Trychtýř podle verzí úvodu** počítá pohled `analytika.trychtyr` ze [supabase/funnel.sql](supabase/funnel.sql): příchod → otočení lístku → otevření formuláře → odeslání. U každého kroku je, kolik návštěv ho udělalo, kolik udělalo i všechny předchozí a podíl z příchodů.
+- **ID návštěvy se nikdy nespojuje s e-mailem.** Kontakt jde jinou funkcí ([`/api/lead`](api/lead.js)) do jiné tabulky, bez ID návštěvy. Funkce kontakt s ID odmítne a událost s „@“ v detailu taky. Čas událostí se ukládá jen na celé hodiny, takže událost `odeslano` nejde s řádkem kontaktu spárovat podle času.
+- **Ověřeno automaticky:** test v Chromu porovná události, které stránka odeslala, s tím, co lokální server uložil, a kontroluje, že v nich nikde není e-mail. Vlastní funkce mají testy s podvrženou databází ([scripts/test-api.mjs](scripts/test-api.mjs)).
 - **Před ostrou kampaní by měl měření posoudit právník.** Do prohlížeče sice nic neukládáme, ale i JavaScript, který z prohlížeče odesílá data, může podle výkladu Evropského sboru pro ochranu osobních údajů (pokyny 2/2023) vyžadovat souhlas. Tenhle výklad jsme z primárního zdroje neověřovali, proto ho necháváme na právníkovi.
+
+## Nasazení na Supabase a Vercel
+
+Všechno je připravené, stačí založit projekty a zadat tři proměnné prostředí. Klíče patří jen do Vercelu (a lokálně do `.env.local`, který je v `.gitignore`), nikdy do repa ani do chatu.
+
+**1. Supabase (databáze)**
+
+1. Na [supabase.com](https://supabase.com/dashboard) → **New project**. Název třeba `etf-dvojcata`, **Region: Central EU (Frankfurt)**, tedy `eu-central-1`. Heslo k databázi si ulož do správce hesel, stránka ho nepotřebuje.
+2. **SQL Editor → New query** → vlož celý [supabase/schema.sql](supabase/schema.sql) → **Run**. V **Table Editor** pak uvidíš tabulky `leads` a `events`, obě s RLS zapnutým.
+3. Znovu **SQL Editor → New query** → vlož [supabase/funnel.sql](supabase/funnel.sql) → **Run**. Trychtýř pak kdykoli zobrazíš dotazem `select * from analytika.trychtyr;`.
+4. Tlačítko **Connect** (nebo **Project Settings → Data API**): zkopíruj **Project URL** (`https://….supabase.co`), to je `SUPABASE_URL`.
+5. **Project Settings → API Keys → Secret keys**: zkopíruj secret klíč (`sb_secret_…`), to je `SUPABASE_SECRET_KEY`. Publishable klíč stránka nepotřebuje, prohlížeč se Supabase vůbec nekontaktuje.
+
+**2. Vercel (web a funkce)**
+
+1. Na [vercel.com](https://vercel.com/new) → **Add New → Project** → importuj repozitář z GitHubu.
+2. **Project Name:** `etf-dvojcata-clientelo`. Adresa pak bude `https://etf-dvojcata-clientelo.vercel.app` a bude sedět s `og:image` ve stránce (`etf-dvojcata` už používá cizí projekt). Když zvolíš jiný název, změň adresu v `og:image` v `public/index.html`.
+3. **Framework Preset:** Other. Build ani výstupní složku neměň, nastavuje je [vercel.json](vercel.json): web z `public/`, funkce z `api/` ve Frankfurtu (`fra1`) a denní cron na `/api/keepalive`.
+4. **Environment Variables** (pro Production, případně i Preview):
+   - `SUPABASE_URL`: Project URL ze Supabase,
+   - `SUPABASE_SECRET_KEY`: secret klíč `sb_secret_…`,
+   - `CRON_SECRET`: náhodný řetězec aspoň 16 znaků, vytvoříš ho třeba příkazem `openssl rand -hex 24`. Vercel ho posílá cronu v hlavičce, bez něj keep-alive nic neudělá.
+5. **Deploy.**
+
+**3. Kontrola po nasazení**
+
+1. Otevři stránku na telefonu, otoč lístek a odešli svůj e-mail.
+2. V Supabase → **Table Editor → leads** musí být řádek s e-mailem. V `events` řádky z návštěvy.
+3. Ve Vercelu → **Settings → Cron Jobs** je `/api/keepalive` jednou denně. Tlačítkem **Run** ho můžeš pustit hned a v **Logs** uvidíš odpověď 200.
+4. **Settings → Functions:** region `fra1`.
+5. Odkaz stránky vlož do [nástroje pro ladění sdílení od Facebooku](https://developers.facebook.com/tools/debug/), ať je vidět obrázek pro sdílení.
+
+**Lokálně se skutečnou databází** (jinak lokální server běží s podvrženou databází v paměti): vytvoř `.env.local` podle [.env.example](.env.example) a spusť `node --env-file=.env.local scripts/server.mjs`. Obsah `.env.local` nikdy nevypisuj ani nesdílej.
 
 ## Očekávaná konverze
 
@@ -87,8 +136,17 @@ _TODO: stack a proč (čisté HTML/CSS/JS bez build kroku, Vercel, Supabase), zp
 - **Panel s formulářem je přístupný z klávesnice.** Je to nativní modální `<dialog>` s `aria-modal`: Tab a Shift+Tab zůstávají v panelu, Esc ho zavře a fokus se vrátí na tlačítko, které ho otevřelo.
 - **Funguje i bez JavaScriptu.** Obsah je v HTML a tlačítka výběru jsou odkazy na karty párů. JS jen přidává výsledek na místě, formulář na místě a lištu dole.
 - **Úvod podle reklamy:** malý inline skript hned za nadpisem přepíše nadpis podle `?v=` dřív, než se stránka vykreslí, takže se layout neposune (CLS 0 i u varianty s poznámkou navíc).
+- **Zpracování formuláře a měření: tři malé funkce bez závislostí** ([api/](api/)). Volají Supabase přímo přes REST (`fetch`), bez knihovny `supabase-js`, takže se nic neinstaluje. Každá funkce sama ověří vstup a nespoléhá na formulář:
+  - povolená pole (kontakt s ID návštěvy nebo s polem navíc odmítne), formát e-mailu, souhlas musí být `true`,
+  - velikost těla nejvýš 1 kB u kontaktu a 512 B u události, i když klient délku neuvede,
+  - skryté pole `web` proti botům: když je vyplněné, funkce odpoví úspěchem, ale nic neuloží,
+  - požadavek z cizí stránky (hlavička `Origin`) odmítne,
+  - opakovaný e-mail se uloží jen jednou a odpověď je stejná, aby formulář neprozradil, kdo už je v databázi,
+  - do logu jde jen stavový kód, nikdy e-mail ani klíč.
+- **Secret klíč Supabase (`sb_secret_…`) jen na serveru.** Funkce ho posílá v hlavičce `apikey`, jak chce [dokumentace Supabase](https://supabase.com/docs/guides/api/api-keys) (nové klíče nejsou JWT, do `Authorization: Bearer` nepatří). Starý klíč `service_role` Supabase do konce roku 2026 ruší. Tabulky mají zapnuté RLS bez jediné politiky a odebraná práva pro `anon` a `authenticated`, takže publishable klíčem nejde nic přečíst ani zapsat.
+- **Lokální server se stejnými funkcemi** ([scripts/server.mjs](scripts/server.mjs)): servíruje `public/` a funkce z `api/` jako Vercel. Bez klíčů běží s podvrženou databází v paměti, takže formulář jde vyzkoušet i na telefonu ve stejné Wi-Fi a testy můžou ověřit, co se opravdu uložilo.
 - **Supabase projekt v EU regionu.** Ukládáme e-maily českých návštěvníků a databáze má být blízko serverless funkcím ve Frankfurtu.
-- **Denní keep-alive přes Vercel cron.** Bezplatný Supabase projekt se po čase bez aktivity pozastaví a formulář musí fungovat, i když stránku někdo otevře až za dva týdny.
+- **Denní keep-alive přes Vercel cron.** Bezplatný Supabase projekt se po čase bez aktivity pozastaví a formulář musí fungovat, i když stránku někdo otevře až za dva týdny. Cron volá [`/api/keepalive`](api/keepalive.js) jednou denně (víc bezplatný tarif Vercelu nedovolí) a ta udělá jeden malý dotaz do databáze. Funkce chce hlavičku s `CRON_SECRET`, cizí volání odmítne.
 - **Serverless funkce v regionu `fra1` (Frankfurt).** Kratší odezva pro české návštěvníky i k databázi v EU.
 
 ## Testování: co automaticky a co jen na telefonu
@@ -172,6 +230,12 @@ Co musí doplnit nebo rozhodnout někdo jiný než vývojář. V návrhu zásad 
 - právní základ měření bez cookie lišty. Do prohlížeče nic neukládáme, ale i odesílání dat z prohlížeče může podle výkladu Evropského sboru pro ochranu osobních údajů (pokyny 2/2023) vyžadovat souhlas. Tenhle výklad jsme z primárního zdroje neověřovali,
 - předávání údajů mimo EU: Supabase i Vercel jsou americké firmy, i když data a funkce jsou ve Frankfurtu,
 - celý návrh [zásad ochrany osobních údajů](public/ochrana-osobnich-udaju.html) a text souhlasu u formuláře.
+
+**Vývojář (před ostrou kampaní):**
+
+- omezení počtu požadavků z jedné adresy (rate limiting) chybí. Proti botům je jen skryté pole a kontrola `Origin`; bez úložiště pro počítadla ho serverless funkce sama neudělá. Kdyby přišel spam, přidat ochranu na úrovni Vercelu nebo službu typu Turnstile,
+- ověřit, že denní dotaz z keep-alive Supabase opravdu počítá jako aktivitu (předpoklad, z dokumentace neověřený),
+- [nasadit podle návodu](#nasazení-na-supabase-a-vercel) a projít kontrolu po nasazení.
 
 **Po nasazení (vývojář):**
 

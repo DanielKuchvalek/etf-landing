@@ -483,28 +483,46 @@ html{scroll-behavior:auto}
   var doc = document;
   var qs = new URLSearchParams(location.search);
   var variant = ['dvojce', 'zacatek'].indexOf(qs.get('v')) >= 0 ? qs.get('v') : 'vychozi';
-  var utm = {};
-  ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'].forEach(function (k) { if (qs.get(k)) utm[k] = qs.get(k); });
-  var visitId = window.crypto && crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2);
+  /* ID návštěvy: náhodné UUID jen v paměti tohoto načtení stránky (nic se neukládá do prohlížeče).
+     crypto.randomUUID funguje jen přes https, proto náhrada přes getRandomValues (třeba telefon v lokální síti). */
+  function uuid() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    var b = crypto.getRandomValues(new Uint8Array(16));
+    b[6] = (b[6] & 15) | 64;
+    b[8] = (b[8] & 63) | 128;
+    var h = [].map.call(b, function (x) { return (x + 256).toString(16).slice(1); }).join('');
+    return h.slice(0, 8) + '-' + h.slice(8, 12) + '-' + h.slice(12, 16) + '-' + h.slice(16, 20) + '-' + h.slice(20);
+  }
+  var visitId = uuid();
 
-  /* Měření: zatím jen do konzole, později navigator.sendBeacon na /api/udalost.
-     ID návštěvy žije jen v paměti tohoto načtení stránky a nikdy se neposílá s e-mailem. */
-  function track(name, data) {
-    var e = { udalost: name, navsteva: visitId, varianta: variant, cas: new Date().toISOString() };
-    var k;
-    for (k in utm) e[k] = utm[k];
-    for (k in data || {}) e[k] = data[k];
-    console.log('[měření]', e);
+  /* Měření: anonymní událost na /api/event (sendBeacon, stránku nezdrží). Detail je krátký text bez „@“,
+     server jiné odmítne. ID návštěvy se nikdy neposílá s e-mailem. */
+  function track(name, detail) {
+    var e = { navsteva: visitId, udalost: name, varianta: variant };
+    detail = String(detail == null ? '' : detail).replace(/[^A-Za-z0-9_:.-]/g, '').slice(0, 40);
+    if (detail) e.detail = detail;
+    var body = JSON.stringify(e);
+    try { if (navigator.sendBeacon && navigator.sendBeacon('/api/event', body)) return; } catch (err) { /* fetch níž */ }
+    if (window.fetch) fetch('/api/event', { method: 'POST', body: body, keepalive: true, headers: { 'Content-Type': 'text/plain' } }).catch(function () {});
   }
 
-  /* Odeslání kontaktu: zatím jen do konzole, později POST na /api/lead.
-     Záměrně bez ID návštěvy. */
+  /* Odeslání kontaktu na /api/lead: jen e-mail, souhlas a verze úvodu, záměrně bez ID návštěvy.
+     Při chybě vrátí { chyba }: email / souhlas od serveru, jinak sit nebo server. */
   function submitLead(lead) {
-    console.log('[formulář] odeslání (zatím bez serveru):', lead);
-    return new Promise(function (resolve) { setTimeout(resolve, 400); });
+    var ctrl = window.AbortController ? new AbortController() : null;
+    var timer = ctrl && setTimeout(function () { ctrl.abort(); }, 10000);
+    return fetch('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(lead), signal: ctrl ? ctrl.signal : undefined })
+      .then(function (r) {
+        clearTimeout(timer);
+        if (r.ok) return;
+        return r.json().catch(function () { return {}; }).then(function (d) { throw { chyba: d.chyba || 'server' }; });
+      }, function () {
+        clearTimeout(timer);
+        throw { chyba: 'sit' };
+      });
   }
 
-  track('prichod', { sirka: window.innerWidth, ref: qs.get('ref') === 'sdileni' ? 'sdileni' : '' });
+  track('prichod', qs.get('ref') === 'sdileni' ? 'sdileni' : qs.get('utm_source'));
 
   /* Hloubka scrollu: 25, 50, 75 a 100 %, každá jednou. */
   var marks = [25, 50, 75, 100];
@@ -515,7 +533,7 @@ html{scroll-behavior:auto}
     requestAnimationFrame(function () {
       ticking = false;
       var pct = Math.round((window.scrollY + window.innerHeight) / doc.documentElement.scrollHeight * 100);
-      while (marks.length && pct >= marks[0]) track('scroll', { hloubka: marks.shift() });
+      while (marks.length && pct >= marks[0]) track('scroll', marks.shift());
       if (!marks.length) window.removeEventListener('scroll', onScroll);
     });
   }
@@ -556,13 +574,13 @@ html{scroll-behavior:auto}
     var on = card.getAttribute('aria-pressed') !== 'true';
     picker.classList.remove('peek');
     listky.forEach(function (c) { c.setAttribute('aria-pressed', c === card && on ? 'true' : 'false'); });
-    track('otoceni_listku', { etf: etf, strana: on ? 'dvojce' : 'original' });
+    track('otoceni_listku', etf + ':' + (on ? 'dvojce' : 'original'));
     if (!on) return;
     twins.forEach(function (t) { t.hidden = t.getAttribute('data-etf') !== etf; });
     result.hidden = false;
     if (cta.hidden && !done) {
       cta.hidden = false;
-      track('vyzva_zobrazena', { zdroj: 'listky' });
+      track('vyzva_zobrazena', 'listky');
     }
   }
   listky.forEach(function (card) {
@@ -591,13 +609,13 @@ html{scroll-behavior:auto}
     p.hidden = false;
     email.setAttribute('aria-invalid', emailErr ? 'true' : 'false');
     (emailErr ? email : type === 'souhlas' ? form.elements.consent : form.querySelector('[type=submit]')).focus();
-    track('odeslani_chyba', { typ: type, zdroj: form.getAttribute('data-zdroj') });
+    track('odeslani_chyba', type);
   }
 
   function bind(form) {
     var started = false;
     form.addEventListener('focusin', function () {
-      if (!started) { started = true; track('formular_zacatek', { zdroj: form.getAttribute('data-zdroj') }); }
+      if (!started) { started = true; track('formular_zacatek', form.getAttribute('data-zdroj')); }
     });
     form.elements.email.addEventListener('input', function () { form.elements.email.removeAttribute('aria-invalid'); });
     form.addEventListener('submit', function (e) {
@@ -605,7 +623,7 @@ html{scroll-behavior:auto}
       var zdroj = form.getAttribute('data-zdroj');
       var email = form.elements.email.value.trim();
       var consent = form.elements.consent.checked;
-      track('odeslani_pokus', { zdroj: zdroj });
+      track('odeslani_pokus', zdroj);
       var err = !email ? 'prazdny' : !EMAIL.test(email) ? 'neplatny' : !consent ? 'souhlas' : navigator.onLine === false ? 'offline' : '';
       if (err) return showError(form, err);
       form.querySelector('.form-error').hidden = true;
@@ -614,13 +632,13 @@ html{scroll-behavior:auto}
       var label = btn.textContent;
       btn.disabled = true;
       btn.textContent = 'Odesílám…';
-      submitLead({ email: email, souhlas: consent }).then(function () {
-        track('odeslano', { zdroj: zdroj });
+      submitLead({ email: email, souhlas: consent, varianta: variant }).then(function () {
+        track('odeslano', zdroj);
         finish(form);
-      }, function () {
+      }, function (err) {
         btn.disabled = false;
         btn.textContent = label;
-        showError(form, 'server');
+        showError(form, err.chyba === 'email' ? 'neplatny' : err.chyba === 'souhlas' ? 'souhlas' : err.chyba === 'sit' && navigator.onLine === false ? 'offline' : 'server');
       });
     });
   }
@@ -643,11 +661,11 @@ html{scroll-behavior:auto}
 
   var ctaBtn = doc.querySelector('[data-otevri="vyber"]');
   ctaBtn.addEventListener('click', function () {
-    track('cta', { zdroj: 'listky' });
+    track('cta', 'listky');
     if (done) return;
     var form = mount('vyber', 'listky');
     ctaBtn.hidden = true;
-    track('formular_otevren', { zdroj: 'listky' });
+    track('formular_otevren', 'listky');
     form.elements.email.focus();
   });
 
@@ -725,7 +743,7 @@ html{scroll-behavior:auto}
   });
 
   function openSheet(zdroj, el) {
-    track('cta', { zdroj: zdroj });
+    track('cta', zdroj);
     if (done) return;
     if (typeof dialog.showModal !== 'function') {
       doc.getElementById('tahak').scrollIntoView();
@@ -738,7 +756,7 @@ html{scroll-behavior:auto}
     dialog.scrollTop = 0;
     fitSheet();
     updateBar();
-    track('formular_otevren', { zdroj: zdroj });
+    track('formular_otevren', zdroj);
     // Na dotykovém displeji fokus na nadpis: klávesnice nevyskočí během animace panelu. S myší rovnou do pole.
     (coarse ? dialog.querySelector('h2') || form.elements.email : form.elements.email).focus({ preventScroll: true });
   }
@@ -777,7 +795,7 @@ html{scroll-behavior:auto}
       var t = thanksTpl.content.firstElementChild.cloneNode(true);
       var kde = dialog.contains(host) ? 'panel' : host.id === 'vyber-cta' ? 'listky' : 'sekce';
       if (kde === 'panel') t.querySelector('h3').id = 'panel-nadpis'; // dialog má aria-labelledby
-      t.querySelector('[data-tahak]').addEventListener('click', function () { track('tahak_otevren', { zdroj: kde }); });
+      t.querySelector('[data-tahak]').addEventListener('click', function () { track('tahak_otevren', kde); });
       t.querySelector('[data-sdilej]').addEventListener('click', function () { share(t.querySelector('[data-sdileni-stav]')); });
       host.replaceChildren(t);
       if (host === submittedHost) focusTarget = t;
@@ -791,9 +809,9 @@ html{scroll-behavior:auto}
   function share(status) {
     if (navigator.share) {
       navigator.share({ title: 'ETF dvojčata', text: 'Americká ETF ti broker v Česku často nenabídne. Tady jsou jejich evropská dvojčata.', url: SHARE_URL }).then(function () {
-        track('sdileni', { zpusob: 'nativni' });
+        track('sdileni', 'nativni');
       }, function (e) {
-        if (e && e.name === 'AbortError') return track('sdileni', { zpusob: 'zruseno' });
+        if (e && e.name === 'AbortError') return track('sdileni', 'zruseno');
         copyLink(status);
       });
       return;
@@ -803,7 +821,7 @@ html{scroll-behavior:auto}
   function copyLink(status) {
     function copied() {
       status.textContent = 'Odkaz je zkopírovaný. Vlož ho kamarádovi do zprávy.';
-      track('sdileni', { zpusob: 'kopie' });
+      track('sdileni', 'kopie');
     }
     function manual() {
       // bez schránky (např. stránka přes http v lokální síti): odkaz k ručnímu zkopírování
@@ -815,7 +833,7 @@ html{scroll-behavior:auto}
       status.textContent = 'Zkopíruj si odkaz:';
       status.after(input);
       input.select();
-      track('sdileni', { zpusob: 'rucne' });
+      track('sdileni', 'rucne');
     }
     if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(SHARE_URL).then(copied, manual);
     else manual();

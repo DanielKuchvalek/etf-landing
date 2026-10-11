@@ -21,12 +21,12 @@ public/        web – jediná složka, kterou Vercel servíruje
   tahak.pdf    lead magnet, generovaný (needitovat ručně)
   favicon.*, apple-touch-icon.png, og.png   ikony a obrázek pro sdílení, generuje scripts/obrazky.mjs
   ochrana-osobnich-udaju.html   návrh zásad (musí schválit právník)
-api/           serverless funkce (zpracování formuláře)
+api/           serverless funkce: lead.js (formulář), event.js (měření), keepalive.js (cron), každá soběstačná
 tahak/         zdroj PDF taháku (tahak.html), generuje scripts/pdf.mjs
 scripts/       testy, Lighthouse, snímky obrazovky, generování PDF (návod v scripts/README.md)
 docs/screenshots/  snímky obrazovky před a po úpravách
 data/          podklady k údajům o ETF: hodnota, zdroj (URL), datum
-supabase/      SQL schéma tabulek a RLS politiky
+supabase/      SQL: schema.sql (tabulky a RLS), funnel.sql (trychtýř podle verzí úvodu)
 reklamy/       obě verze reklamy (texty a vizuály)
 ai-log/        exporty konverzací z Claude Code (/export) a deník práce s AI
 README.md      dokumentace pro hodnotitele
@@ -34,6 +34,8 @@ texty.md       všechny texty stránky s odkazy na data, ze kterých vycházejí
 tahak.md       osnova PDF taháku a co pro něj chybí
 design.md      návrhy směru designu
 .env.example   názvy proměnných prostředí bez hodnot
+package.json   jen "type": "module" pro funkce v api/ (bez závislostí)
+vercel.json    výstupní složka public/, region fra1, denní cron
 ```
 
 `public/` nastav ve `vercel.json` explicitně jako výstupní složku, aby se omylem neservíroval celý kořen repa (`ai-log/`, `supabase/`, `CLAUDE.md`). Novou složku v kořeni nezakládej bez domluvy. Když se struktura změní, uprav tuhle sekci.
@@ -47,7 +49,7 @@ Už rozhodnuté, neotevírej znovu. Když narazíš na důvod rozhodnutí změni
 - **Tykáme.** Proč: cílovka jsou spíš mladší lidé z Instagramu a Facebooku, vykání by tam působilo strojeně.
 - **Kontakt = jen e-mail,** žádný telefon. Proč: zadání chce co nejméně polí a e-mail stačí k doručení toho, co slibujeme.
 - **Konverze = návštěva → odeslaný formulář.** Proč: oba konce trychtýře změříme vlastním měřením, bez dat z reklamního systému.
-- **Měření: vlastní anonymní eventy do Supabase, žádné GA4, pixel ani cookie lišta.** Stránka posílá eventy (příchod, hloubka scrollu, otočení lístku, zobrazení výzvy, otevření a odeslání formuláře) přes `/api/…`. ID návštěvy žije jen v paměti po dobu jednoho načtení stránky; nic se neukládá do prohlížeče (žádné cookies, `localStorage` ani `sessionStorage`). Trychtýř se počítá SQL dotazem. Proč: GA4 by potřebovalo souhlas a cookie lišta na mobilu zdržuje a ubírá konverze.
+- **Měření: vlastní anonymní eventy do Supabase, žádné GA4, pixel ani cookie lišta.** Stránka posílá eventy (příchod, hloubka scrollu, otočení lístku, zobrazení výzvy, otevření a odeslání formuláře, otevření taháku, sdílení) přes `/api/event`, kontakt přes `/api/lead`. ID návštěvy žije jen v paměti po dobu jednoho načtení stránky; nic se neukládá do prohlížeče (žádné cookies, `localStorage` ani `sessionStorage`). Trychtýř se počítá SQL dotazem. Proč: GA4 by potřebovalo souhlas a cookie lišta na mobilu zdržuje a ubírá konverze.
 - **ID návštěvy se nikdy nespojuje s e-mailem.** Neukládej ho do tabulky kontaktů a neposílej ho spolu s e-mailem. Proč: z anonymních eventů by se staly osobní údaje. Před ostrou kampaní posoudí měření právník (poznámka je v README).
 - **Koncept stránky: „dvojčata“.** Návštěvník klepne na americké ETF a uvidí jeho evropskou UCITS obdobu. Lead magnet je PDF tahák; o e-mail žádáme po prvním výsledku a tlačítkem pořád vidět dole. Detaily (cílovka, pořadí sekcí, proč) jsou v README, texty v `texty.md`, reklamy v `reklamy/`. Proč: stavíme na ověřeném faktu, který návštěvník jinde snadno nenajde.
 - **Název stránky: ETF dvojčata.** Design: směr B „Tahák v sešitě“ z `design.md`, čistě a důvěryhodně, nesmí působit dětsky (pravidla jsou v `design.md`).
@@ -89,7 +91,7 @@ Stránka mluví o penězích. Jedno vymyšlené číslo zničí důvěryhodnost 
 ### 3. Klíče a osobní údaje
 
 - URL a klíče k Supabase jsou jen v proměnných prostředí: na Vercelu v Environment Variables, lokálně v `.env.local` (je v `.gitignore`). Do repa patří jen `.env.example` s názvy proměnných bez hodnot.
-- Service role (secret) klíč obchází RLS. Používá se výhradně v `api/`: nikdy v `public/`, nikdy v odpovědi API, nikdy v logu.
+- Secret klíč (`sb_secret_…`, role service_role) obchází RLS. Používá se výhradně v `api/` (proměnná `SUPABASE_SECRET_KEY`, posílá se v hlavičce `apikey`): nikdy v `public/`, nikdy v odpovědi API, nikdy v logu. Starý JWT klíč `service_role` Supabase do konce roku 2026 ruší, proto ho nepoužíváme.
 - Prohlížeč se Supabase nemluví vůbec, data posílá jen na `/api/…`. Tabulka s kontakty má zapnuté RLS a žádné veřejné politiky.
 - Serverless funkce validuje vstup sama (nespoléhá na validaci ve formuláři) a má ochranu proti botům, aspoň honeypot pole.
 - Nikdy nevypisuj obsah `.env.local` ani hodnoty klíčů (`cat`, `echo`, logy). Výstup by skončil v exportu konverzace ve veřejném `ai-log/`.
