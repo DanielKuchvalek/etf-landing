@@ -110,3 +110,23 @@ Doplňuje exporty konverzací (`/export`), které nezachytí celý průběh prá
   - Testovací adresa na skutečné doméně (seznam.cz) mohla patřit skutečnému člověku. Při kontrole diffu před commitem ji AI nahradila adresou na vyhrazené doméně `example.com`.
   - Adresu `etf-dvojcata.vercel.app` AI chtěla použít pro `og:image`, ale kontrola ukázala, že ji už používá cizí projekt. Zvolila volnou `etf-dvojcata-clientelo` a zapsala to do návodu.
   - Příčinu 404 u PDF se nepodařilo zjistit. AI to neoznačila za vyřešené: zapsala, co vyloučila, a přidala diagnostiku do lokálního serveru.
+
+### 2026-10-11 – otočení lístku ve WebKitu, formulář nad lištou návrhů, bezpečnost a ochrana proti spamu
+
+- **Zadání pro AI:**
+  - nejdřív napsat příčinu nefunkčního otočení lístku (test člověka na iPhonu, Chrome na iOS), pak opravit a ověřit snímky v průběhu animace ve WebKitu,
+  - tlačítko formuláře nad klávesnici i s lištou návrhů e-mailů, odeslání modrou klávesou,
+  - vypsat dostupné skilly a ty na bezpečnost a review použít; projít celý projekt, přidat ochranu proti spamu (rychlost odeslání, limity s hashem IP, jednorázové domény, MX), bezpečnostní hlavičky, testy na všechno,
+  - noindex a poznámka „Ukázkové řešení“ v patičce, doména etf-dvojcata-demo, ověřit v dokumentaci Supabase, co je aktivita proti uspání.
+- **Kontrola výstupu:**
+  - příčina otočení změřená ve WebKitu (úhel z matice transformace po 100 ms), nový test kontroluje každý snímek průběhu a na staré verzi by selhal (zrcadlový nebo prázdný lístek),
+  - nová kontrola „pole a tlačítko nad lištou návrhů“ ověřená na staré verzi formuláře (selhala) i na nové (prošla),
+  - skilly `security-review` (s podúkolem podle jeho postupu) a `code-review`; jejich nálezy AI ověřila v kódu, falešný poplach (typografie) zapsala jako falešný,
+  - SQL testované na skutečném Postgresu (PGlite) včetně výchozích práv Supabase; lokální server používá stejnou databázi a stejné hlavičky jako Vercel,
+  - CSP ověřená tím, že podstrčený skript se nespustí, a Lighthouse bez chyb v konzoli.
+- **Kde se AI spletla a jak se na to přišlo:**
+  - Otočení lístku rozbila „pojistka“, kterou AI přidala v předchozím kroku kvůli headless WebKitu: přepínala strany podle času, ne podle úhlu. Test kontroloval jen konečný stav, takže chybu našel až člověk na telefonu.
+  - AI tvrdila v README, že zaokrouhlení času na hodiny zabrání spárovat kontakt s návštěvou. Review ukázal, že to nepravda (pořadová čísla, pořadí zápisu). Opraveno na náhodná UUID a tvrzení přepsané na pravdivé, včetně toho, co vyřešit nejde.
+  - AI ve svém předchozím počtu uvedla 45 kontrol databáze, skutečně jich je 44. Přišlo se na to při kontrole výstupu před commitem.
+  - Klepnutí v testech míjela tlačítka, protože fokus stránku ještě plynule posouval. Šlo o chybu testu, ne stránky; test teď čeká na doběhnutí posunu.
+  - Review hlásil chybějící nezlomitelné mezery v textech z JS. Kontrola znaků ukázala, že tam jsou (jako znak, ne `&nbsp;`), takže falešný poplach.

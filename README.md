@@ -194,7 +194,7 @@ _TODO: tři hypotézy seřazené podle očekávaného dopadu. U každé změna, 
 
 _TODO: stack a proč (čisté HTML/CSS/JS bez build kroku, Vercel, Supabase), zpracování formuláře, zabezpečení klíčů, rychlost načtení._
 
-- **Celá stránka je jeden soubor `public/index.html`** s inline CSS a JS a systémovým písmem. Bez externích skriptů a písem: 58,7 kB, po gzipu 16,9 kB, z toho JS 16,7 kB (po gzipu 6,1 kB). Jediný obrázek je náhled taháku (WebP, 24 kB), který se načte až u formuláře. Lighthouse (mobil, 11. 10. 2026, lokální server bez komprese): 100 ve všech čtyřech kategoriích (výkon, přístupnost, osvědčené postupy, SEO) u všech tří verzí úvodu, LCP 1,2 s, CLS 0, TBT 0 ms, celkem 82 KiB.
+- **Celá stránka je jeden soubor `public/index.html`** s inline CSS a JS a systémovým písmem. Bez externích skriptů a písem: 62,7 kB, po gzipu 18,5 kB, z toho JS 20,6 kB (po gzipu 7,6 kB). Jediný obrázek je náhled taháku (WebP, 24 kB), který se načte až u formuláře. Lighthouse (mobil, 11. 10. 2026, lokální server bez komprese, s CSP a ostatními hlavičkami z `vercel.json`): výkon, přístupnost a osvědčené postupy 100 u všech tří verzí úvodu, LCP 1,2 s, CLS 0, TBT 0 ms, celkem 88 KiB. SEO 66, protože stránka má záměrně `noindex` (jediný neúspěšný audit je „stránka je blokovaná pro indexování“).
 - **„Ručně kreslené“ prvky bez písma navíc.** Fix, šipky, kroužky a fajfky jsou malá inline SVG. Rukou psané písmo by přidalo desítky kB a probliknutí textu. Lístky se otáčejí bez 3D kontextu a bez `backface-visibility`: JS (Web Animations API, bez knihovny) otočí jednu rovinu s perspektivou o 90°, když je lístek z boku, vymění strany a dotočí. WebKit to kreslí stejně s grafickým čipem i bez něj. Při `prefers-reduced-motion` se jen vymění strany.
 - **Ikony a obrázek pro sdílení generuje skript** ([scripts/obrazky.mjs](scripts/obrazky.mjs)) ve stylu stránky a s čísly z `data/etf.json`: favicon (SVG a ICO), ikona pro iOS a `og.png` 1200×630 pro náhled odkazu na Facebooku a v Messengeru. Stránka si je nenačítá, takže nezdržují.
 - **Jen světlé barvy** (`color-scheme: only light`). Tmavý režim iOS ani automatické ztmavení v Chromu stránku nepřebarví, „sešit“ zůstane papírový.
@@ -277,6 +277,13 @@ Varianty úvodu po: [?v=dvojce](docs/screenshots/po-1b-uvod-dvojce.png), [?v=zac
 - V logu serveru bylo `GET /tahak.pdf` s 404 hned po úspěšném HEAD. Zopakovat se to nepodařilo a přegenerováním PDF to nebylo (PDF se naposledy zapsalo o 22 minut dřív). Generování teď zapisuje přes dočasný soubor a lokální server u každé 404 vypíše, kde soubor hledal.
 - Safari PDF místo stažení otevřelo v prohlížeči, takže poděkování „tahák se ti stahuje“ neplatilo. Teď je tam tlačítko „Otevřít tahák“.
 - Poděkování bylo prázdné, zásady měly moc žlutých TODO, chyběla favicona.
+
+**Třetí test na skutečném iPhonu, zase člověk** (Chrome na iOS, tedy WebKit, 11. 10. 2026, s videem). Oprava panelu pomohla, ale našly se dvě chyby, které simulace nezachytila:
+
+- **Lístek se neotáčel, jen blikl:** během animace zmizel (zůstala páska) a rub nebylo vidět. Příčinu zavedla AI v předchozí opravě: viditelnost líce a rubu přepínala v půlce *času* (220 ms), ale lístek byl kvůli křivce animace z boku už po ~50 ms. Mezitím byl otočený zády se skrytým rubem a GPU v iPhonu odvrácený líc nekreslí. Původní test kontroloval jen konečný stav, ne průběh. Teď se otáčí jedna rovina bez 3D kontextu, strany se vymění přesně ve chvíli, kdy je lístek z boku, a test ve WebKitu kontroluje snímky po 100 ms:
+
+  <img src="docs/screenshots/webkit-otoceni-listku.png" width="640" alt="Průběh otočení lístku VTI po 100 ms: líc se zužuje, ve 224 ms je lístek z boku, pak se rozšiřuje rub s dvojčetem SXR4">
+- **Tlačítko pod klávesnicí:** nad klávesnici vyskočila lišta s návrhy e-mailů, zakryla souhlas a tlačítko „Získat tahák“ skončilo pod klávesnicí. Tuhle lištu simulace nezachytila. Tlačítko je teď hned pod polem, souhlas pod ním a formulář nechává rezervu 50 px.
 
 AI navíc při kontrole na 320 px našla, že zadní strana lístku se třemi brokery přetékala přes další řadu, a že headless WebKit nerespektuje `backface-visibility` (rub prosvítal). Obojí je opravené a hlídané testem.
 
