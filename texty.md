@@ -193,7 +193,7 @@ U „Kde ho najdeš“ jmenujeme všechny brokery, u kterých je fond ve veřejn
 - **H2:** Proč ti broker americká ETF často nenabídne
 - **Text:** Fondy, které se v EU prodávají drobným investorům, potřebují dokument s klíčovými informacemi (KID). Americké fondy jako VOO ho nevydávají, a tak je brokeři často nenabízejí, nebo jen jako CFD. To je derivát, se kterým fond samotný nevlastníš. Evropská dvojčata KID mají, takže je koupíš normálně.
   `[r: PRIIPs]` (čl. 5 odst. 1 a čl. 13 odst. 1 nařízení PRIIPs; Lynx; XTB nabízí americké originály kromě VOO jen jako CFD: `[d: * › original_u_xtb_cz]`; KID pro VOO na serveru Vanguardu není)
-  - „Často“, ne „vždy“: XTB má VOO.US jako stránku ETF a ČNB připouští execution-only bez KID.
+  - „Často“, ne „vždy“: ČNB připouští execution-only bez KID a profesionální klient americké ETF koupit může. (Že český klient XTB VOO v aplikaci nenajde, je ověřené 12. 10. 2026, `data/README.md`.)
 
 ---
 

@@ -75,11 +75,11 @@
         "hodnota_ve_zdroji": "Quarterly"
       },
       "original_u_xtb_cz": {
-        "hodnota": "stránka jako ETF (ne CFD)",
+        "hodnota": "v aplikaci se nenajde (veřejná stránka ETF existuje)",
         "zdroj": "https://www.xtb.com/cz/etf/voo-us",
-        "k_datu": null,
-        "overeno": "2026-10-10",
-        "poznamka": "Česká stránka XTB obsahuje „Investujte do ETF VOO.US“ s ISIN fondu. Jestli XTB nákup povolí neprofesionálnímu (retailovému) klientovi, se z veřejné stránky ověřit nepodařilo – TODO."
+        "k_datu": "2026-10-12",
+        "overeno": "2026-10-12",
+        "poznamka": "Ověřeno ručně v aplikaci XTB (český účet) 12. 10. 2026: hledání „VOO.US“ vrací „Nenalezeny žádné výsledky“, hledání „VOO“ jen VOOL.DE (Amundi S&P 500 VIX Futures Enhanced Roll UCITS, jiný fond). Snímky: docs/screenshots/xtb-voo-us.png a docs/screenshots/xtb-voo.png. Veřejná stránka xtb.com/cz/etf/voo-us je zjevně generovaná automaticky pro všechny nástroje (prázdné poplatky i obchodní hodiny), nákup nedokládá."
       },
       "original_u_trading212": {
         "hodnota": "vyloučeno pro evropské entity",

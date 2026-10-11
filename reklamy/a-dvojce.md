@@ -43,4 +43,4 @@ Hotové obrázky: [a-dvojce-feed.png](a-dvojce-feed.png) (1080 × 1350) a [a-dvo
 
 ## Proč háček nic absolutního netvrdí
 
-XTB má VOO.US na webu jako stránku ETF, ne CFD (`[d: VOO › original_u_xtb_cz]`), a ČNB připouští execution-only bez KID. Proto netvrdíme, že VOO koupit nejde. Říkáme jen, že ho broker často nenabídne, a to platí i v případě, že ho XTB prodává.
+Premisa je ověřená: v aplikaci XTB (český účet, 12. 10. 2026) hledání „VOO.US“ nic nenajde a „VOO“ najde jen jiný fond (VOOL.DE), viz [snímky](../docs/screenshots/xtb-voo-us.png) a [druhý](../docs/screenshots/xtb-voo.png) (`[d: VOO › original_u_xtb_cz]`). Veřejná stránka xtb.com/cz/etf/voo-us je generovaná automaticky a nákup nedokládá. Přesto netvrdíme, že VOO koupit nejde: ČNB připouští execution-only bez KID a profesionální klient ho koupit může. Říkáme jen, že ho broker často nenabídne.

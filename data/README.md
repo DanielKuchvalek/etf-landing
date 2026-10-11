@@ -58,6 +58,8 @@ Všech 7 UCITS fondů má na českém webu XTB stránku „Investujte do ETF …
 
 **Další doklad k PRIIPs:**
 
+- **VOO u XTB, ověřeno v aplikaci 12. 10. 2026 (český účet):** hledání „VOO.US“ vrací „Nenalezeny žádné výsledky“ a hledání „VOO“ jen VOOL.DE (Amundi S&P 500 VIX Futures Enhanced Roll UCITS), což je jiný fond. Americké VOO tedy český klient XTB v aplikaci nenajde. Veřejná stránka [xtb.com/cz/etf/voo-us](https://www.xtb.com/cz/etf/voo-us) ho sice ukazuje, ale je zjevně generovaná automaticky pro všechny nástroje (prázdné poplatky i obchodní hodiny) a nákup nedokládá. Snímky: [vyhledání „VOO.US“](../docs/screenshots/xtb-voo-us.png), [vyhledání „VOO“](../docs/screenshots/xtb-voo.png). V `etf.json` pole `original_u_xtb_cz` u VOO.
+
 - V seznamu Trading 212 je 1 151 ETF s americkým ISINem a 1 137 z nich je vyloučeno pro evropské entity. Mezi vyloučenými jsou VOO, VT, VGT, SDY a AGG. VTI a VWO vyloučené nejsou; jestli je jde jako retailový klient koupit, z veřejných dat nepoznáme.
 - Degiro v [nápovědě k PRIIPs](https://www.degiro.cz/helpdesk/trading-possibilities/impact-new-priips-regulation) píše, že fond musí být schválený k nabízení v zemi klienta a mít KID v jeho jazyce.
 
@@ -70,7 +72,7 @@ Všech 7 UCITS fondů má na českém webu XTB stránku „Investujte do ETF …
 
 ## Jak se data získávala
 
-- Jen weby emitentů (Vanguard USA a UK, iShares USA a UK, State Street) a produktové stránky XTB. Žádné agregátory ani blogy.
+- Jen weby emitentů (Vanguard USA a UK, iShares USA a UK, State Street) a produktové stránky XTB. Žádné agregátory ani blogy. Výjimka: dostupnost VOO u XTB ověřil autor ručně v aplikaci (12. 10. 2026, snímky v `docs/screenshots/`).
 - U Vanguardu USA jsou zdrojem JSON endpointy `investor.vanguard.com/vmf/api/…`, ze kterých se plní produktová stránka. Burza je z textu stránky („listed for trading on NYSE Arca“).
 - Hodnoty vytáhl skript, ručně se nic nepřepisovalo.
 - Kontroly:
@@ -81,7 +83,7 @@ Všech 7 UCITS fondů má na českém webu XTB stránku „Investujte do ETF …
 ## Co se ověřit nepodařilo (TODO)
 
 - **Dostupnost u Fio** u všech 7 dvojčat a u Degira u VUAA, VFEA, SPYD a IUAA (viz tabulka výše). IBKR, Lynx a Portu se neověřovaly. V `etf.json` je `null`.
-- **VOO u XTB:** XTB má VOO.US jako stránku ETF (ne CFD) s ISIN fondu. Z veřejné stránky nejde zjistit, jestli nákup povolí retailovému klientovi. Je to v rozporu s ostatními americkými ETF, které XTB nabízí jen jako CFD.
+- ~~**VOO u XTB**~~ ověřeno 12. 10. 2026 v aplikaci XTB: český klient VOO nenajde (viz „Další doklad k PRIIPs“ výše).
 - **Fio:** jestli u Fio jde americké ETF jako retailový klient koupit. Seznam ETF na webu Fio je zastaralý (obsahuje dávno zrušené fondy) a nic nedokazuje.
 - **Přesná UCITS obdoba VTI** (celý americký trh včetně malých firem) se nenašla. iShares MSCI USA je nejbližší náhrada.
 - **SDY u XTB:** stránka pro SDY.US se nenašla.

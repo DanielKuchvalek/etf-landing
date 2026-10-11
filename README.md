@@ -95,6 +95,8 @@ Obě pro Meta (Facebook a Instagram) na mobilu: statický obrázek 4 : 5 do feed
 | Kam vede | [etf-dvojcata-demo.vercel.app/?v=dvojce](https://etf-dvojcata-demo.vercel.app/?v=dvojce) | [etf-dvojcata-demo.vercel.app/?v=zacatek](https://etf-dvojcata-demo.vercel.app/?v=zacatek) |
 | Co od ní čekáme | Lidé přijdou s konkrétním problémem a hned otočí VOO. Čekám vyšší podíl otočení i odeslání než u B, protože slib reklamy vyřeší první lístek. | Lidé si spíš projdou víc lístků, než se rozhodnou. Čekám nižší konverzi než u A (nehledají konkrétní fond), ale možná víc otočených lístků na návštěvu. |
 
+**Premisa reklamy A je ověřená:** v aplikaci XTB (český účet, 12. 10. 2026) hledání „VOO.US“ nic nenajde a „VOO“ najde jen jiný fond VOOL.DE ([snímek „VOO.US“](docs/screenshots/xtb-voo-us.png), [snímek „VOO“](docs/screenshots/xtb-voo.png), podrobnosti v [data/README.md](data/README.md)).
+
 **Jak navazuje první obrazovka:** nadpis a podnadpis se mění podle `?v=` (malý inline skript hned za nadpisem, layout se neposune), zbytek stránky je pro obě verze stejný. Rozdíl v konverzi tak jde připsat reklamě a úvodu. Verze se ukládá k událostem i ke kontaktu, takže trychtýř je zvlášť pro každou. Obě reklamy mají běžet ve stejné kampani se stejným publikem a rozpočtem. Očekávání v tabulce jsou moje hypotézy, ne čísla ze zdroje. Rozhodne trychtýř podle verze úvodu (`analytika.trychtyr`): která verze přivede víc odeslaných formulářů na návštěvu a jak se liší otočení lístků. Odkazy v reklamách mají i `utm_source=meta&utm_medium=paid_social&utm_campaign=etf-dvojcata&utm_content=a-dvojce` (nebo `b-zacatek`). Zdroj, kampaň a obsah se ukládají k příchodu, takže jdou porovnat i reklamy uvnitř jedné verze úvodu.
 
 ## Očekávaná konverze
