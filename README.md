@@ -62,6 +62,8 @@ Spodní lišta: „Tahák zdarma: ISINy a postup nákupu“, reklamy: „Tahák 
 
 **Po odeslání:** poděkování s tlačítkem „Otevřít tahák“, takže nikdo nečeká na e-mail. Pod ním je věta s prvním krokem a „Poslat odkaz kamarádovi“ (nativní sdílení telefonu, jinak zkopírování odkazu). Sdílení měříme a sdílený odkaz má `?ref=sdileni`. PDF se samo nestahuje: Safari na iPhonu ho při testu místo stažení otevřel a návštěvník by odešel dřív, než uvidí sdílení.
 
+**PDF je na veřejné adrese** (`/tahak.pdf`), takže se dá stáhnout i bez e-mailu. V demu je to záměr: jednoduchost (žádné přihlášení, žádná e-mailová služba) a tahák má hodnotu hlavně jako důvod k akci ve chvíli zájmu, ne jako tajemství. Kdo adresu zná, e-mail obejde, ale z reklamy na ni nikdo nepřijde. V ostré verzi by se PDF vydávalo přes jednorázový podepsaný odkaz, který vrátí `/api/lead` po úspěšném uložení kontaktu, nebo e-mailem po potvrzení double opt-inu, a soubor by na veřejné adrese nebyl.
+
 Texty všech částí jsou v [texty.md](texty.md).
 
 ## Pořadí sekcí a zdůvodnění
