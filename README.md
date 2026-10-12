@@ -26,22 +26,29 @@ Snímky z iPhonu 13 (390 × 844), poděkování z lokálního serveru. **Trycht�
 
 ## Lead magnet a moment žádosti o kontakt
 
-- **Hodnota před formulářem, zdarma:** lístky se 7 ETF na první obrazovce, klepnutím se otočí na evropské dvojče, brokery v nabídce a poplatek v korunách.
-- **Tahák (PDF, 8 stran A5):** jen to, co stránka nedává: ISINy všech dvojčat a postup nákupu u XTB a Trading 212 krok za krokem se zdrojem u každého kroku. Na první obrazovce je řádek „Tahák zdarma v PDF: ISINy a postup nákupu krok za krokem“, aby navázal na nabídku z reklam.
-- **Kdy žádáme:** hned po prvním otočení lístku (výzva pod řadou otočeného lístku, formulář se rozbalí na místě), spodní lištou, když lístky zmizí z obrazovky, a v sekci Tahák. Nikdy odkazem dolů.
-- **Formulář:** jen e-mail a souhlas, tlačítko hned pod polem kvůli klávesnici na iPhonu. Po odeslání „Otevřít tahák“ a sdílení.
+**Co návštěvník dostane zdarma a bez e-mailu:** lístky se 7 známými ETF z NYSE na první obrazovce. Klepnutím se lístek otočí a ukáže evropské dvojče, u kterých brokerů je ve veřejné nabídce a kolik stojí ročně z 10 000 Kč. Pod lístky jsou podrobnosti (index, poplatek proti originálu, dividendy) a přehled všech párů.
 
-Výběr textu výzvy a proč je PDF na veřejné adrese: [docs/lead-magnet.md](docs/lead-magnet.md); proč jen e-mail: [docs/obchodni-pohled.md](docs/obchodni-pohled.md).
+**Co dostane za e-mail:** PDF „Tahák: 7 ETF z NYSE a jejich evropská dvojčata z nabídky brokerů v Česku“ (8 stran A5). Slibuje jen to, co stránka nedává: ISINy všech dvojčat (zkopíruje je do aplikace brokera), poplatky originálů a dvojčat vedle sebe a postup nákupu u XTB a Trading 212 krok za krokem se zdrojem u každého kroku. Tahák se otevře hned po odeslání, nikdo nečeká na e-mail.
+
+**Kdy žádáme o kontakt:**
+
+1. **Hned po prvním otočení lístku**, kdy je zájem nejvyšší: výzva „Chci tahák s postupem nákupu“ se objeví hned pod řadou otočeného lístku a formulář se rozbalí na místě. Na první obrazovce už předtím stojí „Tahák zdarma v PDF: ISINy a postup nákupu krok za krokem“, aby stránka navázala na nabídku z reklamy.
+2. **Spodní lištou**, která se ukáže, když lístky zmizí z obrazovky. Otevře formulář jako panel tam, kde návštěvník je.
+3. **Formulářem v sekci Tahák** pro ty, kdo dočtou až dolů.
+
+Formulář má jen e-mail a souhlas a tlačítko hned pod polem, aby ho na iPhonu nezakryla klávesnice. Po odeslání: „Otevřít tahák“, jedna věta s prvním krokem a „Poslat odkaz kamarádovi“. Výběr textu výzvy a proč je PDF na veřejné adrese: [docs/lead-magnet.md](docs/lead-magnet.md); proč jen e-mail: [docs/obchodni-pohled.md](docs/obchodni-pohled.md).
 
 ## Pořadí sekcí a zdůvodnění
 
-1. **Úvod navazující na reklamu a rovnou lístky.** Pár sekund pozornosti: zopakovat slib reklamy a nabídnout akci bez scrollování.
-2. **Výsledek a výzva k taháku** hned pod otočeným lístkem, kdy je zájem nejvyšší.
-3. **Přehled všech 7 párů v kartách** pro ty, kdo chtějí celek.
-4. **Proč ti broker americká ETF často nenabídne** (2–3 věty). Až tady: kdo přišel z reklamy A, důvod zná a nechce ho číst před výsledkem.
-5. **Důvěra: zdroje s datem a „Není to investiční doporučení“** těsně před formulářem (krátká verze je i hned pod lístky).
-6. **Formulář** pro ty, kdo dočetli. Výzvy výš sem nevedou, otevírají formulář na místě (návrh AI: méně kroků, žádné skákání stránkou).
-7. **Krátké FAQ** proti poslední obavě, hlavně ze spamu.
+| # | Sekce | Proč právě tady |
+|---|---|---|
+| 1 | Úvod navazující na reklamu (mění se podle `?v=`), řádek o taháku a rovnou lístky s ETF | Návštěvník z reklamy dává stránce pár sekund: první obrazovka musí zopakovat slib reklamy a nabídnout akci bez scrollování. |
+| 2 | Výsledek po otočení a výzva k taháku pod řadou otočeného lístku | Hodnota zdarma hned, výzva ve chvíli největšího zájmu, formulář na místě. |
+| 3 | Přehled všech 7 párů v kartách | Pro ty, kdo chtějí vidět celek, než se rozhodnou. |
+| 4 | Proč ti broker americká ETF často nenabídne (2–3 věty) | Až tady: kdo přišel z reklamy A, důvod zná a nechce ho číst před výsledkem. |
+| 5 | Důvěra: zdroje s datem a „Není to investiční doporučení“ | Těsně před formulářem odpoví na „můžu tomu věřit?“. Krátká verze je i hned pod lístky. |
+| 6 | Formulář (e-mail a souhlas) | Pro ty, kdo dočetli. Výzvy výš sem nevedou, otevírají formulář na místě: skok přes tři sekce stojí konverze (návrh AI). |
+| 7 | Krátké FAQ | Odstraní poslední obavy u formuláře, hlavně strach ze spamu. |
 
 ## Dvě verze reklamy
 
@@ -58,7 +65,7 @@ Meta (Facebook a Instagram), mobil, statický obrázek 4 : 5 a 9 : 16, generovan
 
 ## Očekávaná konverze
 
-**Odhad 2–13 %, nejspíš kolem 6 %** (návštěva → odeslaný formulář). Procenta jsou **můj odhad**, po prvním týdnu kampaně je nahradí `analytika.trychtyr_od(datum spuštění)`.
+**Odhad 2–13 %, nejspíš kolem 6 %** (návštěva = načtená stránka → odeslaný formulář, stejně jako v trychtýři). **Všechna procenta jsou můj odhad**, ne naměřená data; po prvním týdnu kampaně je nahradí `select * from analytika.trychtyr_od('datum spuštění');`.
 
 | Krok trychtýře | Pesimisticky | Středně | Optimisticky | Z čeho odhad vychází |
 |---|---|---|---|---|
@@ -68,30 +75,63 @@ Meta (Facebook a Instagram), mobil, statický obrázek 4 : 5 a 9 : 16, generovan
 | 4. odeslání (z otevřených formulářů) | 40 % | 50 % | 60 % | Jedno pole a zaškrtnutí, tahák hned bez čekání na e-mail. Část lidí odradí, že dávají e-mail a souhlas s e-maily. |
 | **Návštěva → odeslání** | **2,0 %** | **6,0 %** | **13,2 %** | součin kroků 2–4 |
 
-Středně na 1 000 návštěv: 1 000 × 40 % = 400 otočí lístek → × 30 % = 120 otevře formulář → × 50 % = 60 odešle (6 %).
+**Výpočet po krocích na 1 000 návštěv:**
+- středně: 1 000 × 40 % = 400 otočí lístek → 400 × 30 % = 120 otevře formulář → 120 × 50 % = 60 odešle, tedy **6,0 %**,
+- pesimisticky: 1 000 × 25 % = 250 → 250 × 20 % = 50 → 50 × 40 % = 20, tedy **2,0 %**,
+- optimisticky: 1 000 × 55 % = 550 → 550 × 40 % = 220 → 220 × 60 % = 132, tedy **13,2 %**.
 
-**Hrubá kontrola proti zdroji:** [Unbounce](https://unbounce.com/landing-pages/whats-a-good-conversion-rate/) (2024, 41 000 landing pages) uvádí medián 6,6 % napříč obory, 8,3 % ve finančních službách a 3,9 % v investování; [starší stránka Unbounce](https://unbounce.com/industry/finance/) 3,8 % pro finance. Zdroje se rozcházejí a český trh v nich není.
+Zjednodušení: formulář jde otevřít i bez otočení lístku (spodní lišta, sekce Tahák), v odhadu je to součást kroku 3.
 
-Cena za kontakt (orientačně ~196 Kč při 10 Kč za klik), k čemu je kontakt a proč jen e-mail: [docs/obchodni-pohled.md](docs/obchodni-pohled.md).
+**Hrubá kontrola proti zdroji (ne odhad):** [Unbounce](https://unbounce.com/landing-pages/whats-a-good-conversion-rate/) (Conversion Benchmark Report 2024, 41 000 landing pages) uvádí medián 6,6 % napříč obory, 8,3 % ve finančních službách a 3,9 % v investování; [starší stránka Unbounce](https://unbounce.com/industry/finance/) 3,8 % pro finance a pojištění. Zdroje se rozcházejí, zahrnují všechny druhy konverzí a český trh v nich není. Střední odhad 6 % leží mezi investováním a finančními službami.
+
+**Co konverzi nejvíc ovlivní:** jestli úvod navazuje na slib reklamy, jestli lidé poznají, že se na lístek dá klepnout (krok 2), a jestli je tahák lákavý i pro toho, kdo dvojče už viděl (krok 3, na něj míří první hypotéza). Cena za kontakt (~196 Kč při 10 Kč za klik) a k čemu je kontakt: [docs/obchodni-pohled.md](docs/obchodni-pohled.md).
 
 ## Hypotézy na A/B test
 
-Seřazené podle očekávaného dopadu; minimum pro rozdíl při výchozí konverzi 6 %, α 0,05 a síle 80 % (výpočet a zdůvodnění v [docs/ab-hypotezy.md](docs/ab-hypotezy.md)).
+Seřazené podle očekávaného dopadu na konverzi návštěva → odeslání. Očekávaná zlepšení jsou můj odhad.
 
-| # | Hypotéza a změna | Metrika | Minimum návštěv | Proč na tomhle místě |
-|---|---|---|---|---|
-| 1 | Formulář rovnou pod otočeným lístkem místo tlačítka, které ho rozbalí: odpadne jedno klepnutí ve chvíli zájmu. | návštěva → odeslání | ~8 800 (+25 %) | největší odhadovaný úbytek v procentech (otočení → formulář), mění jeden prvek |
-| 2 | Poslední tři lístky (SDY, VGT, AGG) zamčené za e-mail. | návštěva → odeslání, odchody po zámku | ~13 400 (+20 %) | možný velký dopad, ale riziko pro důvěru a slib reklamy B, proto jen pro reklamu A a po první |
-| 3 | Lístek VOO se po načtení otočí sám. | návštěva → odeslání, otočení | ~23 400 (+15 %) | míří na krok 2, na odeslání působí jen nepřímo |
+| # | Hypotéza | Co měníme | Metrika | Minimum návštěv | Proč na tomhle místě |
+|---|---|---|---|---|---|
+| 1 | Když po prvním otočení uvidí návštěvník rovnou pole na e-mail, odpadne jedno klepnutí ve chvíli největšího zájmu a víc lidí formulář odešle. | Pod lístky rovnou formulář (pole, „Získat tahák“, souhlas) místo tlačítka, které ho teprve rozbalí. | návštěva → odeslání; kontrolní: otočení lístků | 4 388 na verzi, **asi 8 800** (z 6 na 7,5 %, +25 %) | Míří na krok s největším odhadovaným úbytkem v procentech (formulář neotevře 70 % z těch, kdo otočí lístek) a mění jeden prvek. |
+| 2 | Když se dvojčata SDY, VGT a AGG ukážou až po e-mailu, část lidí, kteří chtějí celý přehled, e-mail zadá. | Tři poslední lístky se zámkem, klepnutí otevře formulář; VOO a ostatní zůstanou volně. Jen pro návštěvy z reklamy A. | návštěva → odeslání; kontrolní: odchody po klepnutí na zámek | 6 717 na verzi, **asi 13 400** (z 6 na 7,2 %, +20 %) | Může mít velký dopad, ale jde proti zásadě „hodnota před formulářem“ a slibu reklamy B (všech 7 fondů), proto až po první a jen pro reklamu A. |
+| 3 | Část lidí nepozná, že se na lístek dá klepnout. Když se VOO otočí sám, hodnota je vidět bez akce a víc lidí dojde k výzvě. | Lístek VOO se chvíli po načtení sám otočí. | návštěva → odeslání; vedlejší: otočení | 11 690 na verzi, **asi 23 400** (z 6 na 6,9 %, +15 %) | Míří na krok 2, kde v absolutních číslech odejde nejvíc lidí, ale na odeslání působí jen nepřímo. |
 
-Dřívější hypotéza „výzva slibuje postup nákupu místo všech 7 dvojčat“ už není test, ale oprava: stránka dvojčata ukáže zdarma.
+**Výpočet minima:** n na verzi = (z₁₋α/₂ + z₁₋β)² × [p₁(1 − p₁) + p₂(1 − p₂)] ÷ (p₂ − p₁)², α = 0,05 oboustranně, síla 80 %, (1,96 + 0,84)² ≈ 7,85. Příklad pro první: 7,85 × (0,06 × 0,94 + 0,075 × 0,925) ÷ 0,015² ≈ 4 388. Při skutečné výchozí konverzi 2 % vychází zhruba třikrát víc, výpočet je potřeba zopakovat s naměřenou konverzí. Při 500 návštěvách denně (předpoklad) by testy trvaly asi 18, 27 a 47 dní. Dřívější hypotéza „výzva slibuje postup nákupu místo všech 7 dvojčat“ už není test, ale oprava: stránka dvojčata ukáže zdarma. Podrobnosti: [docs/ab-hypotezy.md](docs/ab-hypotezy.md).
 
 ## Jak jsem pracoval s AI
 
-- **Plánovací chat na claude.ai** na přípravu zadání, **Claude Code** na výzkum dat, stránku, PDF, funkce, SQL, testy a dokumentaci. Pravidla pro každou session jsou v [CLAUDE.md](CLAUDE.md), exporty konverzací v [ai-log/](ai-log/README.md), deník kontrol v [ai-log/denik.md](ai-log/denik.md).
-- **Kontrola výstupů:** automatické testy (funkce, SQL na Postgresu, Chrome, WebKit se simulovanou klávesnicí, data proti zdrojům), tři testy na skutečném iPhonu a čtení diffu před každým commitem.
-- **Nezávislá kontrola:** hotové řešení zkontrolovaly Gemini, ChatGPT a nový chat Claude jen se zadáním a odkazy. Gemini si kontrolu z velké části vymyslel (neexistující soubory, páry QQQ a SOXX), jeho report jsem zahodil. Další dvě se shodly na výtkách, které jsou opravené.
-- **Kde AI chybovala (výběr):** absolutní tvrzení „Americké ti broker nenabídne“; „pojistka“ u lístku podle času místo úhlu (na iPhonu blikal, test hlídal jen konečný stav); kontrola skrytého pole v prohlížeči tiše zahazovala kontakty; nepravdivé tvrzení, že kontakt nejde spárovat s návštěvou; klávesnice a lišta návrhů na iPhonu, které simulace neukázala; Clientelo jako správce, slib „všech 7 dvojčat“ a „koupíš u“; tvrzení, že je oprava „všude“, i když PDF zůstalo. Celá tabulka s tím, jak se na chyby přišlo: [docs/prace-s-ai.md](docs/prace-s-ai.md).
+**Jak jsem agenta řídil:**
+
+- **Plánovací chat na claude.ai:** v něm jsem si připravoval a ladil zadání pro Claude Code. Do Claude Code šlo až hotové, očíslované zadání: co udělat, v jakém pořadí, jak to ověřit, co se nesmí stát, „commit po každém bodu“ a co napsat v reportu.
+- **Claude Code** dělal výzkum dat z primárních zdrojů, stránku, PDF, funkce, SQL, testy a dokumentaci. Pravidla pro každou session i pro subagenty jsou v [CLAUDE.md](CLAUDE.md):
+  - žádná vymyšlená data, u každého údaje zdroj, nebo TODO,
+  - klíče jen v proměnných prostředí,
+  - nic absolutního v textech, tykání bez rodu, česká typografie,
+  - malé commity, push jen na pokyn, nepřepisovat historii.
+- **U chyb vždy nejdřív příčina:** agent napsal, proč chyba vzniká, teprve pak opravoval a novou kontrolu ověřil na staré verzi, že selže (například otočení lístku změřené ve WebKitu po 100 ms).
+- **Subagenti:** skilly `security-review` (hledání zranitelností, každý nález ověřený zvlášť, falešné poplachy vyřazené) a `code-review`. Co dostaly za zadání a jak se kontroloval jejich výstup, je v [ai-log/denik.md](ai-log/denik.md).
+
+**Jak jsem výstupy kontroloval:**
+
+- **Automatické testy**, které při chybě skončí nenulovým kódem: funkce s podvrženou databází a DNS (132 kontrol), SQL na skutečném Postgresu (80), stránka v Chromu (134), WebKit s emulovanými iPhony a simulovanou klávesnicí (81), data proti zdrojům, čísla na stránce a v PDF proti datům, Lighthouse a kontrola živé stránky jen čtením ([docs/testovani.md](docs/testovani.md)).
+- **Na skutečném iPhonu**, třikrát (Safari a Chrome na iOS). Tam se našly chyby, které žádná simulace neukázala.
+- **Proti zadání** a **čtením**: texty, README a diff před každým commitem (klíče, skutečné e-maily).
+- **Nezávislá kontrola:** hotové řešení zkontrolovaly Gemini, ChatGPT a nový chat Claude jen se zadáním a odkazy. Gemini si kontrolu z velké části vymyslel (soubory `app.js` a `analytics.js`, které neexistují, páry QQQ a SOXX), jeho report jsem zahodil. ChatGPT a Claude se dvakrát shodly na výtkách, které jsou opravené.
+
+**Kde AI chybovala a jak se to odhalilo (nejdůležitější):**
+
+| Chyba AI | Jak se na ni přišlo | Oprava |
+|---|---|---|
+| Absolutní tvrzení „Americké ti broker nenabídne, evropské ano.“ v návrhu podnadpisu. | Člověk při čtení plánu. | „Americká ti broker často nenabídne, evropská ano.“ |
+| „Pojistka“ u otočení lístku přepínala strany podle času, ne podle úhlu, takže na iPhonu lístek jen blikl. Test kontroloval jen konečný stav. | Člověk na iPhonu (s videem), příčinu AI změřila ve WebKitu. | Strany se mění na konci první půlky animace, test kontroluje každý snímek. |
+| Kontrola skrytého pole v prohlížeči tiše zahazovala skutečné kontakty, když pole vyplnilo automatické vyplňování. | Skill `code-review`. | Rozhoduje jen server. |
+| README tvrdilo, že kontakt nejde spárovat s návštěvou. Nebyla to pravda (pořadová čísla, pořadí zápisu). | Review při bezpečnostní kontrole. | Náhodná UUID, odeslání bez ID návštěvy, čas na minuty, pravdivý popis zbytkového rizika. |
+| Panel odskočil pod klávesnici, po opravě tlačítko zakryla lišta s návrhy e-mailů. Simulace to neukázala. | Dva testy na skutečném iPhonu. | Panel podle `visualViewport`, tlačítko pod polem, rezerva 50 px, WebKit test lištu kreslí. |
+| Clientelo jako správce na živém demu, slib „všech 7 dvojčat“, která stránka dá zdarma, reklama B se schovanými dvojčaty a „koupíš u …“ bez ověření v účtu. Všechno prošlo testy, protože hlídaly shodu s daty, ne smysl. | Nezávislá kontrola (ChatGPT a Claude). | Správce je autor, slib „ISINy a postup nákupu“, B ukazuje dvojčata, „v nabídce“. |
+| AI tvrdila opravu „všude“, ale PDF vynechala („Koupíš u“ 7×, u SXR4 popis originálu). | Druhá nezávislá kontrola četla text PDF. | „V nabídce u“, popis dvojčete, kontrola textu PDF. |
+| Výzva po otočení byla pod všemi 7 lístky, na 390 × 844 mimo obrazovku. Test hlídal, že existuje, ne že je vidět. | Druhá nezávislá kontrola. | Výzva pod řadou otočeného lístku, test viditelnosti v Chromu i WebKitu. |
+
+Celá tabulka (limit z jedné IP, kontrola MX, Gemini a další) a průběh testů na iPhonu jsou v [docs/prace-s-ai.md](docs/prace-s-ai.md), každé kolo v [ai-log/denik.md](ai-log/denik.md).
 
 ## Nejasnosti v zadání a moje rozhodnutí
 
