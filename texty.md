@@ -78,7 +78,7 @@ Nadpis a podnadpis se mění podle parametru v URL (viz `reklamy/README.md`). Zb
 | AGG · dluhopisy | dvojče · stejný index | IUAA | ✓ XTB, Trading 212 | 25 Kč ročně z 10 000 Kč |
 
   `[d: * › typ]` `[d: * › ucits_obdoba.rozdil_oproti_originalu]` `[d: * › ucits_obdoba.burza.ticker]` `[d: * › ucits_obdoba.kde_koupit]` `[výpočet: TER × 100 = Kč z 10 000 Kč, d: * › ucits_obdoba.ter]`
-- **Po prvním otočení se pod lístky objeví výzva:**
+- **Po prvním otočení se hned pod řadou otočeného lístku objeví výzva** (ne až pod posledním lístkem, aby byla vidět bez posouvání):
   - tlačítko: Chci tahák s postupem nákupu. Formulář se rozbalí na místě.
   - pod ním: ISINy všech dvojčat a postup nákupu u XTB a Trading 212 krok za krokem. PDF hned a zdarma.
 - **Pod výběrem (u lístků, ne až v patičce):** Data od správců fondů a brokerů, ověřeno 10. 10. 2026 (zdroje). Není to investiční doporučení. „zdroje“ vede na sekci se zdroji.

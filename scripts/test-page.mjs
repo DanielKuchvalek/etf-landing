@@ -81,6 +81,22 @@ try {
     await page.close();
   }
 
+  // 2a) Výzva po prvním otočení je vidět hned (pod řadou otočeného lístku, ne až pod posledním)
+  for (const etf of ['VOO', 'SDY']) {
+    const { page } = await open('?v=dvojce');
+    await page.$eval(`.listek[data-etf="${etf}"]`, (el) => el.scrollIntoView({ block: 'end', behavior: 'instant' }));
+    await sleep(200);
+    await page.$eval(`.listek[data-etf="${etf}"]`, (el) => el.click());
+    await sleep(900);
+    const v = await page.evaluate((etf) => {
+      const card = document.querySelector(`.listek[data-etf="${etf}"]`), b = document.querySelector('[data-otevri="vyber"]').getBoundingClientRect(), c = card.getBoundingClientRect();
+      const row = [...document.querySelectorAll('.listek')].filter((x) => x.offsetTop === card.offsetTop);
+      return { vidět: b.top >= 0 && b.bottom <= innerHeight && c.bottom > 0, zaRadou: row[row.length - 1].nextElementSibling === document.getElementById('vyber-cta') };
+    }, etf);
+    check(`výzva po otočení ${etf}: tlačítko celé na obrazovce, hned pod řadou lístku`, v.vidět && v.zaRadou, JSON.stringify(v));
+    await page.close();
+  }
+
   // 2) Najdi dvojče – všech 7
   const PAIRS = { VOO: 'VUAA', VTI: 'SXR4', VT: 'VWCE', VWO: 'VFEA', SDY: 'SPYD', VGT: 'QDVE', AGG: 'IUAA' };
   {

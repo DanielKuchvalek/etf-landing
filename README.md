@@ -47,7 +47,7 @@ Exporty konverzací s AI jsou v [ai-log/](ai-log/), reklamy v [reklamy/](reklamy
 
 **Kdy žádáme o kontakt:**
 
-1. Hned po prvním otočení lístku: pod lístky se objeví „Chci tahák s postupem nákupu“. Návštěvník právě viděl dvojče a výzva mu nabízí, co mu ještě chybí: jak ho koupit. Formulář se rozbalí na místě.
+1. Hned po prvním otočení lístku: hned pod řadou otočeného lístku (ne až pod posledním) se objeví „Chci tahák s postupem nákupu“, a když je lístek u spodního okraje, stránka se posune jen o tolik, aby byla výzva vidět (snímky z [WebKitu](docs/screenshots/vyzva-webkit-375x667-dole.png) a [Chromu](docs/screenshots/vyzva-chrome-390x844-nahore.png)). Návštěvník právě viděl dvojče a výzva mu nabízí, co mu ještě chybí: jak ho koupit. Formulář se rozbalí na místě.
 2. Spodní lištou, která se ukáže, když lístky zmizí z obrazovky a výzva ani formulář nejsou vidět. Formulář se otevře jako panel tam, kde návštěvník právě je.
 3. Formulářem v sekci Tahák pro ty, kdo dočtou až dolů.
 

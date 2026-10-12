@@ -79,6 +79,7 @@ a{color:var(--ink);text-decoration-thickness:1px;text-underline-offset:2px}
 @keyframes peek{0%,100%{transform:perspective(600px) rotateY(0)}45%{transform:perspective(600px) rotateY(-16deg)}}
 .stamp{margin:14px 0 0;font-size:.8125rem;color:var(--ink-2)}
 .cta{margin-top:16px}
+.listky>.cta{grid-column:1/-1;margin:4px 0 6px}
 .cta .small{text-align:center;margin:8px 0 0}
 /* podrobnosti k otočenému lístku */
 .result{padding-top:20px}
@@ -559,7 +560,7 @@ html{scroll-behavior:auto}
       });
   }
 
-  // příchod: odkaz od kamaráda, jinak utm_source:utm_campaign:utm_content (každý nejvýš 24 znaků)
+  // příchod: sdílení, jinak utm_source:utm_campaign:utm_content
   var utm = ['utm_source', 'utm_campaign', 'utm_content'].map(function (k) { return (qs.get(k) || '').toLowerCase().replace(/[^a-z0-9_.-]/g, '').slice(0, 24); });
   track('prichod', qs.get('ref') === 'sdileni' ? 'sdileni' : utm.join(':').replace(/:+$/, ''));
 
@@ -638,7 +639,11 @@ html{scroll-behavior:auto}
     twins.forEach(function (t) { t.hidden = t.getAttribute('data-etf') !== etf; });
     result.hidden = false;
     if (cta.hidden && !done) {
+      // výzva pod řadu otočeného lístku, ať je vidět hned
+      var row = [].filter.call(listky, function (c) { return c.offsetTop === card.offsetTop; });
+      row[row.length - 1].after(cta);
       cta.hidden = false;
+      cta.scrollIntoView({ block: 'nearest' });
       track('vyzva_zobrazena', 'listky');
     }
   }
