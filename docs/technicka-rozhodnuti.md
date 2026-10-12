@@ -5,13 +5,13 @@
 **Stack:** čisté HTML, CSS a JavaScript bez frameworku a bez build kroku, Vercel (statika a serverless funkce) a Supabase (Postgres v EU). Proč: stránka pro návštěvníka z mobilní reklamy musí být hlavně rychlá a malá a tohle je nejkratší cesta k webu, funkcím a databázi zdarma, v EU a bez závislostí, které by se musely instalovat a aktualizovat.
 
 - **Celá stránka je jeden soubor `public/index.html`** s inline CSS a JS a systémovým písmem. Bez externích skriptů a písem: 62,0 kB, po gzipu 18,1 kB, z toho JS 19,9 kB (oba vložené skripty, po gzipu 7,2 kB, limit 20 kB hlídá test). Jediný obrázek je náhled taháku (WebP, 24 kB), který se načte až u formuláře.
-- **Lighthouse na živé adrese** (mobil, 12. 10. 2026 po posledním nasazení, Lighthouse 13.5, [scripts/lighthouse.mjs](../scripts/lighthouse.mjs) s blokovanými požadavky na `/api/`, aby měření nezapsalo do databáze příchody):
+- **Lighthouse na živé adrese** (mobil, 12. 10. 2026 po posledním nasazení s výzvou pod řadou lístku, Lighthouse 13.5, [scripts/lighthouse.mjs](../scripts/lighthouse.mjs) s blokovanými požadavky na `/api/`, aby měření nezapsalo do databáze příchody):
 
   | Verze úvodu | Výkon | Přístupnost | Osvědčené postupy | SEO | LCP | CLS | TBT | Přeneseno |
   |---|---|---|---|---|---|---|---|---|
-  | výchozí | 100 | 100 | 100 | 66 | 1,0 s | 0 | 0 ms | 45 KiB |
-  | `?v=dvojce` | 100 | 100 | 100 | 66 | 0,9 s | 0 | 0 ms | 45 KiB |
-  | `?v=zacatek` | 100 | 100 | 100 | 66 | 1,1 s | 0 | 0 ms | 45 KiB |
+  | výchozí | 100 | 100 | 100 | 66 | 1,0 s | 0 | 0 ms | 44 KiB |
+  | `?v=dvojce` | 100 | 100 | 100 | 66 | 1,1 s | 0 | 0 ms | 44 KiB |
+  | `?v=zacatek` | 100 | 100 | 100 | 66 | 1,0 s | 0 | 0 ms | 44 KiB |
 
   SEO 66 jen proto, že stránka má záměrně `noindex` (jediný neúspěšný audit je „stránka je blokovaná pro indexování“). V konzoli žádné chyby. Lokálně bez komprese (stejný den, po posledních úpravách) vychází totéž, jen 88 KiB a LCP 1,2 s.
 - **„Ručně kreslené“ prvky bez písma navíc.** Fix, šipky, kroužky a fajfky jsou malá inline SVG. Rukou psané písmo by přidalo desítky kB a probliknutí textu. Lístky se otáčejí bez 3D kontextu a bez `backface-visibility`: JS (Web Animations API, bez knihovny) otočí jednu rovinu s perspektivou o 90°, když je lístek z boku, vymění strany a dotočí. WebKit to kreslí stejně s grafickým čipem i bez něj. Při `prefers-reduced-motion` se jen vymění strany.
