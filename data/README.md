@@ -46,6 +46,10 @@ Všech 7 UCITS fondů má na českém webu XTB stránku „Investujte do ETF …
 | IUAA | ano | ano (LSE USD) | neověřeno | neověřeno |
 
 - **XTB:** česká produktová stránka „Investujte do ETF <ticker>“.
+- **Co je u XTB ověřené a čím (rozlišení):**
+  - **VOO (americký originál): ověřeno v aplikaci, že není.** Český účet, 12. 10. 2026, viz „Další doklad k PRIIPs“ níž a snímky v `docs/screenshots/xtb-voo*.png`.
+  - **Dvojčata (VUAA, SXR4, VWCE, VFEA, SPYD, QDVE, IUAA): důkazem je jen veřejná produktová stránka XTB, v aplikaci neověřeno.** Stránka u VOO.US ukázala, že veřejné stránky XTB vznikají automaticky a dostupnost v účtu nedokládají. Proto stránka i tahák píšou „ve veřejné nabídce“ / „v nabídce“, nikde „koupíš u“, a radí „ověř si dostupnost ve svém účtu“.
+  - **Trading 212 a Degiro** totéž: veřejný seznam nástrojů (u Trading 212 pole `dealerExclusions`), ne nákup v účtu.
 - **Trading 212:**
   - [veřejný seznam nástrojů](https://www.trading212.com/cs/trading-instruments/invest), účet Invest, je za ochranou Cloudflare, takže jsem ho četl ve skutečném prohlížeči (headless Chrome),
   - u každého nástroje je pole `dealerExclusions`, tedy entity Trading 212, které ho nenabízejí; u všech 7 dvojčat je prázdné,
