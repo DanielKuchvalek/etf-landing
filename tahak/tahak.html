@@ -62,7 +62,7 @@ ul.plain li{margin:0 0 1.5mm}
 <section class="page cover">
   <p class="kicker">ETF dvojčata · tahák</p>
   <h1>7 ETF z NYSE a jejich evropská <span class="hl">dvojčata</span> z nabídky brokerů v Česku</h1>
-  <p class="muted">Co koupit a jak, když ti broker americké ETF nenabídne. Ke každému fondu jeho evropská verze, ISIN, poplatek a u kterých brokerů je ve veřejné nabídce.</p>
+  <p class="muted">Kde fond najdeš a jak nákup zadat, když ti broker americké ETF nenabídne. Ke každému fondu jeho evropská verze, ISIN, poplatek a u kterých brokerů je ve veřejné nabídce.</p>
   <ul class="pairs" id="cover-pairs"></ul>
   <div class="note">
     <p><b>Jak tahák použít:</b> vyber si pár, opiš ticker nebo ISIN do aplikace brokera a postupuj podle kroků na straně „Jak koupit“.</p>
@@ -195,7 +195,8 @@ ul.plain li{margin:0 0 1.5mm}
 
       var c = el('div', 'card');
       c.appendChild(el('h3', null, e.ticker + ' → ' + b.ticker));
-      c.appendChild(el('p', 'full', u.nazev.hodnota.replace(/®/g, '') + ' · ' + e.typ));
+      // popis dvojčete, ne originálu: u stejného indexu typ fondu, jinak index, který dvojče sleduje
+      c.appendChild(el('p', 'full', u.nazev.hodnota.replace(/®/g, '') + ' · ' + (same ? e.typ : 'sleduje ' + u.index.hodnota.replace(/ Index$/, ''))));
       var dl = el('dl');
       function row(k, v, cls) { dl.appendChild(el('dt', null, k)); var dd = el('dd', cls, v); dl.appendChild(dd); return dd; }
       row('ISIN', u.isin.hodnota, 'mono');
@@ -214,7 +215,7 @@ ul.plain li{margin:0 0 1.5mm}
       row('Dividendy', u.dividendova_politika.hodnota.charAt(0).toUpperCase() + u.dividendova_politika.hodnota.slice(1) + '.');
       row('Index', same ? 'Stejný jako ' + e.ticker + ': ' + u.index.hodnota + '.'
         : 'Podobný, ne stejný: ' + u.index.hodnota + ' (' + th(u.pocet_titulu.hodnota) + ' titulů), ' + e.ticker + ' ' + e.index.hodnota + ' (' + th(e.pocet_titulu.hodnota) + ').');
-      var ok = row('Koupíš u', '');
+      var ok = row('V nabídce u', '');
       ok.appendChild(el('span', 'ok', '✓ ')); ok.appendChild(document.createTextNode(br.join(', ')));
       c.appendChild(dl);
       cards.appendChild(c);
