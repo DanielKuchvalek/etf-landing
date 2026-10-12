@@ -97,7 +97,7 @@ try {
     await page.close();
   }
 
-  // 2) Najdi dvojče – všech 7
+  // 2) Otočení lístků – všech 7
   const PAIRS = { VOO: 'VUAA', VTI: 'SXR4', VT: 'VWCE', VWO: 'VFEA', SDY: 'SPYD', VGT: 'QDVE', AGG: 'IUAA' };
   {
     const { page, logs } = await open();

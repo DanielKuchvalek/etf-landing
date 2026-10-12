@@ -30,7 +30,7 @@ Všechny texty landing page v pořadí sekcí. Tykáme, bez rodu (žádné „hl
 
 ---
 
-## 1. Úvod a „Najdi dvojče“
+## 1. Úvod a lístky s ETF
 
 Nadpis a podnadpis se mění podle parametru v URL (viz `reklamy/README.md`). Zbytek stránky je pro všechny stejný.
 
@@ -70,7 +70,7 @@ Nadpis a podnadpis se mění podle parametru v URL (viz `reklamy/README.md`). Zb
 | Přední strana | Zadní strana: štítek | Dvojče (v kroužku) | Kde ho najdeš | Poplatek |
 |---|---|---|---|---|
 | VOO · S&P 500 | dvojče · stejný index | VUAA | ✓ XTB, Trading 212 | 7 Kč ročně z 10 000 Kč |
-| VTI · celé USA | obdoba · podobný index | SXR4 | ✓ XTB, Trading 212, Degiro | 3 Kč ročně z 10 000 Kč |
+| VTI · celé USA | dvojče · podobný index | SXR4 | ✓ XTB, Trading 212, Degiro | 3 Kč ročně z 10 000 Kč |
 | VT · celý svět | dvojče · podobný index | VWCE | ✓ XTB, Trading 212, Degiro | 14 Kč ročně z 10 000 Kč |
 | VWO · rozvíjející se trhy | dvojče · podobný index | VFEA | ✓ XTB, Trading 212 | 17 Kč ročně z 10 000 Kč |
 | SDY · dividendy | dvojče · stejný index | SPYD | ✓ XTB, Trading 212 | 35 Kč ročně z 10 000 Kč |
@@ -92,7 +92,7 @@ Podrobnosti k otočenému lístku se objeví pod lístky a výzvou, bez přechod
 
 ### Šablona podrobností
 
-1. **Nadpis:** Evropské dvojče {originál} je {ticker dvojčete} (u VTI „Nejbližší evropská obdoba“)
+1. **Nadpis:** Evropské dvojče {originál} je {ticker dvojčete}, u všech sedmi stejně. Že index není stejný (VTI, VT, VWO, VGT), říká štítek „dvojče · podobný index“ a řádek Index „Podobný, ne stejný“.
 2. **Přeškrtnutý originál → dvojče v kroužku** (ručně kreslená šipka a kroužek)
 3. **Celý název dvojčete** `[d: X › ucits_obdoba.nazev]`
 4. **Kde ho najdeš:** zeleně „✓ Je ve veřejné nabídce …“, pak „Hledej ticker …“
@@ -113,7 +113,7 @@ U „Kde ho najdeš“ jmenujeme všechny brokery, u kterých je fond ve veřejn
 
 ### VTI → SXR4
 
-- **Nejbližší evropská obdoba VTI je SXR4**
+- **Evropské dvojče VTI je SXR4**
   (Ne „dvojče“: přesnou obdobu celého amerického trhu jsme nenašli.)
 - iShares MSCI USA UCITS ETF (Acc) `[d: VTI › ucits_obdoba.nazev]`
 - Podobný, ne stejný index. SXR4 sleduje MSCI USA a drží 515 titulů, VTI celý americký trh s 3 507 akciemi. Přesné dvojče celého trhu jsme mezi evropskými fondy nenašli. `[d: VTI › ucits_obdoba.index]` `[d: VTI › ucits_obdoba.pocet_titulu]` `[d: VTI › index]` `[d: VTI › pocet_titulu]` `[d: VTI › ucits_obdoba.rozdil_oproti_originalu]`
@@ -191,7 +191,7 @@ U „Kde ho najdeš“ jmenujeme všechny brokery, u kterých je fond ve veřejn
 ## 4. Proč ti broker americká ETF často nenabídne
 
 - **H2:** Proč ti broker americká ETF často nenabídne
-- **Text:** Fondy, které se v EU prodávají drobným investorům, potřebují dokument s klíčovými informacemi (KID). Americké fondy jako VOO ho nevydávají, a tak je brokeři často nenabízejí, nebo jen jako CFD. To je derivát, se kterým fond samotný nevlastníš. Evropská dvojčata KID mají, takže je koupíš normálně.
+- **Text:** Fondy, které se v EU prodávají drobným investorům, potřebují dokument s klíčovými informacemi (KID). Americké fondy jako VOO ho nevydávají, a tak je brokeři často nenabízejí, nebo jen jako CFD. To je derivát, se kterým fond samotný nevlastníš. Evropská dvojčata KID mají, takže je brokeři nabízet můžou.
   `[r: PRIIPs]` (čl. 5 odst. 1 a čl. 13 odst. 1 nařízení PRIIPs; Lynx; XTB nabízí americké originály kromě VOO jen jako CFD: `[d: * › original_u_xtb_cz]`; KID pro VOO na serveru Vanguardu není)
   - „Často“, ne „vždy“: ČNB připouští execution-only bez KID a profesionální klient americké ETF koupit může. (Že český klient XTB VOO v aplikaci nenajde, je ověřené 12. 10. 2026, `data/README.md`.)
 

@@ -55,7 +55,7 @@ https://etf-dvojcata-demo.vercel.app/?v=zacatek&utm_source=meta&utm_medium=paid_
 - **Hlavní metrika:** odeslané formuláře ÷ návštěvy podle verze úvodu (`v`), z našeho měření (`analytika.trychtyr`).
 - **Vedlejší metriky:**
   - míra prokliku (CTR) a cena za proklik z Meta,
-  - kolik návštěv použilo „Najdi dvojče“.
+  - kolik návštěv otočilo aspoň jeden lístek (krok 2 trychtýře).
 
 ## Než se reklama spustí (TODO)
 

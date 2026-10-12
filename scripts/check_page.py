@@ -1,6 +1,6 @@
 """Porovná čísla a tvrzení na stránce (public/index.html) s data/etf.json.
 
-U každého páru kontroluje výsledek „Najdi dvojče“ (ticker, poplatky, Kč z 10 000 Kč, počty titulů
+U každého páru kontroluje výsledek po otočení lístku (ticker, poplatky, Kč z 10 000 Kč, počty titulů
 u podobných indexů, měnu, jmenované brokery, odznak stejný/podobný index), kartu páru a odkazy na zdroje.
 Použití: python3 scripts/check_page.py
 """

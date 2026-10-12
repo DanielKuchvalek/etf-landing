@@ -78,7 +78,7 @@ Texty všech částí jsou v [texty.md](texty.md).
 
 ## Dvě verze reklamy
 
-Obě pro Meta (Facebook a Instagram) na mobilu: statický obrázek 4 : 5 do feedu a 9 : 16 do Stories a Reels, tlačítko „Zjistit víc“. Texty jsou v [reklamy/](reklamy/README.md). Obrázky generuje [scripts/reklamy.mjs](scripts/reklamy.mjs) z HTML ve stylu stránky (sešit, fix, lístky), takže jdou upravit a přegenerovat. Každá má nahoře hook z primárního textu, dole nabídku „Tahák zdarma: všech 7 dvojčat v PDF →“ (stejný slib jako výzva na stránce) a drobně „Není investiční doporučení.“ A ukazuje dvojče VOO, B všech 7 fondů s jejich evropskými verzemi, stejně jako stránka zdarma. U Stories a Reels je text mimo horních 270 px a dolních 450 px, kde je ovládání aplikace.
+Obě pro Meta (Facebook a Instagram) na mobilu: statický obrázek 4 : 5 do feedu a 9 : 16 do Stories a Reels, tlačítko „Zjistit víc“. Texty jsou v [reklamy/](reklamy/README.md). Obrázky generuje [scripts/reklamy.mjs](scripts/reklamy.mjs) z HTML ve stylu stránky (sešit, fix, lístky), takže jdou upravit a přegenerovat. Každá má nahoře hook z primárního textu, dole nabídku „Tahák zdarma: ISINy a postup nákupu →“ (stejný slib jako výzva na stránce) a drobně „Není investiční doporučení.“ A ukazuje dvojče VOO, B všech 7 fondů s jejich evropskými verzemi, stejně jako stránka zdarma. U Stories a Reels je text mimo horních 270 px a dolních 450 px, kde je ovládání aplikace.
 
 | | Feed 1080 × 1350 | Stories a Reels 1080 × 1920 |
 |---|---|---|
@@ -177,7 +177,7 @@ Seřazené podle očekávaného dopadu na konverzi návštěva → odeslání. H
 - **Minimum:** z 6 % na 6,9 % (+15 %) → 11 690 návštěv na verzi, **asi 23 400 celkem**.
 - **Proč třetí:** míří na krok 2, kde v absolutních číslech odejde odhadem nejvíc lidí (600 z 1 000), ale na odeslání působí jen nepřímo. Kdo uvidí dvojče bez klepnutí, nemusí o tahák stát. Proto čekám nejmenší dopad.
 
-**Co už hypotéza není:** dřívější třetí hypotéza „výzva slibuje postup nákupu místo všech 7 dvojčat“. Stránka dvojčata ukáže zdarma, takže slib „všech 7 dvojčat“ byl chyba, ne varianta k testu. Je opravený všude (výzva, lišta, panel, sekce Tahák, reklamy).
+**Co už hypotéza není:** dřívější třetí hypotéza „výzva slibuje postup nákupu místo všech 7 dvojčat“. Stránka dvojčata ukáže zdarma, takže slib „všech 7 dvojčat“ byl chyba, ne varianta k testu. Je opravený na stránce i v reklamách (výzva, lišta, panel, sekce Tahák, reklamy).
 
 **Výpočet minima:** n na verzi = (z₁₋α/₂ + z₁₋β)² × [p₁(1 − p₁) + p₂(1 − p₂)] ÷ (p₂ − p₁)², kde α = 0,05 oboustranně (z = 1,96) a síla testu 80 % (z = 0,84), takže (1,96 + 0,84)² ≈ 7,85. Například první hypotéza: 7,85 × (0,06 × 0,94 + 0,075 × 0,925) ÷ 0,015² = 7,85 × 0,1258 ÷ 0,000225 ≈ 4 388. Výchozí konverze 6 % je střední odhad. Kdyby skutečná byla 2 %, potřebný počet návštěv vyjde zhruba třikrát vyšší (u první hypotézy 13 807 na verzi). Výpočet je proto potřeba zopakovat s konverzí naměřenou v prvním týdnu. Při 500 návštěvách denně (předpoklad) by první test trval asi 18 dní, druhý 27 a třetí 47. Druhý test běží jen na návštěvách z reklamy A, takže potrvá déle podle toho, jaký podíl provozu A přivede.
 
