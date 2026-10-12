@@ -221,3 +221,26 @@ Doplňuje exporty konverzací (`/export`), které nezachytí celý průběh prá
   - **Zdůvodnění „nic absolutního“ stálo na tom, že „XTB má VOO.US jako ETF“** (v CLAUDE.md, `texty.md`, `a-dvojce.md`). AI to opřela o veřejnou stránku XTB, která je generovaná automaticky. Člověk v aplikaci ověřil, že český klient VOO nenajde. Zdůvodnění teď stojí na výkladu ČNB a profesionálních klientech.
   - **Lighthouse na živé adrese napoprvé spadl** u jedné verze a u jiné ukázal horší FCP. Druhé spuštění prošlo, šlo o rozptyl měření a spouštění Chromu, ne o změnu stránky.
   - **Screenshoty z aplikace XTB (`docs/screenshots/xtb-voo-us.png`, `xtb-voo.png`) v repozitáři zatím nejsou.** Odkazy na ně jsou připravené, soubory doplní člověk.
+
+### 2026-10-12 – druhá nezávislá kontrola: PDF, výzva pod ohybem, dokumentace, README, cache
+
+- **Zadání pro AI:**
+  - opravit „Koupíš u“ v PDF a popisy dvojčat,
+  - výzvu po otočení ukázat hned (na 390 × 844 byla pod ohybem),
+  - sjednotit dokumentaci se stránkou,
+  - rozlišit, co je u XTB ověřené a čím,
+  - README pod 2 500 slov a podrobnosti do `docs/`,
+  - riziko `/api/event` bez tokenu, `ai-log/README.md`,
+  - prověřit cache HTML.
+- **Kontrola výstupu:**
+  - text PDF prohledaný na „koup“ (zbyl jen návod a „co koupíš, je tvoje rozhodnutí“),
+  - výzva ověřená v Chromu i WebKitu na 390 × 844 a 375 × 667 (lístek nahoře i u spodního okraje) s novým testem,
+  - odkazy v README a `docs/` skriptem,
+  - cache přes `curl -sI` s různými parametry a dokumentaci Vercelu,
+  - výsledky: data 183, API 132, databáze 80, Chrome 134, WebKit 81.
+- **Kde se AI spletla a jak se na to přišlo:**
+  - **AI v minulém kole tvrdila, že formulace o brokerech je opravená „všude“, ale PDF vynechala** („Koupíš u“ 7× a u SXR4 popis originálu). Odhalila to nezávislá kontrola, která četla text PDF. AI ho tehdy grepovala jen ve zdrojích stránky.
+  - **Výzvu po otočení AI umístila pod všech 7 lístků.** Na vyšším telefonu byla mimo obrazovku. Test kontroloval, že výzva existuje, ne že je vidět.
+  - **U VTI zůstalo na stránce „obdoba“, u ostatních párů s jiným indexem „dvojče“.** Přišlo se na to při sjednocování dokumentace.
+  - **Tvrzení „detail události jen z pevného seznamu“ přestalo platit** po přidání UTM k příchodu. AI ho v README a dokumentaci neopravila, dokud to neukázala kontrola.
+  - **Starou verzi stránky u kontrolora AI nejdřív podezírala z cache Vercelu.** Měření (ETag, `x-vercel-cache`) a dokumentace ukázaly, že Vercel vrací aktuální verzi. Hlavička u HTML je teď výslovná a hlídaná.
