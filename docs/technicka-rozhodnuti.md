@@ -1,0 +1,28 @@
+# Technická rozhodnutí
+
+Část [README](../README.md), přesunutá sem, aby se hlavní README dalo přečíst za 5 minut.
+
+**Stack:** čisté HTML, CSS a JavaScript bez frameworku a bez build kroku, Vercel (statika a serverless funkce) a Supabase (Postgres v EU). Proč: stránka pro návštěvníka z mobilní reklamy musí být hlavně rychlá a malá a tohle je nejkratší cesta k webu, funkcím a databázi zdarma, v EU a bez závislostí, které by se musely instalovat a aktualizovat.
+
+- **Celá stránka je jeden soubor `public/index.html`** s inline CSS a JS a systémovým písmem. Bez externích skriptů a písem: 62,0 kB, po gzipu 18,1 kB, z toho JS 19,7 kB (oba vložené skripty, po gzipu 7,2 kB, limit 20 kB hlídá test). Jediný obrázek je náhled taháku (WebP, 24 kB), který se načte až u formuláře.
+- **Lighthouse na živé adrese** (mobil, 12. 10. 2026 po posledním nasazení, Lighthouse 13.5, [scripts/lighthouse.mjs](../scripts/lighthouse.mjs) s blokovanými požadavky na `/api/`, aby měření nezapsalo do databáze příchody):
+
+  | Verze úvodu | Výkon | Přístupnost | Osvědčené postupy | SEO | LCP | CLS | TBT | Přeneseno |
+  |---|---|---|---|---|---|---|---|---|
+  | výchozí | 100 | 100 | 100 | 66 | 1,0 s | 0 | 0 ms | 45 KiB |
+  | `?v=dvojce` | 100 | 100 | 100 | 66 | 0,9 s | 0 | 0 ms | 45 KiB |
+  | `?v=zacatek` | 100 | 100 | 100 | 66 | 1,1 s | 0 | 0 ms | 45 KiB |
+
+  SEO 66 jen proto, že stránka má záměrně `noindex` (jediný neúspěšný audit je „stránka je blokovaná pro indexování“). V konzoli žádné chyby. Lokálně bez komprese (stejný den, po posledních úpravách) vychází totéž, jen 88 KiB a LCP 1,2 s.
+- **„Ručně kreslené“ prvky bez písma navíc.** Fix, šipky, kroužky a fajfky jsou malá inline SVG. Rukou psané písmo by přidalo desítky kB a probliknutí textu. Lístky se otáčejí bez 3D kontextu a bez `backface-visibility`: JS (Web Animations API, bez knihovny) otočí jednu rovinu s perspektivou o 90°, když je lístek z boku, vymění strany a dotočí. WebKit to kreslí stejně s grafickým čipem i bez něj. Při `prefers-reduced-motion` se jen vymění strany.
+- **Ikony a obrázek pro sdílení generuje skript** ([scripts/obrazky.mjs](../scripts/obrazky.mjs)) ve stylu stránky a s čísly z `data/etf.json`: favicon (SVG a ICO), ikona pro iOS a `og.png` 1200×630 pro náhled odkazu na Facebooku a v Messengeru. Stránka si je nenačítá, takže nezdržují.
+- **Jen světlé barvy** (`color-scheme: only light`). Tmavý režim iOS ani automatické ztmavení v Chromu stránku nepřebarví, „sešit“ zůstane papírový.
+- **Panel s formulářem je přístupný z klávesnice.** Je to nativní modální `<dialog>` s `aria-modal`: Tab a Shift+Tab zůstávají v panelu, Esc ho zavře a fokus se vrátí na tlačítko, které ho otevřelo.
+- **Obsah funguje i bez JavaScriptu.** Text i data jsou v HTML a lístky jsou odkazy na karty párů. JS přidává otočení, formulář na místě a lištu dole. Formulář bez JS nefunguje (token proti botům, viz [Bezpečnost](bezpecnost.md#bezpečnost-a-ochrana-proti-spamu)).
+- **Úvod podle reklamy:** malý inline skript hned za nadpisem přepíše nadpis podle `?v=` dřív, než se stránka vykreslí, takže se layout neposune (CLS 0 i u varianty s poznámkou navíc).
+- **Zpracování formuláře a měření: čtyři malé funkce bez závislostí** ([api/](../api/)): `lead`, `event`, `token` a `keepalive`, společný kód je v [api/_lib.js](../api/_lib.js). Soubory s podtržítkem Vercel jako funkce nenasadí (ověřeno ve zdrojovém kódu Vercelu, `packages/fs-detectors/src/detect-builders.ts`). Supabase volají přímo přes REST (`fetch`), bez knihovny `supabase-js`, takže se nic neinstaluje. Každá funkce sama ověří vstup a nespoléhá na formulář. Co přesně kontrolují, je v sekci [Bezpečnost a ochrana proti spamu](bezpecnost.md#bezpečnost-a-ochrana-proti-spamu).
+- **Secret klíč Supabase (`sb_secret_…`) jen na serveru.** Funkce ho posílá v hlavičce `apikey`, jak chce [dokumentace Supabase](https://supabase.com/docs/guides/api/api-keys) (nové klíče nejsou JWT, do `Authorization: Bearer` nepatří). Starý klíč `service_role` Supabase do konce roku 2026 ruší. Tabulky mají zapnuté RLS bez jediné politiky a odebraná práva pro `anon` a `authenticated`, takže publishable klíčem nejde nic přečíst ani zapsat.
+- **Lokální server se stejnými funkcemi** ([scripts/server.mjs](../scripts/server.mjs)): servíruje `public/` a funkce z `api/` jako Vercel. Bez klíčů běží s podvrženou databází v paměti, takže formulář jde vyzkoušet i na telefonu ve stejné Wi-Fi a testy můžou ověřit, co se opravdu uložilo.
+- **Supabase projekt v EU regionu.** Ukládáme e-maily českých návštěvníků a databáze má být blízko serverless funkcím ve Frankfurtu.
+- **Denní keep-alive přes Vercel cron.** Bezplatný Supabase projekt se po čase bez aktivity pozastaví a formulář musí fungovat, i když stránku někdo otevře až za dva týdny. Cron volá [`/api/keepalive`](../api/keepalive.js) jednou denně (víc bezplatný tarif Vercelu nedovolí). Ta přes API Supabase spustí v databázi funkci `uklid`, která smaže staré záznamy limitů, takže jde o požadavek na API i o příkaz v databázi. Supabase ale nedefinuje, co přesně je „aktivita“ (riziko a doporučení jsou v sekci [Před spuštěním kampaně](pred-spustenim.md#před-spuštěním-kampaně)). Funkce chce hlavičku s `CRON_SECRET`, cizí volání odmítne.
+- **Serverless funkce v regionu `fra1` (Frankfurt).** Kratší odezva pro české návštěvníky i k databázi v EU.

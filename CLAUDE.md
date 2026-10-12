@@ -26,7 +26,8 @@ api/           serverless funkce: lead.js (formulář), event.js (měření), to
 tahak/         zdroj PDF taháku (tahak.html), generuje scripts/pdf.mjs
 scripts/       testy, Lighthouse, snímky obrazovky, generování PDF (návod v scripts/README.md)
 docs/screenshots/  snímky obrazovky před a po úpravách
-docs/*.md      bezpečnost, testování, nasazení a návrh souhlasu a zásad pro Clientelo (z README, aby šlo přečíst za 5 minut)
+docs/*.md      podrobnosti z README (lead magnet, obchodní pohled, A/B hypotézy, měření, technická rozhodnutí, bezpečnost,
+               testování, nasazení, před spuštěním, Meta Conversions API, práce s AI, návrh pro Clientelo); README do 2 500 slov
 data/          podklady k údajům o ETF: hodnota, zdroj (URL), datum
 supabase/      SQL: schema.sql (tabulky, RLS, limity, funkce), funnel.sql (trychtýř podle verzí úvodu)
 reklamy/       obě verze reklamy (texty a vizuály)

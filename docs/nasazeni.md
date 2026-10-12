@@ -43,8 +43,8 @@
 - [ ] Publishable klíč nic nepřečte: `curl -s "<SUPABASE_URL>/rest/v1/leads?select=email" -H "apikey: <publishable klíč>"` vrátí chybu oprávnění, ne data.
 - [x] Vercel → **Settings → Cron Jobs**: `/api/keepalive` jednou denně. Tlačítkem **Run** ho pusť hned, v **Logs** musí být odpověď 200.
 - [x] Vercel → **Settings → Functions**: region `fra1` (hlavička `x-vercel-id` u `/api/*` začíná `fra1::fra1`).
-- [x] Lighthouse na živé adrese v mobilním režimu: výkon 100, SEO 66 kvůli záměrnému `noindex` ([výsledky](../README.md#technická-rozhodnutí)). Hlavičky, token, keep-alive, soubory a nadpisy kontroluje jen čtením [scripts/check-live.mjs](../scripts/check-live.mjs).
+- [x] Lighthouse na živé adrese v mobilním režimu: výkon 100, SEO 66 kvůli záměrnému `noindex` ([výsledky](technicka-rozhodnuti.md#technická-rozhodnutí)). Hlavičky, token, keep-alive, soubory a nadpisy kontroluje jen čtením [scripts/check-live.mjs](../scripts/check-live.mjs).
 - [ ] Odkaz vlož do [nástroje pro ladění sdílení od Facebooku](https://developers.facebook.com/tools/debug/), ať je vidět obrázek pro sdílení.
-- [ ] **15. 10. 2026** zkontroluju v Supabase, že projekt neběží jako „Paused“ ([riziko keep-alive](../README.md#před-spuštěním-kampaně)), a pustím `node scripts/check-live.mjs`.
+- [ ] **15. 10. 2026** zkontroluju v Supabase, že projekt neběží jako „Paused“ ([riziko keep-alive](pred-spustenim.md#před-spuštěním-kampaně)), a pustím `node scripts/check-live.mjs`.
 
 **Lokálně se skutečnou databází** (jinak lokální server běží s podvrženou databází v paměti): vytvoř `.env.local` podle [.env.example](../.env.example) a spusť `node --env-file=.env.local scripts/server.mjs`. Obsah `.env.local` nikdy nevypisuj ani nesdílej.

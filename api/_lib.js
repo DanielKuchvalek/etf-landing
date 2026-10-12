@@ -13,7 +13,7 @@ export const SOUHLAS = {
   text: 'Souhlasím, že Daniel Kuchválek uloží můj e-mail jen pro tuhle ukázku do výběrového řízení. Žádné e-maily mi neposílá a smaže ho nejpozději 31. 12. 2026.',
 };
 
-// Detail události: pro každou událost jen hodnoty, které stránka opravdu posílá (do měření nejde uložit nic jiného).
+// Detail události: pro každou událost jen hodnoty, které stránka posílá; u příchodu text z UTM omezený regulárním výrazem.
 const ETF = 'VOO|VTI|VT|VWO|SDY|VGT|AGG';
 const ZDROJ = /^(listky|lista|karty)$/;
 const ZDROJ_FORMULARE = /^(listky|lista|karty|sekce)$/;

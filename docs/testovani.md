@@ -25,7 +25,7 @@ Skripty a návod jsou ve [scripts/](../scripts/README.md). Všechny vracejí nen
 
 **Jen na skutečném telefonu:**
 
-- skutečná klávesnice iOS: její výška, lišta nad ní (šipky, Hotovo, návrhy e-mailů) a to, jak Safari sám posouvá stránku k poli. **Lištu s návrhy e-mailů simulace nezachytila, našel ji až test na skutečném telefonu** ([víc](../README.md#jak-jsem-pracoval-s-ai)),
+- skutečná klávesnice iOS: její výška, lišta nad ní (šipky, Hotovo, návrhy e-mailů) a to, jak Safari sám posouvá stránku k poli. **Lištu s návrhy e-mailů simulace nezachytila, našel ji až test na skutečném telefonu** ([víc](prace-s-ai.md#jak-jsem-pracoval-s-ai)),
 - plynulost otočení lístků na skutečném displeji (průběh po 100 ms kontroluje WebKit),
 - otevření a uložení PDF v Safari,
 - nativní sdílení a kopírování odkazu,

@@ -1,6 +1,7 @@
 // POST /api/event – uloží pseudonymní událost z cesty návštěvníka (ID návštěvy je náhodné, ale ne anonymní) (funkce uloz_udalost, tabulka events).
 // Přijímá jen ID návštěvy (náhodné UUID z paměti stránky), název události, verzi úvodu a detail z pevného
-// seznamu pro každou událost (_lib.js, DETAILY), takže se přes měření nedají ukládat libovolná data.
+// seznamu pro každou událost (_lib.js, DETAILY; u příchodu UTM text přes regulární výraz), takže se přes měření
+// nedají ukládat libovolná data. Endpoint nemá token: falešné příchody a jejich čištění viz docs/mereni.md.
 // Události od odeslání formuláře dál (BEZ_NAVSTEVY) musí přijít bez ID návštěvy, ostatní s ním.
 // Proti zahlcení: tělo nejvýš 512 B, 600 událostí za hodinu z jedné IP a 100 na návštěvu (počítá databáze).
 // Prohlížeč posílá přes navigator.sendBeacon, tedy jako text/plain.
