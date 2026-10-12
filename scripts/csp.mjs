@@ -28,19 +28,24 @@ export const CSP = [
   "frame-ancestors 'none'",
 ].join('; ');
 
+// HTML se v prohlížeči ani ve sdílených cache neuchová bez ověření: nová verze se po nasazení projeví hned
+// (Vercel CDN drží statické soubory jen po dobu nasazení, tohle platí i pro proxy a prohlížeče).
+export const HTML_CACHE = 'public, max-age=0, must-revalidate';
+
 const vercelPath = join(root, 'vercel.json');
 const vercel = JSON.parse(readFileSync(vercelPath, 'utf8'));
 const sources = ['/', ...pages.map((f) => `/${f}`)];
 const current = (vercel.headers || []).filter((h) => sources.includes(h.source)).map((h) => h.headers.find((x) => x.key === 'Content-Security-Policy')?.value);
 
 if (process.argv.includes('--check')) {
-  const ok = current.length === sources.length && current.every((v) => v === CSP);
+  const cache = (vercel.headers || []).filter((h) => sources.includes(h.source)).map((h) => h.headers.find((x) => x.key === 'Cache-Control')?.value);
+  const ok = current.length === sources.length && current.every((v) => v === CSP) && cache.every((v) => v === HTML_CACHE);
   console.log(ok ? `CSP ve vercel.json sedí (${hashes.length} vložené skripty)` : 'CSP ve vercel.json nesedí na HTML: spusť node scripts/csp.mjs');
   process.exit(ok ? 0 : 1);
 }
 vercel.headers = [
   ...(vercel.headers || []).filter((h) => !sources.includes(h.source)),
-  ...sources.map((source) => ({ source, headers: [{ key: 'Content-Security-Policy', value: CSP }] })),
+  ...sources.map((source) => ({ source, headers: [{ key: 'Content-Security-Policy', value: CSP }, { key: 'Cache-Control', value: HTML_CACHE }] })),
 ];
 writeAtomic(vercelPath, JSON.stringify(vercel, null, 2) + '\n');
 console.log(`hotovo: CSP pro ${sources.join(', ')} (${hashes.length} vložené skripty)`);

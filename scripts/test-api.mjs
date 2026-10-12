@@ -314,7 +314,7 @@ check('hlavičky: nosniff, Referrer-Policy, X-Frame-Options, COOP', hv('X-Conten
 check('hlavičky: Permissions-Policy vypíná kameru, mikrofon, polohu; sdílení a schránku nechává', /camera=\(\)/.test(hv('Permissions-Policy')) && !/web-share|clipboard/.test(hv('Permissions-Policy')));
 let cspOk = true;
 try { execFileSync('node', [join(root, 'scripts', 'csp.mjs'), '--check'], { stdio: 'pipe' }); } catch { cspOk = false; }
-check('hlavičky: CSP na HTML stránkách sedí na hashe vložených skriptů (scripts/csp.mjs --check)', cspOk);
+check('hlavičky: CSP na HTML stránkách sedí na hashe vložených skriptů a Cache-Control bez uchování bez ověření (scripts/csp.mjs --check)', cspOk);
 const csp = (vercel.headers.find((h) => h.source === '/') || { headers: [] }).headers.find((h) => h.key === 'Content-Security-Policy')?.value || '';
 check("hlavičky: CSP bez 'unsafe-inline' a 'unsafe-eval' u skriptů, object-src a frame-ancestors 'none'", /script-src 'sha256-/.test(csp) && !/script-src[^;]*unsafe/.test(csp) && /object-src 'none'/.test(csp) && /frame-ancestors 'none'/.test(csp));
 check('api/_lib.js a seznam domén nejsou funkce (podtržítko), všechny endpointy mají soubor', apiFiles.filter((f) => !f.startsWith('_')).sort().join() === 'event.js,keepalive.js,lead.js,token.js', apiFiles.join());

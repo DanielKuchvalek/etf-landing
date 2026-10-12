@@ -20,6 +20,12 @@ check('stránka vrací 200', home.status === 200, String(home.status));
 check('CSP stejná jako ve vercel.json (hashe skriptů sedí)', h('content-security-policy') === csp);
 check('HSTS', h('strict-transport-security').startsWith('max-age='), h('strict-transport-security'));
 check('x-robots-tag: noindex', h('x-robots-tag') === 'noindex');
+check('HTML: Cache-Control max-age=0, must-revalidate (nová verze hned po nasazení)', /max-age=0/.test(h('cache-control')) && /must-revalidate/.test(h('cache-control')), h('cache-control'));
+{
+  // s parametry reklamy musí přijít stejná (aktuální) verze jako bez nich
+  const r = await fetch(`${BASE}/?v=dvojce&utm_source=meta&utm_campaign=etf-dvojcata&utm_content=a-dvojce&kontrola=${Date.now()}`);
+  check('stránka s ?v= a UTM má stejný ETag jako / (žádná stará verze z cache)', r.headers.get('etag') === h('etag') && !!h('etag'), `${r.headers.get('etag')} / ${h('etag')}`);
+}
 for (const k of ['x-content-type-options', 'referrer-policy', 'permissions-policy', 'x-frame-options', 'cross-origin-opener-policy']) check(`hlavička ${k}`, !!h(k), h(k));
 
 const html = await home.text();
